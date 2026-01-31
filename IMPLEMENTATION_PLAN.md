@@ -1,7 +1,7 @@
 # Bonero Implementation Plan
 
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
-> **Status**: ~30% complete - network identity, address prefixes, consensus params done
+> **Status**: ~40% complete - network identity, address prefixes, consensus params, binary names done
 
 ---
 
@@ -176,13 +176,13 @@ ls -la /tmp/bonero-test  # Should exist
 
 ## Priority 2: Branding
 
-### 2.1 Binary Names
-- [ ] Change daemon OUTPUT_NAME from "monerod" to "bonerod"
-- [ ] Change wallet CLI OUTPUT_NAME from "monero-wallet-cli" to "bonero-wallet-cli"
-- [ ] Change wallet RPC OUTPUT_NAME from "monero-wallet-rpc" to "bonero-wallet-rpc"
-- [ ] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
-- [ ] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
-- [ ] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
+### 2.1 Binary Names ✅ COMPLETED
+- [x] Change daemon OUTPUT_NAME from "monerod" to "bonerod"
+- [x] Change wallet CLI OUTPUT_NAME from "monero-wallet-cli" to "bonero-wallet-cli"
+- [x] Change wallet RPC OUTPUT_NAME from "monero-wallet-rpc" to "bonero-wallet-rpc"
+- [x] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
+- [x] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
+- [x] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
 
 **Files:**
 - `src/daemon/CMakeLists.txt` (line 74)
@@ -224,8 +224,8 @@ exit 0
 
 ---
 
-### 2.2 CMake Project Name
-- [ ] Change project(monero) to project(bonero) in CMakeLists.txt
+### 2.2 CMake Project Name ✅ COMPLETED
+- [x] Change project(monero) to project(bonero) in CMakeLists.txt
 
 **File:** `CMakeLists.txt` (line 49)
 
