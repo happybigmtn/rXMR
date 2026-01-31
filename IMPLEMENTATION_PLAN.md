@@ -15,6 +15,8 @@
 >
 > **Review (2026-01-31):** Updated functional `tests/functional_tests/validate_address.py` fixtures to Bonero address prefixes; OpenAlias validation now rejects Monero OpenAlias records.
 >
+> **Review (2026-01-31):** Signed off hardfork schedule to single v16 entry at height 1; fixed ideal-version lookup for single-entry schedules; ran `tests/unit_tests/unit_tests --gtest_filter=chain_state.*`.
+>
 > **Review (2026-01-31):** Updated `utils/fish/monerod.fish` ZMQ RPC default port text to 18882/28882/38882 and P2P default port text to 18880/28880/38880.
 >
 > **Review (2026-01-31):** Signed off `init_default_checkpoints()` returning true for a fresh chain; ran `unit_tests --gtest_filter=chain_state.*`.

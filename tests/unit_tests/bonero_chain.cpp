@@ -41,12 +41,12 @@
 
 // Test suite: Verify hardfork schedule starts at version 16
 // Acceptance: Bonero starts at hardfork 16 with no legacy hardfork history
-// This ensures we start with all modern features enabled from genesis (block 0)
+// This ensures we start with all modern features enabled from block 1
 TEST(chain_state, starts_at_version_16)
 {
   ASSERT_EQ(num_mainnet_hard_forks, 1);
   ASSERT_EQ(mainnet_hard_forks[0].version, 16);
-  ASSERT_EQ(mainnet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_EQ(mainnet_hard_forks[0].height, 1);  // First post-genesis block is v16
 }
 
 // Test suite: Verify no legacy v1 period exists
@@ -63,7 +63,7 @@ TEST(chain_state, testnet_starts_at_version_16)
 {
   ASSERT_EQ(num_testnet_hard_forks, 1);
   ASSERT_EQ(testnet_hard_forks[0].version, 16);
-  ASSERT_EQ(testnet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_EQ(testnet_hard_forks[0].height, 1);  // First post-genesis block is v16
 }
 
 // Test suite: Verify stagenet hardfork configuration
@@ -72,7 +72,7 @@ TEST(chain_state, stagenet_starts_at_version_16)
 {
   ASSERT_EQ(num_stagenet_hard_forks, 1);
   ASSERT_EQ(stagenet_hard_forks[0].version, 16);
-  ASSERT_EQ(stagenet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_EQ(stagenet_hard_forks[0].height, 1);  // First post-genesis block is v16
 }
 
 // Test suite: Verify genesis transaction is valid and parseable

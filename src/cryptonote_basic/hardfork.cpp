@@ -372,7 +372,7 @@ uint8_t HardFork::get_ideal_version() const
 uint8_t HardFork::get_ideal_version(uint64_t height) const
 {
   CRITICAL_REGION_LOCAL(lock);
-  for (unsigned int n = heights.size() - 1; n > 0; --n) {
+  for (size_t n = heights.size(); n-- > 0; ) {
     if (height >= heights[n].height) {
       return heights[n].version;
     }
@@ -421,4 +421,3 @@ bool HardFork::get_voting_info(uint8_t version, uint32_t &window, uint32_t &vote
   voting = heights.back().version;
   return enabled;
 }
-
