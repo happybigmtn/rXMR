@@ -21,6 +21,8 @@
 >
 > **Review (2026-01-31):** Signed off wallet RPC rename; updated functional tests to use `bonero-wallet-rpc` and `bonerod`, refreshed fish completions and docs references.
 >
+> **Review (2026-01-31):** Updated blockchain utility docs/runtime warnings to reference `bonero-blockchain-*` binaries; release checklist updated.
+>
 > **Bug Fix (2026-01-30):** Fixed `cmake/CheckLinkerFlag.cmake` - updated `monero_SOURCE_DIR` → `bonero_SOURCE_DIR` to match project rename
 >
 > **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound and Boost headers are installed and the protobuf/C++17 build issue is resolved.
