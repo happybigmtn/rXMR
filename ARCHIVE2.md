@@ -298,3 +298,5 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear Monero IP seed nodes from net_node.inl
 
+- [x] Clear Monero DNS seed nodes from net_node.h
+
