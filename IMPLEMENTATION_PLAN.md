@@ -19,6 +19,8 @@
 >
 > **Review (2026-01-31):** Fixed `cryptonote::blobdata` qualification in `src/daemon/main.cpp` and updated `src/debug_utilities/object_sizes.cpp` to use `boost::asio::io_context` so debug utilities build with newer Boost.
 >
+> **Review (2026-01-31):** Signed off wallet2 unit name update; ran `unit_tests --gtest_filter=branding.currency_unit_name`.
+>
 > **Review (2026-01-31):** Signed off wallet RPC rename; updated functional tests to use `bonero-wallet-rpc` and `bonerod`, refreshed fish completions and docs references.
 >
 > **Review (2026-01-31):** Updated blockchain utility docs/runtime warnings to reference `bonero-blockchain-*` binaries; release checklist updated.
