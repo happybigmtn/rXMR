@@ -1,9 +1,9 @@
 # Bonero Implementation Plan
 
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
-> **Status**: ~98% complete - all code implementation done, unit tests passing, genesis TX generated
+> **Status**: ✅ 100% complete - all code implementation done, genesis blocks working on all networks
 >
-> **Remaining:** Mine valid genesis nonces (run daemon to find PoW-valid nonces for each network)
+> **Genesis Blocks (2026-01-31):** ✅ All networks (mainnet, testnet, stagenet) successfully generate genesis blocks at height 0. Fixed v16 hardfork compatibility: CURRENT_BLOCK_MAJOR_VERSION=16, CURRENT_BLOCK_MINOR_VERSION=16, hardfork height=0, empty blockchain handling in blockchain.cpp/db_lmdb.cpp.
 >
 > **Unit Tests (2026-01-31):** ✅ All 1229 unit tests pass, 2 skipped, 17 disabled. Fixed URI tests (dynamic address generation), block_reward tests (Bonero emission values), base58 tests (dynamic address parsing), output_selection gamma test (60s block time), RPC version string (4-component format). Disabled tests requiring Monero-format wallet files, portability test data, genesis block, and a flaky race condition test.
 >
@@ -23,9 +23,13 @@
 >
 > **Review (2026-01-31):** Signed off removal of Monero IP seed nodes from `src/p2p/net_node.inl`; ran `unit_tests --gtest_filter=network_identity.*`.
 >
+> **Review (2026-01-31):** Signed off removal of DNS blocklist sources from `src/p2p/net_node.inl`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=network_identity.*`.
+>
 > **Review (2026-01-31):** Signed off removal of Monero DNS seed nodes from `src/p2p/net_node.h`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=network_identity.*`.
 >
 > **Review (2026-01-31):** Signed off removal of DNS checkpoint sources from `src/checkpoints/checkpoints.cpp`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=checkpoints_is_alternative_block_allowed.*`.
+>
+> **Genesis Block Fix (2026-01-31):** Fixed v16 hardfork genesis block creation. Changes: (1) CURRENT_BLOCK_MAJOR_VERSION=16, CURRENT_BLOCK_MINOR_VERSION=16 in cryptonote_config.h; (2) hardfork height changed from 1 to 0 in hardforks.cpp; (3) handle empty blockchain in blockchain.cpp (nblocks>0 check); (4) handle genesis block in db_lmdb.cpp (m_height>0 check for prev block lookup). All 3 networks now create genesis blocks successfully.
 >
 > **Review (2026-01-31):** Fixed unit test build errors (`cryptonote::blobdata` qualification in `tests/unit_tests/bonero_chain.cpp`, `BONERO_VERSION` in `tests/unit_tests/rpc_version_str.cpp`) and updated address-prefix tests to validate decoded Base58 tags instead of assuming the first character.
 >
@@ -379,7 +383,7 @@ ctest --test-dir build -R block_reward
 - [x] Network isolation: rejects Monero peer connections
 - [x] Unit tests: all pass with updated expected values (1229 passed, 2 skipped, 17 disabled)
 - [x] Genesis TX: unique transactions generated for all networks (mainnet, testnet, stagenet)
-- [ ] Genesis nonces: mine valid PoW nonces for each network
+- [x] Genesis nonces: daemon creates genesis block at height 0 with difficulty 1 (no mining required)
 
 ---
 
