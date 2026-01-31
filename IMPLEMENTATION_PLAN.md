@@ -97,7 +97,6 @@ grep -q "project(bonero)" CMakeLists.txt || exit 1
 ## Priority 3: Consensus Parameters
 
 ### 3.1 Block Time ✅ COMPLETED
-- [x] Change EMISSION_SPEED_FACTOR_PER_MINUTE from 20 to 21 (halves reward for 60s blocks)
 - [x] Verify FINAL_SUBSIDY_PER_MINUTE remains 300000000000 (0.3 BON/minute = 0.3 BON/block)
 
 **File:** `src/cryptonote_config.h` (lines 55-56)

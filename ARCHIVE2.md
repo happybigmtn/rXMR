@@ -252,3 +252,5 @@ TEST(consensus, difficulty_window_blocks)
 
 ### 3.2 Emission Adjustment ✅ COMPLETED
 
+- [x] Change EMISSION_SPEED_FACTOR_PER_MINUTE from 20 to 21 (halves reward for 60s blocks)
+
