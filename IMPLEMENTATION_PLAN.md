@@ -175,7 +175,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Set mainnet_hard_fork_version_1_till to 0
 - [x] Update testnet/stagenet similarly
 
 **File:** `src/hardforks/hardforks.cpp` (lines 34-78)

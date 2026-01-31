@@ -266,3 +266,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Replace Monero hardfork schedule with single v16 entry at height 1
 
+- [x] Set mainnet_hard_fork_version_1_till to 0
+
