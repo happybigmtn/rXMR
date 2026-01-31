@@ -150,8 +150,9 @@ TEST(block_reward, tail_emission)
 - [x] Remove all testnet/stagenet checkpoints
 - [x] Return true from init_default_checkpoints()
 - [x] Clear DNS checkpoint sources (moneropulse domains)
+- [x] Clear compiled-in mainnet precomputed blocks (`src/blocks/checkpoints.dat`)
 
-**File:** `src/checkpoints/checkpoints.cpp` (lines 183-260)
+**Files:** `src/checkpoints/checkpoints.cpp` (lines 183-260), `src/blocks/checkpoints.dat`
 
 **Required Tests:**
 ```cpp
