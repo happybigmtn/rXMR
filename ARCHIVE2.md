@@ -306,3 +306,5 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear DNS update sources from updates.cpp
 
+- [x] Clear DNS probe hostname from dns_utils.cpp
+
