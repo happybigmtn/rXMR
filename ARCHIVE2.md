@@ -165,3 +165,5 @@ TEST(branding, data_directory_name)
 
 - [x] Change daemon OUTPUT_NAME from "monerod" to "bonerod"
 
+- [x] Change wallet CLI OUTPUT_NAME from "monero-wallet-cli" to "bonero-wallet-cli"
+
