@@ -333,3 +333,5 @@ TEST(network_identity, no_monero_seed_nodes)
 
 - [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
 
+- [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
+

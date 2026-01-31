@@ -191,7 +191,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
 - [x] Install libunbound dependency and build project
 - [x] Run: `./bonerod --print-genesis-tx` to generate new genesis transaction
 - [x] Update GENESIS_TX in cryptonote_config.h with new hex for all networks
