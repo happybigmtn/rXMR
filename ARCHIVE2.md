@@ -196,3 +196,5 @@ TEST(branding, data_directory_name)
 
 - [x] Change "piconero" to "picobon" in cryptonote_format_utils.cpp
 
+- [x] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
+

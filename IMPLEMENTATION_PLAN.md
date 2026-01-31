@@ -94,7 +94,6 @@ grep -q "project(bonero)" CMakeLists.txt || exit 1
 ---
 
 ### 2.3 Currency Unit Names ✅ COMPLETED
-- [x] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
 - [x] Update unit names in wallet2.cpp
 
 **Files:**
