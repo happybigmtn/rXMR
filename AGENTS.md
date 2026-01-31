@@ -65,3 +65,28 @@ After build, binaries are in `build/release/bin/`:
 | Mainnet   | 18880    | 18881    | 18882    | 'B' (66)       |
 | Testnet   | 28880    | 28881    | 28882    | 'T' (136)      |
 | Stagenet  | 38880    | 38881    | 38882    | 'S' (86)       |
+
+## Genesis Block Generation
+
+To generate a new genesis block (required for fresh chain):
+
+```bash
+# Generate genesis transaction hex
+./build/Linux/master/release/bin/bonerod --print-genesis-tx
+
+# Copy the output hex to GENESIS_TX in src/cryptonote_config.h
+# Then run daemon to mine valid nonce - check logs for GENESIS_NONCE
+```
+
+## Unit Tests
+
+Run Bonero-specific unit tests:
+```bash
+ctest --test-dir build/Linux/master/release -R bonero_ --output-on-failure
+```
+
+Test suites:
+- `bonero_network` - Network identity, ports, consensus params
+- `bonero_address` - Address prefix verification
+- `bonero_branding` - Data directory, message signing domain
+- `bonero_chain` - Genesis block, hardforks, checkpoints

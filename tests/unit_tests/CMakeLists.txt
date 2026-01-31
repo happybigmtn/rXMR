@@ -33,6 +33,7 @@ set(unit_tests_sources
   base58.cpp
   bonero_address.cpp
   bonero_branding.cpp
+  bonero_chain.cpp
   bonero_network.cpp
   blockchain_db.cpp
   block_queue.cpp

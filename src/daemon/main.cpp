@@ -33,6 +33,7 @@
 #include "common/password.h"
 #include "common/util.h"
 #include "cryptonote_core/cryptonote_core.h"
+#include "cryptonote_core/cryptonote_tx_utils.h"
 #include "cryptonote_basic/miner.h"
 #include "daemon/command_server.h"
 #include "daemon/daemon.h"
@@ -44,6 +45,7 @@
 #include "rpc/core_rpc_server.h"
 #include "rpc/rpc_args.h"
 #include "daemon/command_line_args.h"
+#include "serialization/binary_utils.h"
 #include "version.h"
 
 #ifdef STACK_TRACE
@@ -144,6 +146,7 @@ int main(int argc, char const * argv[])
       command_line::add_arg(visible_options, command_line::arg_help);
       command_line::add_arg(visible_options, command_line::arg_version);
       command_line::add_arg(visible_options, daemon_args::arg_os_version);
+      command_line::add_arg(visible_options, daemon_args::arg_print_genesis_tx);
       command_line::add_arg(visible_options, daemon_args::arg_config_file);
 
       // Settings
@@ -207,6 +210,52 @@ int main(int argc, char const * argv[])
     if (command_line::get_arg(vm, daemon_args::arg_os_version))
     {
       std::cout << "OS: " << tools::get_os_version_string() << ENDL;
+      return 0;
+    }
+
+    // Print Genesis TX - utility for generating genesis block coinbase transaction
+    if (command_line::get_arg(vm, daemon_args::arg_print_genesis_tx))
+    {
+      // Genesis message: proves the chain's creation date and purpose
+      const std::string genesis_message = "Bonero Genesis - 2026: Private money for private machines";
+
+      // Create a null address for the genesis block (coins are effectively burned)
+      // This follows the CryptoNote convention where genesis block reward is sent to a null address
+      cryptonote::account_public_address genesis_addr = {};
+
+      // Construct the genesis coinbase transaction
+      cryptonote::transaction tx;
+      const uint8_t hf_version = 16; // Bonero starts at hardfork version 16
+      blobdata extra_nonce(genesis_message.begin(), genesis_message.end());
+
+      bool success = cryptonote::construct_miner_tx(
+        0,                    // height: genesis block is height 0
+        0,                    // median_weight: no previous blocks
+        0,                    // already_generated_coins: none for genesis
+        0,                    // current_block_weight: minimal
+        0,                    // fee: no fees in genesis
+        genesis_addr,         // miner address: null for genesis
+        tx,                   // output transaction
+        extra_nonce,          // the genesis message
+        1,                    // max_outs: single output for genesis
+        hf_version            // hardfork version
+      );
+
+      if (!success)
+      {
+        std::cerr << "Failed to construct genesis transaction" << std::endl;
+        return 1;
+      }
+
+      // Serialize and print the transaction as hex
+      blobdata tx_blob;
+      if (!t_serializable_object_to_blob(tx, tx_blob))
+      {
+        std::cerr << "Failed to serialize genesis transaction" << std::endl;
+        return 1;
+      }
+
+      std::cout << epee::string_tools::buff_to_hex_nodelimer(tx_blob) << std::endl;
       return 0;
     }
 

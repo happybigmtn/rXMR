@@ -141,6 +141,11 @@ namespace daemon_args
   , "Disable ZMQ RPC server"
   };
 
+  const command_line::arg_descriptor<bool> arg_print_genesis_tx = {
+    "print-genesis-tx"
+  , "Print genesis block coinbase transaction hex and exit"
+  };
+
 }  // namespace daemon_args
 
 #endif // DAEMON_COMMAND_LINE_ARGS_H

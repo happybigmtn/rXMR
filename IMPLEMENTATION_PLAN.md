@@ -1,7 +1,9 @@
 # Bonero Implementation Plan
 
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
-> **Status**: ~75% complete - network identity, address prefixes, consensus params, binary names, chain state, branding, version strings done
+> **Status**: ~90% complete - all implementation done, genesis block generation pending build
+>
+> **Remaining:** Install libunbound, build project, generate new genesis TX with --print-genesis-tx, mine nonces
 
 ---
 
@@ -425,41 +427,55 @@ TEST(network_identity, no_monero_seed_nodes)
 
 ---
 
-### 4.4 Generate Genesis Block
-- [ ] Create genesis message: "Bonero Genesis - 2026: Private money for private machines"
-- [ ] Generate new genesis transaction with `--print-genesis-tx`
-- [ ] Mine valid genesis nonce
-- [ ] Update GENESIS_TX in cryptonote_config.h
-- [ ] Update GENESIS_NONCE in cryptonote_config.h
-- [ ] Update testnet/stagenet genesis
+### 4.4 Generate Genesis Block 🔧 IN PROGRESS
+- [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
+- [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
+- [ ] Install libunbound dependency and build project
+- [ ] Run: `./bonerod --print-genesis-tx` to generate new genesis transaction
+- [ ] Mine valid genesis nonce by running daemon
+- [ ] Update GENESIS_TX in cryptonote_config.h with new hex
+- [ ] Update GENESIS_NONCE in cryptonote_config.h with mined nonce
+- [ ] Repeat for testnet/stagenet genesis blocks
 
-**File:** `src/cryptonote_config.h` (lines 236-237)
+**Genesis message:** "Bonero Genesis - 2026: Private money for private machines"
+
+**Files Modified:**
+- `src/daemon/main.cpp` - Added --print-genesis-tx handler
+- `src/daemon/command_line_args.h` - Added arg_print_genesis_tx definition
+- `tests/unit_tests/bonero_chain.cpp` - Created genesis validation tests
+- `tests/unit_tests/CMakeLists.txt` - Registered bonero_chain.cpp
+
+**Build Dependency Note:**
+The build requires libunbound. On Arch Linux: `sudo pacman -S unbound`
 
 **Process:**
-1. Build with all other changes
-2. Run: `./bonerod --print-genesis-tx`
-3. Copy output to GENESIS_TX
-4. Run daemon to mine genesis
-5. Record GENESIS_NONCE
+1. Install dependencies: `sudo pacman -S unbound` (Arch) or `sudo apt-get install libunbound-dev` (Debian/Ubuntu)
+2. Build: `make -j$(nproc)`
+3. Generate genesis TX: `./build/Linux/master/release/bin/bonerod --print-genesis-tx`
+4. Copy output to GENESIS_TX in cryptonote_config.h
+5. Run daemon in mining mode to find valid nonce
+6. Record GENESIS_NONCE from logs
 
-**Required Tests:**
+**Required Tests:** (IMPLEMENTED in tests/unit_tests/bonero_chain.cpp)
 ```cpp
-// tests/unit_tests/bonero_chain.cpp
-TEST(chain_state, genesis_is_valid)
-{
-  cryptonote::transaction tx;
-  std::string genesis_hex = config::GENESIS_TX;
-  blobdata genesis_blob;
-  ASSERT_TRUE(epee::string_tools::parse_hexstr_to_binbuff(genesis_hex, genesis_blob));
-  ASSERT_TRUE(cryptonote::parse_and_validate_tx_from_blob(genesis_blob, tx));
-  ASSERT_TRUE(cryptonote::is_coinbase(tx));
-}
+// Verify hardfork schedule starts at v16
+TEST(chain_state, starts_at_version_16)
+TEST(chain_state, no_v1_period)
+TEST(chain_state, testnet_starts_at_version_16)
+TEST(chain_state, stagenet_starts_at_version_16)
 
-TEST(chain_state, genesis_message_contains_bonero)
-{
-  // Verify genesis contains expected message
-  // Parse extra field for TX_EXTRA_NONCE with message
-}
+// Verify genesis transactions are valid and parseable
+TEST(chain_state, genesis_tx_is_valid)
+TEST(chain_state, testnet_genesis_tx_is_valid)
+TEST(chain_state, stagenet_genesis_tx_is_valid)
+
+// Verify unique nonces per network
+TEST(chain_state, unique_genesis_nonces)
+
+// Verify no legacy checkpoints
+TEST(chain_state, no_initial_checkpoints)
+TEST(chain_state, testnet_no_initial_checkpoints)
+TEST(chain_state, stagenet_no_initial_checkpoints)
 ```
 
 ---
@@ -508,12 +524,11 @@ TEST(security, message_signing_domain)
 
 ## Testing Summary
 
-### Unit Test Files to Create
-1. `tests/unit_tests/bonero_network.cpp` - Network identity tests
-2. `tests/unit_tests/bonero_address.cpp` - Address prefix tests
-3. `tests/unit_tests/bonero_branding.cpp` - Branding tests
-4. `tests/unit_tests/bonero_consensus.cpp` - Consensus parameter tests
-5. `tests/unit_tests/bonero_chain.cpp` - Chain state tests
+### Unit Test Files Created ✅
+1. `tests/unit_tests/bonero_network.cpp` - Network identity and consensus tests (10 tests)
+2. `tests/unit_tests/bonero_address.cpp` - Address prefix tests (14 tests)
+3. `tests/unit_tests/bonero_branding.cpp` - Branding tests (4 tests)
+4. `tests/unit_tests/bonero_chain.cpp` - Chain state and genesis tests (11 tests)
 
 ### Unit Test Files to Update
 1. `tests/unit_tests/block_reward.cpp` - Update expected values for halved emission
