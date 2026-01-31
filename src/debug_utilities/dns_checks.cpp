@@ -135,6 +135,12 @@ int main(int argc, char* argv[])
   // lookup(LOOKUP_A, {"seeds.bonero.org", "seeds.bonero.net"});
   // lookup(LOOKUP_TXT, {"updates.bonero.org", "updates.bonero.net"});
   // lookup(LOOKUP_TXT, {"checkpoints.bonero.org", "checkpoints.bonero.net"});
+  const std::vector<std::string> bonero_seed_hosts;
+  const std::vector<std::string> bonero_update_hosts;
+  const std::vector<std::string> bonero_checkpoint_hosts;
+  lookup(LOOKUP_A, bonero_seed_hosts);
+  lookup(LOOKUP_TXT, bonero_update_hosts);
+  lookup(LOOKUP_TXT, bonero_checkpoint_hosts);
 
   std::cout << "Bonero DNS infrastructure not yet configured." << std::endl;
   std::cout << "When DNS seeds are established, update this utility." << std::endl;
