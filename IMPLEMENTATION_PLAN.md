@@ -25,6 +25,8 @@
 >
 > **Review (2026-01-31):** Signed off removal of Monero DNS seed nodes from `src/p2p/net_node.h`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=network_identity.*`.
 >
+> **Review (2026-01-31):** Signed off removal of DNS checkpoint sources from `src/checkpoints/checkpoints.cpp`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=checkpoints_is_alternative_block_allowed.*`.
+>
 > **Review (2026-01-31):** Fixed unit test build errors (`cryptonote::blobdata` qualification in `tests/unit_tests/bonero_chain.cpp`, `BONERO_VERSION` in `tests/unit_tests/rpc_version_str.cpp`) and updated address-prefix tests to validate decoded Base58 tags instead of assuming the first character.
 >
 > **Review (2026-01-31):** Fixed `cryptonote::blobdata` qualification in `src/daemon/main.cpp` and updated `src/debug_utilities/object_sizes.cpp` to use `boost::asio::io_context` so debug utilities build with newer Boost.
