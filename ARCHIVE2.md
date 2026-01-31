@@ -6,3 +6,5 @@
 
 - [x] Change NETWORK_ID for testnet (ending `0x11`)
 
+- [x] Change NETWORK_ID for stagenet (ending `0x12`)
+
