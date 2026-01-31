@@ -46,7 +46,7 @@ TEST(chain_state, starts_at_version_16)
 {
   ASSERT_EQ(num_mainnet_hard_forks, 1);
   ASSERT_EQ(mainnet_hard_forks[0].version, 16);
-  ASSERT_EQ(mainnet_hard_forks[0].height, 1);  // First post-genesis block is v16
+  ASSERT_EQ(mainnet_hard_forks[0].height, 0);  // Genesis block is v16
 }
 
 // Test suite: Verify no legacy v1 period exists

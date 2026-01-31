@@ -31,24 +31,25 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "blockchain.hardforks"
 
-// Bonero: Fresh chain starting at hardfork version 16
+// Bonero: Fresh chain starting at hardfork version 16 from genesis (block 0)
+// Unlike Monero which had a gradual upgrade path, Bonero starts directly at v16.
 // Timestamp 1735689600 = January 1, 2025 00:00:00 UTC
 const hardfork_t mainnet_hard_forks[] = {
-  { 16, 1, 0, 1735689600 },  // v16 from block 1 (first post-genesis block)
+  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
 };
 const size_t num_mainnet_hard_forks = sizeof(mainnet_hard_forks) / sizeof(mainnet_hard_forks[0]);
 const uint64_t mainnet_hard_fork_version_1_till = 0;  // No v1 period - start at v16
 
-// Bonero testnet: Fresh chain starting at hardfork version 16
+// Bonero testnet: Fresh chain starting at hardfork version 16 from genesis
 const hardfork_t testnet_hard_forks[] = {
-  { 16, 1, 0, 1735689600 },  // v16 from block 1
+  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
 };
 const size_t num_testnet_hard_forks = sizeof(testnet_hard_forks) / sizeof(testnet_hard_forks[0]);
 const uint64_t testnet_hard_fork_version_1_till = 0;
 
-// Bonero stagenet: Fresh chain starting at hardfork version 16
+// Bonero stagenet: Fresh chain starting at hardfork version 16 from genesis
 const hardfork_t stagenet_hard_forks[] = {
-  { 16, 1, 0, 1735689600 },  // v16 from block 1
+  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
 };
 const size_t num_stagenet_hard_forks = sizeof(stagenet_hard_forks) / sizeof(stagenet_hard_forks[0]);
 const uint64_t stagenet_hard_fork_version_1_till = 0;
