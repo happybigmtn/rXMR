@@ -17,5 +17,5 @@
 ## Currency
 | Monero | Bonero |
 |--------|--------|
-| XMR | BON |
+| XMR | BNR |
 | piconero | picobon |
