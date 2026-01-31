@@ -258,3 +258,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Remove all Monero mainnet checkpoints
 
+- [x] Remove all testnet/stagenet checkpoints
+
