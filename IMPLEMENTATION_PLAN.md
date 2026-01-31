@@ -71,3 +71,18 @@
 - [ ] Build and run unit tests
 - [ ] Test wallet creation (address starts with 'B')
 - [ ] Test P2P on new ports
+
+---
+
+## Phase 1.5: Block Time & Emission (NEW)
+
+### 1.5.1 Block Time
+- [ ] Change DIFFICULTY_TARGET_V2 from 120 to 60 in `src/cryptonote_config.h`
+- [ ] Change DIFFICULTY_BLOCKS_COUNT_V2 to 1440 (maintain 24h window)
+
+### 1.5.2 Emission Adjustment
+- [ ] Modify `get_block_reward()` in `src/cryptonote_basic/cryptonote_basic_impl.cpp`
+- [ ] Change emission shift from 2^-19 to 2^-20 (halves reward)
+- [ ] Change tail emission from 0.6 to 0.3 BON/block
+
+**Rationale**: 60s blocks match Botcoin; halved rewards maintain same emission schedule.
