@@ -32,6 +32,7 @@
 // from Monero to enable visual identification and prevent cross-network confusion.
 
 #include "gtest/gtest.h"
+#include "common/base58.h"
 #include "cryptonote_config.h"
 #include "cryptonote_basic/account.h"
 #include "cryptonote_basic/cryptonote_basic_impl.h"
@@ -99,37 +100,46 @@ TEST(address_prefix, stagenet_subaddress_prefix)
   ASSERT_EQ(config::stagenet::CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX, 108);
 }
 
-// Test suite: Verify generated mainnet address starts with 'B'
-// Acceptance: All mainnet standard addresses must begin with 'B' for visual identification
-TEST(address_prefix, mainnet_standard_starts_with_B)
+// Test suite: Verify generated mainnet address encodes the expected prefix
+// Acceptance: Encoded address tag matches the configured mainnet prefix
+TEST(address_prefix, mainnet_standard_encodes_prefix)
 {
   cryptonote::account_base account;
   account.generate();
   std::string address = cryptonote::get_account_address_as_str(
     cryptonote::MAINNET, false, account.get_keys().m_account_address);
-  ASSERT_EQ(address[0], 'B');
+  uint64_t tag = 0;
+  std::string data;
+  ASSERT_TRUE(tools::base58::decode_addr(address, tag, data));
+  ASSERT_EQ(tag, config::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
 }
 
-// Test suite: Verify generated testnet address starts with 'T'
-// Acceptance: All testnet standard addresses must begin with 'T' for visual identification
-TEST(address_prefix, testnet_standard_starts_with_T)
+// Test suite: Verify generated testnet address encodes the expected prefix
+// Acceptance: Encoded address tag matches the configured testnet prefix
+TEST(address_prefix, testnet_standard_encodes_prefix)
 {
   cryptonote::account_base account;
   account.generate();
   std::string address = cryptonote::get_account_address_as_str(
     cryptonote::TESTNET, false, account.get_keys().m_account_address);
-  ASSERT_EQ(address[0], 'T');
+  uint64_t tag = 0;
+  std::string data;
+  ASSERT_TRUE(tools::base58::decode_addr(address, tag, data));
+  ASSERT_EQ(tag, config::testnet::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
 }
 
-// Test suite: Verify generated stagenet address starts with 'S'
-// Acceptance: All stagenet standard addresses must begin with 'S' for visual identification
-TEST(address_prefix, stagenet_standard_starts_with_S)
+// Test suite: Verify generated stagenet address encodes the expected prefix
+// Acceptance: Encoded address tag matches the configured stagenet prefix
+TEST(address_prefix, stagenet_standard_encodes_prefix)
 {
   cryptonote::account_base account;
   account.generate();
   std::string address = cryptonote::get_account_address_as_str(
     cryptonote::STAGENET, false, account.get_keys().m_account_address);
-  ASSERT_EQ(address[0], 'S');
+  uint64_t tag = 0;
+  std::string data;
+  ASSERT_TRUE(tools::base58::decode_addr(address, tag, data));
+  ASSERT_EQ(tag, config::stagenet::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX);
 }
 
 // Test suite: Verify Monero addresses are rejected

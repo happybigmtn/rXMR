@@ -82,7 +82,7 @@ TEST(chain_state, genesis_tx_is_valid)
 {
   cryptonote::transaction tx;
   std::string genesis_hex = config::GENESIS_TX;
-  blobdata genesis_blob;
+  cryptonote::blobdata genesis_blob;
 
   // Parse hex to binary
   ASSERT_TRUE(epee::string_tools::parse_hexstr_to_binbuff(genesis_hex, genesis_blob));
@@ -100,7 +100,7 @@ TEST(chain_state, testnet_genesis_tx_is_valid)
 {
   cryptonote::transaction tx;
   std::string genesis_hex = config::testnet::GENESIS_TX;
-  blobdata genesis_blob;
+  cryptonote::blobdata genesis_blob;
 
   ASSERT_TRUE(epee::string_tools::parse_hexstr_to_binbuff(genesis_hex, genesis_blob));
   ASSERT_TRUE(cryptonote::parse_and_validate_tx_from_blob(genesis_blob, tx));
@@ -113,7 +113,7 @@ TEST(chain_state, stagenet_genesis_tx_is_valid)
 {
   cryptonote::transaction tx;
   std::string genesis_hex = config::stagenet::GENESIS_TX;
-  blobdata genesis_blob;
+  cryptonote::blobdata genesis_blob;
 
   ASSERT_TRUE(epee::string_tools::parse_hexstr_to_binbuff(genesis_hex, genesis_blob));
   ASSERT_TRUE(cryptonote::parse_and_validate_tx_from_blob(genesis_blob, tx));
