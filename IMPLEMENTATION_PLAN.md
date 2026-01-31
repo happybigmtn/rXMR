@@ -27,6 +27,8 @@
 >
 > **Review (2026-01-31):** Signed off removal of Monero DNS seed nodes from `src/p2p/net_node.h`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=network_identity.*`.
 >
+> **Review (2026-01-31):** Signed off `--print-genesis-tx` daemon option; verified `./build/Linux/master/release/bin/bonerod --print-genesis-tx` and ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=chain_state.*`.
+>
 > **Review (2026-01-31):** Signed off removal of DNS checkpoint sources from `src/checkpoints/checkpoints.cpp`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=checkpoints_is_alternative_block_allowed.*`.
 >
 > **Review (2026-01-31):** Signed off clearing DNS probe hostname from `src/common/dns_utils.cpp`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=DNSResolver.*:DNS_PUBLIC.*`.
