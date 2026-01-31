@@ -3,9 +3,9 @@
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
 > **Status**: ~90% complete - all code implementation done, genesis block generation pending build
 >
-> **Remaining:** Install libunbound (`sudo pacman -S unbound`), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
+> **Remaining:** Install libunbound (`sudo pacman -S unbound`), install Boost headers (`libboost-all-dev` / `boost`), resolve protobuf/C++17 requirement (system protobuf 6.33.1 needs C++17 while build uses C++11), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
 >
-> **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound is installed and project builds.
+> **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound and Boost headers are installed and the protobuf/C++17 build issue is resolved.
 
 ---
 
