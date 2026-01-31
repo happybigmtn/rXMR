@@ -27,7 +27,6 @@
 ## Priority 1: Network Identity (CRITICAL PATH)
 
 ### 1.1 Network Magic Bytes and Ports ✅ COMPLETED
-- [x] Change NETWORK_ID for mainnet to `{0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x10}`
 - [x] Change NETWORK_ID for testnet (ending `0x11`)
 - [x] Change NETWORK_ID for stagenet (ending `0x12`)
 - [x] Change P2P_DEFAULT_PORT from 18080 to 18880
