@@ -9,6 +9,8 @@
 >
 > **Build/Test Attempt (2026-01-31):** `make -C build/Linux/master/release -j$(nproc)` failed in `src/daemon/main.cpp` (missing `cryptonote::blobdata` qualification). `ctest --test-dir build/Linux/master/release -R bonero_network` reported "No tests were found".
 >
+> **Review (2026-01-31):** Updated functional `tests/functional_tests/validate_address.py` fixtures to Bonero address prefixes; OpenAlias validation now rejects Monero OpenAlias records.
+>
 > **Review (2026-01-31):** Updated `utils/fish/monerod.fish` ZMQ RPC default port text to 18882/28882/38882.
 >
 > **Review (2026-01-31):** Fixed unit test build errors (`cryptonote::blobdata` qualification in `tests/unit_tests/bonero_chain.cpp`, `BONERO_VERSION` in `tests/unit_tests/rpc_version_str.cpp`) and updated address-prefix tests to validate decoded Base58 tags instead of assuming the first character.
