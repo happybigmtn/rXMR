@@ -9,6 +9,8 @@
 >
 > **Build (2026-01-31):** ✅ Full build succeeds. All Bonero binaries: bonerod, bonero-wallet-cli, bonero-wallet-rpc, bonero-blockchain-import, bonero-blockchain-export.
 >
+> **Review (2026-01-31):** Signed off removal of Monero mainnet checkpoints; cleared compiled-in precomputed blocks (`src/blocks/checkpoints.dat`).
+>
 > **Review (2026-01-31):** Updated functional `tests/functional_tests/validate_address.py` fixtures to Bonero address prefixes; OpenAlias validation now rejects Monero OpenAlias records.
 >
 > **Review (2026-01-31):** Updated `utils/fish/monerod.fish` ZMQ RPC default port text to 18882/28882/38882 and P2P default port text to 18880/28880/38880.
