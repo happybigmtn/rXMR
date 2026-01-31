@@ -31,6 +31,8 @@
 >
 > **Review (2026-01-31):** Signed off clearing DNS probe hostname from `src/common/dns_utils.cpp`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=DNSResolver.*:DNS_PUBLIC.*`.
 >
+> **Review (2026-01-31):** Signed off `src/debug_utilities/dns_checks.cpp` Bonero placeholder messaging and removal of Monero DNS lookups.
+>
 > **Genesis Block Fix (2026-01-31):** Fixed v16 hardfork genesis block creation. Changes: (1) CURRENT_BLOCK_MAJOR_VERSION=16, CURRENT_BLOCK_MINOR_VERSION=16 in cryptonote_config.h; (2) hardfork height changed from 1 to 0 in hardforks.cpp; (3) handle empty blockchain in blockchain.cpp (nblocks>0 check); (4) handle genesis block in db_lmdb.cpp (m_height>0 check for prev block lookup). All 3 networks now create genesis blocks successfully.
 >
 > **Review (2026-01-31):** Fixed unit test build errors (`cryptonote::blobdata` qualification in `tests/unit_tests/bonero_chain.cpp`, `BONERO_VERSION` in `tests/unit_tests/rpc_version_str.cpp`) and updated address-prefix tests to validate decoded Base58 tags instead of assuming the first character.
