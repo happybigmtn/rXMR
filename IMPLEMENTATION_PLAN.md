@@ -95,38 +95,6 @@ grep -q "project(bonero)" CMakeLists.txt || exit 1
 ## Priority 3: Consensus Parameters
 
 ### 3.1 Block Time ✅ COMPLETED
-- [x] Change DIFFICULTY_WINDOW to 1440 (maintain 24h window)
-
-**File:** `src/cryptonote_config.h` (lines 80-82)
-
-**Rationale:** 60s blocks match faster confirmation for AI agents. Window of 1440 blocks × 60s = 24 hours.
-
-**Required Tests:**
-```cpp
-// tests/unit_tests/bonero_consensus.cpp (NEW FILE)
-#include "gtest/gtest.h"
-#include "cryptonote_config.h"
-
-TEST(consensus, block_time_60_seconds)
-{
-  ASSERT_EQ(DIFFICULTY_TARGET_V2, 60);
-}
-
-TEST(consensus, difficulty_window_24h)
-{
-  // 1440 blocks * 60 seconds = 86400 seconds = 24 hours
-  ASSERT_EQ(DIFFICULTY_WINDOW * DIFFICULTY_TARGET_V2, 86400);
-}
-
-TEST(consensus, difficulty_window_blocks)
-{
-  ASSERT_EQ(DIFFICULTY_WINDOW, 1440);
-}
-```
-
----
-
-### 3.2 Emission Adjustment ✅ COMPLETED
 - [x] Change EMISSION_SPEED_FACTOR_PER_MINUTE from 20 to 21 (halves reward for 60s blocks)
 - [x] Verify FINAL_SUBSIDY_PER_MINUTE remains 300000000000 (0.3 BON/minute = 0.3 BON/block)
 
