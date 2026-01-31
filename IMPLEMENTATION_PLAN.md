@@ -3,24 +3,24 @@
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
 > **Status**: ~90% complete - all code implementation done, genesis block generation pending build
 >
-> **Remaining:** Install libunbound (`sudo pacman -S unbound`), install Boost headers (`libboost-all-dev` / `boost`), resolve protobuf/C++17 requirement (system protobuf 6.33.1 needs C++17 while build uses C++11), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
+> **Remaining:** Install Boost headers (`sudo pacman -S boost` on Arch, `libboost-all-dev` on Debian/Ubuntu), resolve protobuf/C++17 requirement (system protobuf requires C++17 while build uses C++11), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
+>
+> **Bug Fix (2026-01-30):** Fixed `cmake/CheckLinkerFlag.cmake` - updated `monero_SOURCE_DIR` → `bonero_SOURCE_DIR` to match project rename
 >
 > **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound and Boost headers are installed and the protobuf/C++17 build issue is resolved.
 
 ---
 
-## Critical Notice: Codebase Identity
+## Codebase Identity
 
-**IMPORTANT:** This repository contains conflicting documentation:
+All documentation now correctly describes **Bonero** (Monero fork):
 
-| Document | Claims to be | Actually matches codebase? |
-|----------|--------------|---------------------------|
-| `AGENTS.md` | Botcoin (Bitcoin fork) | NO - references non-existent Bitcoin files |
-| `README.md` | Bonero (Monero fork) | YES |
-| `specs/*` | Bonero (Monero fork) | YES |
-| `src/*` | Monero v0.18.4.5 | YES |
-
-**Resolution:** This plan implements **Bonero** (Monero fork) as the actual codebase is Monero. The `AGENTS.md` file needs to be replaced with correct Bonero build instructions.
+| Document | Status |
+|----------|--------|
+| `AGENTS.md` | ✅ Updated with correct Bonero build instructions |
+| `README.md` | ✅ Correct |
+| `specs/*` | ✅ Correct |
+| `src/*` | ✅ Monero v0.18.4.5 with Bonero modifications |
 
 ---
 
