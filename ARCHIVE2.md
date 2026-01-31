@@ -173,3 +173,17 @@ TEST(branding, data_directory_name)
 
 - [x] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
 
+- [x] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
+
+**Files:**
+- `src/daemon/CMakeLists.txt` (line 74)
+- `src/simplewallet/CMakeLists.txt` (line 64)
+- `src/wallet/CMakeLists.txt`
+- `src/blockchain_utilities/CMakeLists.txt` (9 entries)
+- `src/debug_utilities/CMakeLists.txt` (3 entries)
+- `src/gen_multisig/CMakeLists.txt`
+- `src/gen_ssl_cert/CMakeLists.txt`
+
+**Required Tests:**
+```bash
+

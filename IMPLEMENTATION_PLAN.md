@@ -57,19 +57,6 @@ ls -la /tmp/bonero-test  # Should exist
 ## Priority 2: Branding
 
 ### 2.1 Binary Names ✅ COMPLETED
-- [x] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
-
-**Files:**
-- `src/daemon/CMakeLists.txt` (line 74)
-- `src/simplewallet/CMakeLists.txt` (line 64)
-- `src/wallet/CMakeLists.txt`
-- `src/blockchain_utilities/CMakeLists.txt` (9 entries)
-- `src/debug_utilities/CMakeLists.txt` (3 entries)
-- `src/gen_multisig/CMakeLists.txt`
-- `src/gen_ssl_cert/CMakeLists.txt`
-
-**Required Tests:**
-```bash
 # Build verification test
 #!/bin/bash
 # tests/functional_tests/verify_binary_names.sh
