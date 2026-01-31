@@ -264,3 +264,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Clear DNS checkpoint sources (moneropulse domains)
 
+- [x] Replace Monero hardfork schedule with single v16 entry at height 1
+
