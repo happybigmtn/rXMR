@@ -40,24 +40,6 @@ All documentation now correctly describes **Bonero** (Monero fork):
 
 ### 1.1 Network Magic Bytes and Ports ✅ COMPLETED
 - [x] Set mainnet CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX to 66 (Base58 tag)
-- [x] Change CRYPTONOTE_NAME from "bitmonero" to "bonero"
-
-**File:** `src/cryptonote_config.h` (line 165)
-
-**Required Tests:**
-```cpp
-// tests/unit_tests/bonero_branding.cpp (NEW FILE)
-#include "gtest/gtest.h"
-#include "cryptonote_config.h"
-
-TEST(branding, data_directory_name)
-{
-  ASSERT_STREQ(CRYPTONOTE_NAME, "bonero");
-}
-```
-
-**Functional Test:**
-```bash
 # After building, verify data directory creation
 ./build/release/bin/bonerod --testnet --data-dir=/tmp/bonero-test &
 sleep 5 && pkill bonerod

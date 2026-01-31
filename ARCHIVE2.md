@@ -144,3 +144,22 @@ TEST(address_prefix, monero_addresses_rejected)
 
 ### 1.3 Data Directory ✅ COMPLETED
 
+- [x] Change CRYPTONOTE_NAME from "bitmonero" to "bonero"
+
+**File:** `src/cryptonote_config.h` (line 165)
+
+**Required Tests:**
+```cpp
+// tests/unit_tests/bonero_branding.cpp (NEW FILE)
+#include "gtest/gtest.h"
+#include "cryptonote_config.h"
+
+TEST(branding, data_directory_name)
+{
+  ASSERT_STREQ(CRYPTONOTE_NAME, "bonero");
+}
+```
+
+**Functional Test:**
+```bash
+
