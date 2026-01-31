@@ -99,7 +99,6 @@ grep -q "project(bonero)" CMakeLists.txt || exit 1
 ## Priority 3: Consensus Parameters
 
 ### 3.1 Block Time ✅ COMPLETED
-- [x] Change DIFFICULTY_TARGET_V2 from 120 to 60 seconds
 - [x] Change DIFFICULTY_WINDOW to 1440 (maintain 24h window)
 
 **File:** `src/cryptonote_config.h` (lines 80-82)

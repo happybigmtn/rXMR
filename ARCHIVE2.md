@@ -217,3 +217,5 @@ TEST(branding, currency_unit_name)
 
 ---
 
+- [x] Change DIFFICULTY_TARGET_V2 from 120 to 60 seconds
+
