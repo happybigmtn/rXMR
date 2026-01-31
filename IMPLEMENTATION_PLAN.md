@@ -19,6 +19,8 @@
 >
 > **Review (2026-01-31):** Signed off wallet2 unit name update, wallet RPC rename, blockchain utility docs. Updated functional tests to use `bonero-wallet-rpc` and `bonerod`.
 >
+> **Review (2026-01-31):** Signed off DIFFICULTY_WINDOW 1440 change; updated difficulty test data generators and fixtures; ran `ctest -R difficulty|unit_tests`.
+>
 > **Bug Fix (2026-01-30):** Fixed `cmake/CheckLinkerFlag.cmake` - updated `monero_SOURCE_DIR` → `bonero_SOURCE_DIR` to match project rename
 >
 > **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests).

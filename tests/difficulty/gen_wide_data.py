@@ -4,7 +4,7 @@ from __future__ import print_function
 import random
 
 DIFFICULTY_TARGET = 120
-DIFFICULTY_WINDOW = 720
+DIFFICULTY_WINDOW = 1440
 DIFFICULTY_LAG = 15
 DIFFICULTY_CUT = 60
 
