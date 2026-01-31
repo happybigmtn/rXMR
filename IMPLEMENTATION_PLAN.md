@@ -177,7 +177,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Clear Monero IP seed nodes from net_node.inl
 - [x] Clear Monero DNS seed nodes from net_node.h
 - [x] Clear DNS checkpoint sources from checkpoints.cpp
 - [x] Clear DNS blocklist sources from net_node.inl

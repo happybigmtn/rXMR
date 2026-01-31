@@ -296,3 +296,5 @@ TEST(chain_state, starts_at_version_16)
 
 ### 4.3 Remove Seed Nodes ✅ COMPLETED
 
+- [x] Clear Monero IP seed nodes from net_node.inl
+
