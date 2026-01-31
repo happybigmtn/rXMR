@@ -187,3 +187,10 @@ TEST(branding, data_directory_name)
 **Required Tests:**
 ```bash
 
+- [x] Change project(monero) to project(bonero) in CMakeLists.txt
+
+**File:** `CMakeLists.txt` (line 49)
+
+**Required Tests:**
+```bash
+
