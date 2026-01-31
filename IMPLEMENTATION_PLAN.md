@@ -189,28 +189,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Update dns_checks debug utility
-
-**Files:**
-- `src/p2p/net_node.inl` (lines 731-763)
-- `src/p2p/net_node.h` (lines 305-310)
-- `src/checkpoints/checkpoints.cpp` (lines 304-307)
-
-**Required Tests:**
-```cpp
-// tests/unit_tests/bonero_network.cpp
-TEST(network_identity, no_monero_seed_nodes)
-{
-  // Verify seed node list doesn't contain Monero domains
-  for (const auto& seed : m_seed_nodes_list) {
-    ASSERT_TRUE(seed.find("moneroseeds") == std::string::npos);
-  }
-}
-```
-
----
-
-### 4.4 Generate Genesis Block ✅ COMPLETED
 - [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
 - [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
 - [x] Install libunbound dependency and build project

@@ -308,3 +308,26 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear DNS probe hostname from dns_utils.cpp
 
+- [x] Update dns_checks debug utility
+
+**Files:**
+- `src/p2p/net_node.inl` (lines 731-763)
+- `src/p2p/net_node.h` (lines 305-310)
+- `src/checkpoints/checkpoints.cpp` (lines 304-307)
+
+**Required Tests:**
+```cpp
+// tests/unit_tests/bonero_network.cpp
+TEST(network_identity, no_monero_seed_nodes)
+{
+  // Verify seed node list doesn't contain Monero domains
+  for (const auto& seed : m_seed_nodes_list) {
+    ASSERT_TRUE(seed.find("moneroseeds") == std::string::npos);
+  }
+}
+```
+
+---
+
+### 4.4 Generate Genesis Block ✅ COMPLETED
+
