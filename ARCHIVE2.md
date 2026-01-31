@@ -73,3 +73,5 @@ TEST(network_identity, network_id_differs_from_monero)
 
 - [x] Set mainnet CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX to 98 ('Bo')
 
+- [x] Set testnet prefixes: 136 ('T'), 137 ('Ti'), 146 ('To')
+

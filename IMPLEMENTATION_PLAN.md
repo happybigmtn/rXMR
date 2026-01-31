@@ -38,7 +38,6 @@ All documentation now correctly describes **Bonero** (Monero fork):
 
 ### 1.1 Network Magic Bytes and Ports ✅ COMPLETED
 - [x] Set mainnet CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX to 66 (Base58 tag)
-- [x] Set testnet prefixes: 136 ('T'), 137 ('Ti'), 146 ('To')
 - [x] Set stagenet prefixes: 86 ('S'), 87 ('Si'), 108 ('So')
 
 **File:** `src/cryptonote_config.h` (lines 227-229, 270-272, 285-287)
