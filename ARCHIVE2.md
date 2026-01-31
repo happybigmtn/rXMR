@@ -194,3 +194,5 @@ TEST(branding, data_directory_name)
 **Required Tests:**
 ```bash
 
+- [x] Change "piconero" to "picobon" in cryptonote_format_utils.cpp
+
