@@ -171,3 +171,5 @@ TEST(branding, data_directory_name)
 
 - [x] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
 
+- [x] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
+
