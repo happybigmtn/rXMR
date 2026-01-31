@@ -152,7 +152,6 @@ TEST(block_reward, tail_emission)
 ## Priority 4: Chain State (New Chain)
 
 ### 4.1 Clear Checkpoints ✅ COMPLETED
-- [x] Return true from init_default_checkpoints()
 - [x] Clear DNS checkpoint sources (moneropulse domains)
 - [x] Clear compiled-in mainnet precomputed blocks (`src/blocks/checkpoints.dat`)
 

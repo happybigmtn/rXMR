@@ -260,3 +260,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Remove all testnet/stagenet checkpoints
 
+- [x] Return true from init_default_checkpoints()
+
