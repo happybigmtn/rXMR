@@ -256,3 +256,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Verify FINAL_SUBSIDY_PER_MINUTE remains 300000000000 (0.3 BON/minute = 0.3 BON/block)
 
+- [x] Remove all Monero mainnet checkpoints
+
