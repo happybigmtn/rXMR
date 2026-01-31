@@ -53,10 +53,15 @@ namespace
 
   TEST_F(block_reward_and_already_generated_coins, handles_first_values)
   {
-  	// 17592186044415 from neozaru, confirmed by fluffypony
-    TEST_ALREADY_GENERATED_COINS(0, UINT64_C(17592186044415));
-    TEST_ALREADY_GENERATED_COINS(m_block_reward, UINT64_C(17592169267200));
-    TEST_ALREADY_GENERATED_COINS(UINT64_C(2756434948434199641), UINT64_C(14963444829249));
+    // Bonero: EMISSION_SPEED_FACTOR_PER_MINUTE = 21 (vs Monero's 20)
+    // With 60s blocks (target_minutes=1): effective_factor = 21 - 0 = 21
+    // First block reward = (2^64 - 1) >> 21 = 8796093022207
+    // This is half of Monero's first block reward (17592186044415) because
+    // Monero uses factor 19 with 120s blocks: effective_factor = 20 - 1 = 19
+    TEST_ALREADY_GENERATED_COINS(0, UINT64_C(8796093022207));
+    TEST_ALREADY_GENERATED_COINS(m_block_reward, UINT64_C(8796084633599));
+    // Adjusted expected value for Bonero's emission curve
+    TEST_ALREADY_GENERATED_COINS(UINT64_C(2756434948434199641), UINT64_C(7481722414624));
   }
 
   TEST_F(block_reward_and_already_generated_coins, correctly_steps_from_2_to_1)
