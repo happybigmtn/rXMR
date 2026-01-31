@@ -57,7 +57,6 @@ ls -la /tmp/bonero-test  # Should exist
 ## Priority 2: Branding
 
 ### 2.1 Binary Names ✅ COMPLETED
-- [x] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
 - [x] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
 - [x] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
 

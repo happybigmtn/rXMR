@@ -169,3 +169,5 @@ TEST(branding, data_directory_name)
 
 - [x] Change wallet RPC OUTPUT_NAME from "monero-wallet-rpc" to "bonero-wallet-rpc"
 
+- [x] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
+
