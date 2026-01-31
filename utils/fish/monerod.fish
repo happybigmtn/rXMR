@@ -16,7 +16,7 @@ complete -c monerod -l proxy -r -d "Network communication through proxy: <socks-
 complete -c monerod -l proxy-allow-dns-leaks -d "Allow DNS leaks outside of proxy"
 complete -c monerod -l public-node -d "Allow other users to use the node as a remote (restricted RPC mode, view-only commands) and advertise it over P2P"
 complete -c monerod -l zmq-rpc-bind-ip -r -d "IP for ZMQ RPC server to listen on. Default: 127.0.0.1"
-complete -c monerod -l zmq-rpc-bind-port -r -d "Port for ZMQ RPC server to listen on. Default: 18082, 28082 if 'testnet', 38082 if 'stagenet'"
+complete -c monerod -l zmq-rpc-bind-port -r -d "Port for ZMQ RPC server to listen on. Default: 18882, 28882 if 'testnet', 38882 if 'stagenet'"
 complete -c monerod -l zmq-pub -r -d "Address for ZMQ pub - tcp://ip:port or ipc://path "
 complete -c monerod -l no-zmq -d "Disable ZMQ RPC server [114/349]"
 complete -c monerod -l data-dir -x -a "(__fish_complete_directories)" -d "Specify data directory"
