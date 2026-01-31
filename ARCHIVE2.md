@@ -198,3 +198,22 @@ TEST(branding, data_directory_name)
 
 - [x] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
 
+- [x] Update unit names in wallet2.cpp
+
+**Files:**
+- `src/cryptonote_basic/cryptonote_format_utils.cpp` (line 1162)
+- `src/simplewallet/simplewallet.cpp` (lines 2726, 3523, 4032)
+- `src/wallet/wallet2.cpp` (lines 15893-15894)
+
+**Required Tests:**
+```cpp
+// Add to tests/unit_tests/bonero_branding.cpp
+TEST(branding, currency_unit_name)
+{
+  // Verify smallest unit is "picobon" not "piconero"
+  // This requires checking the format_utils output
+}
+```
+
+---
+
