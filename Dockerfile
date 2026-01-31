@@ -52,7 +52,7 @@ VOLUME /home/monero/.bitmonero
 
 # Generate your wallet via accessing the container and run:
 # cd /wallet
-# monero-wallet-cli
+# bonero-wallet-cli
 VOLUME /wallet
 
 EXPOSE 18880

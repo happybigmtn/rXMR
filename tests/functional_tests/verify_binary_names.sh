@@ -6,6 +6,16 @@
 # Example: ./tests/functional_tests/verify_binary_names.sh build/release/bin
 
 BUILD_DIR="${1:-build/release/bin}"
+BUILD_ROOT="$(cd "$(dirname "$BUILD_DIR")" && pwd)"
+CMAKE_CACHE="$BUILD_ROOT/CMakeCache.txt"
+BUILD_DEBUG_UTILITIES="OFF"
+
+if [[ -f "$CMAKE_CACHE" ]]; then
+  cache_flag=$(grep -m1 "^BUILD_DEBUG_UTILITIES:BOOL=" "$CMAKE_CACHE" | cut -d= -f2)
+  if [[ -n "$cache_flag" ]]; then
+    BUILD_DEBUG_UTILITIES="$cache_flag"
+  fi
+fi
 
 # All expected Bonero binaries (renamed from Monero)
 expected_binaries=(
@@ -21,12 +31,17 @@ expected_binaries=(
   "bonero-blockchain-stats"
   "bonero-blockchain-prune-known-spent-data"
   "bonero-blockchain-prune"
-  "bonero-utils-deserialize"
-  "bonero-utils-object-sizes"
-  "bonero-utils-dns-checks"
   "bonero-gen-trusted-multisig"
   "bonero-gen-ssl-cert"
 )
+
+if [[ "$BUILD_DEBUG_UTILITIES" == "ON" ]]; then
+  expected_binaries+=(
+    "bonero-utils-deserialize"
+    "bonero-utils-object-sizes"
+    "bonero-utils-dns-checks"
+  )
+fi
 
 # Monero binaries that should NOT exist (to verify complete rename)
 forbidden_binaries=(
