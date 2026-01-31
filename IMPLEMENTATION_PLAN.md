@@ -15,7 +15,7 @@
 >
 > **Review (2026-01-31):** Updated functional `tests/functional_tests/validate_address.py` fixtures to Bonero address prefixes; OpenAlias validation now rejects Monero OpenAlias records.
 >
-> **Review (2026-01-31):** Signed off hardfork schedule to single v16 entry at height 1; fixed ideal-version lookup for single-entry schedules; ran `tests/unit_tests/unit_tests --gtest_filter=chain_state.*`.
+> **Review (2026-01-31):** Signed off single-entry v16 hardfork schedule at height 0 (genesis) for mainnet/testnet/stagenet; fixed ideal-version lookup for single-entry schedules; ran `tests/unit_tests/unit_tests --gtest_filter=chain_state.*`.
 >
 > **Review (2026-01-31):** Updated `utils/fish/monerod.fish` ZMQ RPC default port text to 18882/28882/38882 and P2P default port text to 18880/28880/38880.
 >
@@ -182,7 +182,7 @@ TEST(chain_state, no_initial_checkpoints)
 **Target:**
 ```cpp
 const hardfork_t mainnet_hard_forks[] = {
-  { 16, 1, 0, 1735689600 },  // v16 from block 1
+  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
 };
 const size_t num_mainnet_hard_forks = 1;
 const uint64_t mainnet_hard_fork_version_1_till = 0;
@@ -195,7 +195,7 @@ TEST(chain_state, starts_at_version_16)
 {
   ASSERT_EQ(num_mainnet_hard_forks, 1);
   ASSERT_EQ(mainnet_hard_forks[0].version, 16);
-  ASSERT_EQ(mainnet_hard_forks[0].height, 1);
+  ASSERT_EQ(mainnet_hard_forks[0].height, 0);
 }
 ```
 
