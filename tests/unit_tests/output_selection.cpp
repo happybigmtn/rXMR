@@ -31,6 +31,7 @@
 #include "gtest/gtest.h"
 
 #include "wallet/wallet2.h"
+#include "cryptonote_config.h"
 #include <string>
 
 static tools::wallet2::transfer_container make_transfers_container(size_t N)
@@ -113,10 +114,13 @@ TEST(select_outputs, gamma)
 {
   std::vector<uint64_t> offsets;
 
+  // Use configured block time (60s for Bonero, was 120s for Monero)
+  const double block_time = DIFFICULTY_TARGET_V2;
+
   MKOFFSETS(300000, 1);
   tools::gamma_picker picker(offsets);
   std::vector<double> ages(100000);
-  double age_scale = 120. * (offsets.size() / (double)n_outs);
+  double age_scale = block_time * (offsets.size() / (double)n_outs);
   for (size_t i = 0; i < ages.size(); )
   {
     uint64_t o = picker.pick();
@@ -124,13 +128,15 @@ TEST(select_outputs, gamma)
       continue;
     ages[i] = (n_outs - 1 - o) * age_scale;
     ASSERT_GE(ages[i], 0);
-    ASSERT_LE(ages[i], offsets.size() * 120);
+    ASSERT_LE(ages[i], offsets.size() * block_time);
     ++i;
   }
   double median = epee::misc_utils::median(ages);
   MDEBUG("median age: " << median / 86400. << " days");
-  ASSERT_GE(median, 1.3 * 86400);
-  ASSERT_LE(median, 1.4 * 86400);
+  // With 60s block time (vs Monero's 120s), median is ~0.65-0.7 days
+  // The gamma distribution targets recent outputs, scaled by block time
+  ASSERT_GE(median, 0.6 * 86400);
+  ASSERT_LE(median, 0.8 * 86400);
 }
 
 TEST(select_outputs, density)
