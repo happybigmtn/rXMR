@@ -304,3 +304,5 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear DNS blocklist sources from net_node.inl
 
+- [x] Clear DNS update sources from updates.cpp
+
