@@ -191,7 +191,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
 - [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
 - [x] Install libunbound dependency and build project
 - [x] Run: `./bonerod --print-genesis-tx` to generate new genesis transaction

@@ -331,3 +331,5 @@ TEST(network_identity, no_monero_seed_nodes)
 
 ### 4.4 Generate Genesis Block ✅ COMPLETED
 
+- [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
+
