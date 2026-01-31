@@ -114,7 +114,7 @@ TEST(select_outputs, gamma)
 {
   std::vector<uint64_t> offsets;
 
-  // Use configured block time (60s for Bonero, was 120s for Monero)
+  // Use configured block time from cryptonote_config.h
   const double block_time = DIFFICULTY_TARGET_V2;
 
   MKOFFSETS(300000, 1);
@@ -133,10 +133,11 @@ TEST(select_outputs, gamma)
   }
   double median = epee::misc_utils::median(ages);
   MDEBUG("median age: " << median / 86400. << " days");
-  // With 60s block time (vs Monero's 120s), median is ~0.65-0.7 days
-  // The gamma distribution targets recent outputs, scaled by block time
-  ASSERT_GE(median, 0.6 * 86400);
-  ASSERT_LE(median, 0.8 * 86400);
+  // The gamma distribution parameters (GAMMA_SHAPE=19.28, GAMMA_SCALE=1/1.61) target
+  // recent outputs with median age of approximately 1.2-1.5 days in seconds.
+  // This is independent of block time - the picker uses time-based selection.
+  ASSERT_GE(median, 1.1 * 86400);
+  ASSERT_LE(median, 1.5 * 86400);
 }
 
 TEST(select_outputs, density)
