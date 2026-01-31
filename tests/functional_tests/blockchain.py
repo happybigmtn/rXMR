@@ -45,6 +45,10 @@ Test the following RPCs:
 
 from framework.daemon import Daemon
 
+EMISSION_SPEED_FACTOR_PER_MINUTE = 21
+FIRST_BLOCK_REWARD = ((1 << 64) - 1) >> EMISSION_SPEED_FACTOR_PER_MINUTE
+TAIL_EMISSION_REWARD = 300000000000
+
 class BlockchainTest():
     def run_test(self):
         self.reset()
@@ -109,7 +113,7 @@ class BlockchainTest():
             assert block_header.prev_hash == prev_block, prev_block
             assert int(block_header.wide_difficulty, 16) == (block_header.difficulty_top64 << 64) + block_header.difficulty
             assert int(block_header.wide_cumulative_difficulty, 16) == (block_header.cumulative_difficulty_top64 << 64) + block_header.cumulative_difficulty
-            assert block_header.reward >= 600000000000 # tail emission
+            assert block_header.reward >= TAIL_EMISSION_REWARD # tail emission
             cumulative_difficulty += int(block_header.wide_difficulty, 16)
             assert cumulative_difficulty == int(block_header.wide_cumulative_difficulty, 16)
             assert block_header.block_size > 0
@@ -136,7 +140,7 @@ class BlockchainTest():
         assert res_getblocktemplate.height == height + blocks
         assert res_getblocktemplate.reserved_offset > 0
         assert res_getblocktemplate.prev_hash == res_info.top_block_hash
-        assert res_getblocktemplate.expected_reward >= 600000000000
+        assert res_getblocktemplate.expected_reward >= TAIL_EMISSION_REWARD
         assert len(res_getblocktemplate.blocktemplate_blob) > 0
         assert len(res_getblocktemplate.blockhashing_blob) > 0
         assert int(res_getblocktemplate.wide_difficulty, 16) == (res_getblocktemplate.difficulty_top64 << 64) + res_getblocktemplate.difficulty
@@ -209,24 +213,24 @@ class BlockchainTest():
             assert res_sum.fee_amount == int(res_sum.wide_fee_amount, 16)
 
         res = daemon.get_coinbase_tx_sum(0, 1)
-        assert res.emission_amount == 17592186044415
+        assert res.emission_amount == FIRST_BLOCK_REWARD
         assert res.emission_amount_top64 == 0
         assert res.fee_amount == 0
         assert res.fee_amount_top64 == 0
         sum_blocks = height + nblocks - 1
         res = daemon.get_coinbase_tx_sum(0, sum_blocks)
-        extrapolated = 17592186044415 + 17592186044415 * 2 * (sum_blocks - 1)
+        extrapolated = FIRST_BLOCK_REWARD + FIRST_BLOCK_REWARD * 2 * (sum_blocks - 1)
         assert res.emission_amount < extrapolated and res.emission_amount > extrapolated - 1e12
         assert res.fee_amount == 0
         sum_blocks_emission = res.emission_amount
         res = daemon.get_coinbase_tx_sum(1, sum_blocks)
-        assert res.emission_amount == sum_blocks_emission - 17592186044415
+        assert res.emission_amount == sum_blocks_emission - FIRST_BLOCK_REWARD
         assert res.fee_amount == 0
 
-        res = daemon.get_output_distribution([0, 1, 17592186044415], 0, 0)
+        res = daemon.get_output_distribution([0, 1, FIRST_BLOCK_REWARD], 0, 0)
         assert len(res.distributions) == 3
         for a in range(3):
-            assert res.distributions[a].amount == [0, 1, 17592186044415][a]
+            assert res.distributions[a].amount == [0, 1, FIRST_BLOCK_REWARD][a]
             assert res.distributions[a].start_height == 0
             assert res.distributions[a].base == 0
             assert len(res.distributions[a].distribution) == height + nblocks - 1
@@ -237,7 +241,7 @@ class BlockchainTest():
         res = daemon.get_output_histogram([], min_count = 0, max_count = 0)
         assert len(res.histogram) == 2
         for i in range(2):
-            assert res.histogram[i].amount in [0, 17592186044415]
+            assert res.histogram[i].amount in [0, FIRST_BLOCK_REWARD]
             assert res.histogram[i].total_instances in [height + nblocks - 2, 1]
             assert res.histogram[i].unlocked_instances == 0
             assert res.histogram[i].recent_instances == 0

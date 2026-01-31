@@ -12,25 +12,25 @@
 | Difficulty window | 720 blocks (~24h) | 1440 blocks (~24h) | Maintain 24h window |
 | Difficulty lag | 15 blocks | 15 blocks | Keep same |
 
-## Emission (Adjusted for 60s blocks)
+## Emission (Reduced for 60s blocks)
 
-To maintain the same emission schedule as Monero despite 2x faster blocks, all rewards are halved:
+Bonero deliberately slows main emission relative to Monero. With 60s blocks, the effective emission shift is 21 (vs Monero's 19 at 120s), so per-block rewards are 4x smaller; with 2x more blocks, the initial emission rate is ~50% of Monero.
 
 | Parameter | Monero | Bonero |
 |-----------|--------|--------|
-| Initial block reward | ~17.5 XMR | **~8.75 BONER** |
-| Tail emission | 0.6 XMR/block | **0.3 BONER/block** |
-| Main emission period | ~8 years | ~8 years |
-| Total main emission | ~18.4M | ~18.4M BONER |
-| Annual tail inflation | ~157,680 XMR | ~157,680 BONER |
+| Initial block reward | ~17.5 XMR | **~8.75 BNR** |
+| Tail emission | 0.6 XMR/block | **0.3 BNR/block** |
+| Main emission period | ~8 years | ~13.5 years |
+| Total main emission | ~18.4M | ~18.4M BNR |
+| Annual tail inflation | ~157,680 XMR | ~157,680 BNR |
 
 ### Emission Formula
 
 ```
-reward = max(0.3, (2^64 - 1 - already_emitted) * 2^-20 * 10^-12)
+reward = max(0.3, (2^64 - 1 - already_emitted) * 2^-21 * 10^-12)
 ```
 
-Note: Changed from 2^-19 to 2^-20 to halve the reward.
+Note: Changed from 2^-19 to 2^-21. This reduces per-block rewards 4x; with 2x more blocks, the initial emission rate is ~50% of Monero.
 
 ## Privacy Features (all inherited)
 - Ring size: 16 minimum
@@ -44,7 +44,5 @@ Note: Changed from 2^-19 to 2^-20 to halve the reward.
 #define DIFFICULTY_TARGET_V2                               60  // 60 seconds (was 120)
 #define DIFFICULTY_BLOCKS_COUNT_V2                         1440 // 24h window at 60s blocks
 
-// src/cryptonote_basic/cryptonote_basic_impl.cpp
-// Modify get_block_reward() to halve emission:
-// Change shift from 19 to 20 in the emission calculation
+#define EMISSION_SPEED_FACTOR_PER_MINUTE                   21  // 60s blocks -> effective factor 21 (Monero 19)
 ```

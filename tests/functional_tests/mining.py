@@ -38,6 +38,8 @@ import util_resources
 import multiprocessing
 import string
 
+TAIL_EMISSION_REWARD = 300000000000
+
 """Test daemon mining RPC calls
 
 Test the following RPCs:
@@ -118,7 +120,7 @@ class MiningTest():
         assert res_status.threads_count == cores_mine
         assert res_status.address == '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
         assert res_status.is_background_mining_enabled == False
-        assert res_status.block_reward >= 600000000000
+        assert res_status.block_reward >= TAIL_EMISSION_REWARD
 
         # wait till we mined a few of them
         target_height = initial_height + 5
@@ -195,7 +197,7 @@ class MiningTest():
         wallet.refresh()
         res_getbalance = wallet.get_balance()
         balance = res_getbalance.balance
-        assert balance >= prev_balance + (new_height - initial_height) * 600000000000
+        assert balance >= prev_balance + (new_height - initial_height) * TAIL_EMISSION_REWARD
 
         if via_daemon:
             res = daemon.start_mining('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', threads_count = 1, do_background_mining = True)
@@ -206,7 +208,7 @@ class MiningTest():
         assert res_status.threads_count == 1
         assert res_status.address == '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
         assert res_status.is_background_mining_enabled == True
-        assert res_status.block_reward >= 600000000000
+        assert res_status.block_reward >= TAIL_EMISSION_REWARD
 
         # don't wait, might be a while if the machine is busy, which it probably is
         if via_daemon:

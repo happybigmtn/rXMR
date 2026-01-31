@@ -122,7 +122,7 @@ TEST(consensus, difficulty_window_blocks)
 
 // Test suite: Verify emission speed factor is adjusted for 60-second blocks
 // Acceptance: EMISSION_SPEED_FACTOR_PER_MINUTE must be 21 (not Monero's 20)
-// This halves block reward to compensate for 2x faster blocks, maintaining same total emission
+// This halves the 60s block reward, reducing main emission rate vs Monero
 TEST(consensus, emission_factor_adjusted_for_60s_blocks)
 {
   ASSERT_EQ(EMISSION_SPEED_FACTOR_PER_MINUTE, 21);
