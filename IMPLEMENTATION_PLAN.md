@@ -5,6 +5,8 @@
 >
 > **Remaining:** Install Boost headers (`sudo pacman -S boost` on Arch, `libboost-all-dev` on Debian/Ubuntu), resolve protobuf/C++17 requirement (system protobuf requires C++17 while build uses C++11), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
 >
+> **Build/Test Attempt (2026-01-31):** `make -j$(nproc)` failed during CMake with missing Boost headers and protobuf C++17 requirement; unit tests could not be executed.
+>
 > **Bug Fix (2026-01-30):** Fixed `cmake/CheckLinkerFlag.cmake` - updated `monero_SOURCE_DIR` → `bonero_SOURCE_DIR` to match project rename
 >
 > **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound and Boost headers are installed and the protobuf/C++17 build issue is resolved.
