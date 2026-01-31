@@ -10,3 +10,5 @@
 
 - [x] Change P2P_DEFAULT_PORT from 18080 to 18880
 
+- [x] Change RPC_DEFAULT_PORT from 18081 to 18881
+

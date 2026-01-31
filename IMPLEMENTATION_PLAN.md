@@ -31,7 +31,6 @@ All documentation now correctly describes **Bonero** (Monero fork):
 ## Priority 1: Network Identity (CRITICAL PATH)
 
 ### 1.1 Network Magic Bytes and Ports ✅ COMPLETED
-- [x] Change RPC_DEFAULT_PORT from 18081 to 18881
 - [x] Change ZMQ_RPC_DEFAULT_PORT from 18082 to 18882
 - [x] Update testnet ports: 28880/28881/28882
 - [x] Update stagenet ports: 38880/38881/38882
