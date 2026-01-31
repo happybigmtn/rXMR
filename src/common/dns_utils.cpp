@@ -289,14 +289,6 @@ DNSResolver::DNSResolver() : m_data(new DNSResolverData())
 
   add_anchors(m_data->m_ub_context);
 
-  if (!DNS_PUBLIC)
-  {
-    // Bonero: No DNSSEC probe hostname configured yet
-    // When Bonero DNS infrastructure is established, add probe here
-    // For now, skip the DNSSEC verification probe
-    // TODO: Add Bonero DNS probe hostname when available
-    // static const char *probe_hostname = "updates.bonero.org";
-  }
 }
 
 DNSResolver::~DNSResolver()
