@@ -5,6 +5,6 @@
 
 ## Emission Curve
 Inherited from Monero:
-- Initial reward: ~17.5 BNR/block
-- Tail emission: 0.6 BNR/block (perpetual)
-- Total main emission: ~18.4 million BNR
+- Initial reward: ~17.5 BONER/block
+- Tail emission: 0.6 BONER/block (perpetual)
+- Total main emission: ~18.4 million BONER

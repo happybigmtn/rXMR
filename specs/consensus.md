@@ -18,11 +18,11 @@ To maintain the same emission schedule as Monero despite 2x faster blocks, all r
 
 | Parameter | Monero | Bonero |
 |-----------|--------|--------|
-| Initial block reward | ~17.5 XMR | **~8.75 BNR** |
-| Tail emission | 0.6 XMR/block | **0.3 BNR/block** |
+| Initial block reward | ~17.5 XMR | **~8.75 BONER** |
+| Tail emission | 0.6 XMR/block | **0.3 BONER/block** |
 | Main emission period | ~8 years | ~8 years |
-| Total main emission | ~18.4M | ~18.4M BNR |
-| Annual tail inflation | ~157,680 XMR | ~157,680 BNR |
+| Total main emission | ~18.4M | ~18.4M BONER |
+| Annual tail inflation | ~157,680 XMR | ~157,680 BONER |
 
 ### Emission Formula
 
