@@ -1,7 +1,7 @@
 # Bonero Implementation Plan
 
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
-> **Status**: ~60% complete - network identity, address prefixes, consensus params, binary names, chain state (checkpoints/hardforks/seeds) done
+> **Status**: ~75% complete - network identity, address prefixes, consensus params, binary names, chain state, branding, version strings done
 
 ---
 
@@ -237,10 +237,10 @@ grep -q "project(bonero)" CMakeLists.txt || exit 1
 
 ---
 
-### 2.3 Currency Unit Names
-- [ ] Change "piconero" to "picobon" in cryptonote_format_utils.cpp
-- [ ] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
-- [ ] Update unit names in wallet2.cpp
+### 2.3 Currency Unit Names ✅ COMPLETED
+- [x] Change "piconero" to "picobon" in cryptonote_format_utils.cpp
+- [x] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
+- [x] Update unit names in wallet2.cpp
 
 **Files:**
 - `src/cryptonote_basic/cryptonote_format_utils.cpp` (line 1162)
@@ -490,9 +490,11 @@ TEST(security, message_signing_domain)
 
 ---
 
-### 5.3 Update Version Strings
-- [ ] Change version string constants from "Monero" to "Bonero"
-- [ ] Update release name
+### 5.3 Update Version Strings ✅ COMPLETED
+- [x] Change version string constants from "Monero" to "Bonero"
+- [x] Update release name to "Genesis" (v0.1.0)
+- [x] Update all MONERO_VERSION* references to BONERO_VERSION* across 26 source files
+- [x] Update version.h and version.cpp.in headers
 
 **File:** `src/version.cpp.in`
 
