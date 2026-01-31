@@ -300,3 +300,5 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear Monero DNS seed nodes from net_node.h
 
+- [x] Clear DNS checkpoint sources from checkpoints.cpp
+

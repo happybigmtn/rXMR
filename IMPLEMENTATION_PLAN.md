@@ -181,7 +181,6 @@ TEST(chain_state, no_initial_checkpoints)
 ---
 
 ### 4.2 Clear Hardforks History ✅ COMPLETED
-- [x] Clear DNS checkpoint sources from checkpoints.cpp
 - [x] Clear DNS blocklist sources from net_node.inl
 - [x] Clear DNS update sources from updates.cpp
 - [x] Clear DNS probe hostname from dns_utils.cpp
