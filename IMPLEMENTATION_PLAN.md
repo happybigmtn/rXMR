@@ -5,7 +5,7 @@
 >
 > **Remaining:** Install libunbound (`sudo pacman -S unbound`), build project (`make`), generate new genesis TX with `--print-genesis-tx`, mine nonces
 >
-> **Code Verification:** All unit tests (39 tests across 4 test files) have been verified to be correctly written and will pass once the project builds successfully.
+> **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound is installed and project builds.
 
 ---
 
