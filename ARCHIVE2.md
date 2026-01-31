@@ -12,3 +12,5 @@
 
 - [x] Change RPC_DEFAULT_PORT from 18081 to 18881
 
+- [x] Change ZMQ_RPC_DEFAULT_PORT from 18082 to 18882
+
