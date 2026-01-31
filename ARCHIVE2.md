@@ -268,3 +268,31 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Set mainnet_hard_fork_version_1_till to 0
 
+- [x] Update testnet/stagenet similarly
+
+**File:** `src/hardforks/hardforks.cpp` (lines 34-78)
+
+**Target:**
+```cpp
+const hardfork_t mainnet_hard_forks[] = {
+  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
+};
+const size_t num_mainnet_hard_forks = 1;
+const uint64_t mainnet_hard_fork_version_1_till = 0;
+```
+
+**Required Tests:**
+```cpp
+// tests/unit_tests/bonero_chain.cpp
+TEST(chain_state, starts_at_version_16)
+{
+  ASSERT_EQ(num_mainnet_hard_forks, 1);
+  ASSERT_EQ(mainnet_hard_forks[0].version, 16);
+  ASSERT_EQ(mainnet_hard_forks[0].height, 0);
+}
+```
+
+---
+
+### 4.3 Remove Seed Nodes ✅ COMPLETED
+
