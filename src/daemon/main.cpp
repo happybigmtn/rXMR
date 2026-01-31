@@ -226,7 +226,7 @@ int main(int argc, char const * argv[])
       // Construct the genesis coinbase transaction
       cryptonote::transaction tx;
       const uint8_t hf_version = 16; // Bonero starts at hardfork version 16
-      blobdata extra_nonce(genesis_message.begin(), genesis_message.end());
+      cryptonote::blobdata extra_nonce(genesis_message.begin(), genesis_message.end());
 
       bool success = cryptonote::construct_miner_tx(
         0,                    // height: genesis block is height 0
@@ -248,7 +248,7 @@ int main(int argc, char const * argv[])
       }
 
       // Serialize and print the transaction as hex
-      blobdata tx_blob;
+      cryptonote::blobdata tx_blob;
       if (!t_serializable_object_to_blob(tx, tx_blob))
       {
         std::cerr << "Failed to serialize genesis transaction" << std::endl;

@@ -27,6 +27,8 @@
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <map>
+#include <boost/asio/executor_work_guard.hpp>
+#include <boost/asio/io_context.hpp>
 #include "cryptonote_basic/cryptonote_basic.h"
 #include "cryptonote_basic/tx_extra.h"
 #include "cryptonote_core/cryptonote_core.h"
@@ -70,8 +72,8 @@ int main(int argc, char* argv[])
   mlog_configure("", true);
 
   SL(boost::thread);
-  SL(boost::asio::io_service);
-  SL(boost::asio::io_service::work);
+  SL(boost::asio::io_context);
+  SL(boost::asio::executor_work_guard<boost::asio::io_context::executor_type>);
   SL(boost::asio::deadline_timer);
 
   SL(cryptonote::DB_ERROR);

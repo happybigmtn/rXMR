@@ -17,6 +17,8 @@
 >
 > **Review (2026-01-31):** Updated `utils/fish/monerod.fish` P2P default port text to 18880/28880/38880.
 >
+> **Review (2026-01-31):** Fixed `cryptonote::blobdata` qualification in `src/daemon/main.cpp` and updated `src/debug_utilities/object_sizes.cpp` to use `boost::asio::io_context` so debug utilities build with newer Boost.
+>
 > **Bug Fix (2026-01-30):** Fixed `cmake/CheckLinkerFlag.cmake` - updated `monero_SOURCE_DIR` → `bonero_SOURCE_DIR` to match project rename
 >
 > **Code Verification (2026-01-30):** All unit tests (39 tests across 4 test files) have been verified to be correctly written. Test files: `bonero_network.cpp` (10 tests), `bonero_address.cpp` (14 tests), `bonero_branding.cpp` (4 tests), `bonero_chain.cpp` (11 tests). Tests will pass once libunbound and Boost headers are installed and the protobuf/C++17 build issue is resolved.
