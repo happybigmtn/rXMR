@@ -33,6 +33,7 @@
 
 #include "gtest/gtest.h"
 #include "cryptonote_config.h"
+#include "cryptonote_basic/cryptonote_format_utils.h"
 #include <cstring>
 
 // Test suite: Verify data directory name
@@ -63,4 +64,11 @@ TEST(branding, message_signing_domain)
 TEST(branding, message_signing_domain_not_monero)
 {
   ASSERT_STRNE(config::HASH_KEY_MESSAGE_SIGNING, "MoneroMessageSignature");
+}
+
+// Test suite: Verify smallest currency unit name
+// Acceptance: get_unit(0) returns "picobon" (not "piconero")
+TEST(branding, currency_unit_name)
+{
+  ASSERT_EQ(cryptonote::get_unit(0), "picobon");
 }
