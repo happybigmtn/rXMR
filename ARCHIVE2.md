@@ -8,3 +8,5 @@
 
 - [x] Change NETWORK_ID for stagenet (ending `0x12`)
 
+- [x] Change P2P_DEFAULT_PORT from 18080 to 18880
+
