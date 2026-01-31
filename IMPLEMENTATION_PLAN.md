@@ -21,6 +21,8 @@
 >
 > **Review (2026-01-31):** Signed off `init_default_checkpoints()` returning true for a fresh chain; ran `unit_tests --gtest_filter=chain_state.*`.
 >
+> **Review (2026-01-31):** Signed off removal of Monero IP seed nodes from `src/p2p/net_node.inl`; ran `unit_tests --gtest_filter=network_identity.*`.
+>
 > **Review (2026-01-31):** Fixed unit test build errors (`cryptonote::blobdata` qualification in `tests/unit_tests/bonero_chain.cpp`, `BONERO_VERSION` in `tests/unit_tests/rpc_version_str.cpp`) and updated address-prefix tests to validate decoded Base58 tags instead of assuming the first character.
 >
 > **Review (2026-01-31):** Fixed `cryptonote::blobdata` qualification in `src/daemon/main.cpp` and updated `src/debug_utilities/object_sizes.cpp` to use `boost::asio::io_context` so debug utilities build with newer Boost.
