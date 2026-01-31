@@ -152,7 +152,6 @@ TEST(block_reward, tail_emission)
 ## Priority 4: Chain State (New Chain)
 
 ### 4.1 Clear Checkpoints ✅ COMPLETED
-- [x] Clear DNS checkpoint sources (moneropulse domains)
 - [x] Clear compiled-in mainnet precomputed blocks (`src/blocks/checkpoints.dat`)
 
 **Files:** `src/checkpoints/checkpoints.cpp` (lines 183-260), `src/blocks/checkpoints.dat`

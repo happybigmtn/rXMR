@@ -262,3 +262,5 @@ TEST(consensus, difficulty_window_blocks)
 
 - [x] Return true from init_default_checkpoints()
 
+- [x] Clear DNS checkpoint sources (moneropulse domains)
+
