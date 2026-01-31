@@ -163,3 +163,5 @@ TEST(branding, data_directory_name)
 **Functional Test:**
 ```bash
 
+- [x] Change daemon OUTPUT_NAME from "monerod" to "bonerod"
+
