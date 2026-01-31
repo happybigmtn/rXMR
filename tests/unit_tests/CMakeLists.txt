@@ -31,6 +31,9 @@ set(unit_tests_sources
   apply_permutation.cpp
   address_from_url.cpp
   base58.cpp
+  bonero_address.cpp
+  bonero_branding.cpp
+  bonero_network.cpp
   blockchain_db.cpp
   block_queue.cpp
   block_reward.cpp
