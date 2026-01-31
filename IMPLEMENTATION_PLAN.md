@@ -437,6 +437,8 @@ TEST(network_identity, no_monero_seed_nodes)
 - [ ] Update GENESIS_NONCE in cryptonote_config.h with mined nonce
 - [ ] Repeat for testnet/stagenet genesis blocks
 
+**⚠️ Note:** Stagenet GENESIS_TX currently uses Monero's original value. It should be regenerated with `--print-genesis-tx --stagenet` for full consistency, though this is lower priority than mainnet genesis.
+
 **Genesis message:** "Bonero Genesis - 2026: Private money for private machines"
 
 **Files Modified:**
