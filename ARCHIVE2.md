@@ -167,3 +167,5 @@ TEST(branding, data_directory_name)
 
 - [x] Change wallet CLI OUTPUT_NAME from "monero-wallet-cli" to "bonero-wallet-cli"
 
+- [x] Change wallet RPC OUTPUT_NAME from "monero-wallet-rpc" to "bonero-wallet-rpc"
+
