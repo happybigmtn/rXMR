@@ -67,3 +67,5 @@ TEST(network_identity, network_id_differs_from_monero)
 
 ### 1.2 Address Prefixes ✅ COMPLETED
 
+- [x] Set mainnet CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX to 66 ('B')
+
