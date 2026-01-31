@@ -302,3 +302,5 @@ TEST(chain_state, starts_at_version_16)
 
 - [x] Clear DNS checkpoint sources from checkpoints.cpp
 
+- [x] Clear DNS blocklist sources from net_node.inl
+
