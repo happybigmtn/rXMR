@@ -731,33 +731,25 @@ namespace nodetool
   std::set<std::string> node_server<t_payload_net_handler>::get_ip_seed_nodes() const
   {
     std::set<std::string> full_addrs;
+    // Bonero: No seed node infrastructure yet
+    // When Bonero seed nodes are established, add them here with the correct ports:
+    // - Mainnet: 18880
+    // - Testnet: 28880
+    // - Stagenet: 38880
     if (m_nettype == cryptonote::TESTNET)
     {
-      full_addrs.insert("176.9.0.187:28080");
-      full_addrs.insert("192.99.8.110:28080");
-      full_addrs.insert("37.187.74.171:28080");
-      full_addrs.insert("88.99.195.15:28080");
-      full_addrs.insert("5.104.84.64:28080");
+      // TODO: Add Bonero testnet seed nodes
     }
     else if (m_nettype == cryptonote::STAGENET)
     {
-      full_addrs.insert("176.9.0.187:38080");
-      full_addrs.insert("192.99.8.110:38080");
-      full_addrs.insert("37.187.74.171:38080");
-      full_addrs.insert("88.99.195.15:38080");
-      full_addrs.insert("5.104.84.64:38080");
+      // TODO: Add Bonero stagenet seed nodes
     }
     else if (m_nettype == cryptonote::FAKECHAIN)
     {
     }
     else
     {
-      full_addrs.insert("176.9.0.187:18080");
-      full_addrs.insert("88.198.163.90:18080");
-      full_addrs.insert("192.99.8.110:18080");
-      full_addrs.insert("37.187.74.171:18080");
-      full_addrs.insert("88.99.195.15:18080");
-      full_addrs.insert("5.104.84.64:18080");
+      // TODO: Add Bonero mainnet seed nodes
     }
     return full_addrs;
   }
@@ -2142,14 +2134,11 @@ namespace nodetool
     if (m_nettype != cryptonote::MAINNET)
       return true;
 
+    // Bonero: No DNS blocklist infrastructure yet
+    // When Bonero blocklist DNS is established, add domains here
     static const std::vector<std::string> dns_urls = {
-      "blocklist.moneropulse.se"
-    , "blocklist.moneropulse.org"
-    , "blocklist.moneropulse.net"
-    , "blocklist.moneropulse.no"
-    , "blocklist.moneropulse.fr"
-    , "blocklist.moneropulse.de"
-    , "blocklist.moneropulse.ch"
+      // TODO: Add Bonero blocklist DNS domains
+      // "blocklist.bonero.org"
     };
 
     std::vector<std::string> records;

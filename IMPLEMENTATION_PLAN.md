@@ -1,7 +1,7 @@
 # Bonero Implementation Plan
 
 > Fork of Monero v0.18.4.5 for AI agents with privacy by default.
-> **Status**: ~40% complete - network identity, address prefixes, consensus params, binary names done
+> **Status**: ~60% complete - network identity, address prefixes, consensus params, binary names, chain state (checkpoints/hardforks/seeds) done
 
 ---
 
@@ -344,10 +344,11 @@ TEST(block_reward, tail_emission)
 
 ## Priority 4: Chain State (New Chain)
 
-### 4.1 Clear Checkpoints
-- [ ] Remove all Monero mainnet checkpoints
-- [ ] Remove all testnet/stagenet checkpoints
-- [ ] Return true from init_default_checkpoints()
+### 4.1 Clear Checkpoints ✅ COMPLETED
+- [x] Remove all Monero mainnet checkpoints
+- [x] Remove all testnet/stagenet checkpoints
+- [x] Return true from init_default_checkpoints()
+- [x] Clear DNS checkpoint sources (moneropulse domains)
 
 **File:** `src/checkpoints/checkpoints.cpp` (lines 183-260)
 
@@ -367,10 +368,10 @@ TEST(chain_state, no_initial_checkpoints)
 
 ---
 
-### 4.2 Clear Hardforks History
-- [ ] Replace Monero hardfork schedule with single v16 entry at height 1
-- [ ] Set mainnet_hard_fork_version_1_till to 0
-- [ ] Update testnet/stagenet similarly
+### 4.2 Clear Hardforks History ✅ COMPLETED
+- [x] Replace Monero hardfork schedule with single v16 entry at height 1
+- [x] Set mainnet_hard_fork_version_1_till to 0
+- [x] Update testnet/stagenet similarly
 
 **File:** `src/hardforks/hardforks.cpp` (lines 34-78)
 
@@ -396,10 +397,14 @@ TEST(chain_state, starts_at_version_16)
 
 ---
 
-### 4.3 Remove Seed Nodes
-- [ ] Clear Monero IP seed nodes from net_node.inl
-- [ ] Clear Monero DNS seed nodes from net_node.h
-- [ ] Clear DNS checkpoint sources from checkpoints.cpp
+### 4.3 Remove Seed Nodes ✅ COMPLETED
+- [x] Clear Monero IP seed nodes from net_node.inl
+- [x] Clear Monero DNS seed nodes from net_node.h
+- [x] Clear DNS checkpoint sources from checkpoints.cpp
+- [x] Clear DNS blocklist sources from net_node.inl
+- [x] Clear DNS update sources from updates.cpp
+- [x] Clear DNS probe hostname from dns_utils.cpp
+- [x] Update dns_checks debug utility
 
 **Files:**
 - `src/p2p/net_node.inl` (lines 731-763)

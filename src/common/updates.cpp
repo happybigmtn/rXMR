@@ -44,16 +44,17 @@ namespace tools
 
     MDEBUG("Checking updates for " << buildtag << " " << software);
 
-    // All four MoneroPulse domains have DNSSEC on and valid
+    // Bonero: No update DNS infrastructure yet
+    // When Bonero update servers are established, add them here
     static const std::vector<std::string> dns_urls = {
-        "updates.moneropulse.org",
-        "updates.moneropulse.net",
-        "updates.moneropulse.fr",
-        "updates.moneropulse.de",
-        "updates.moneropulse.no",
-        "updates.moneropulse.ch",
-        "updates.moneropulse.se"
+        // TODO: Add Bonero update DNS domains
+        // "updates.bonero.org",
+        // "updates.bonero.net",
     };
+
+    // Return false if no DNS infrastructure configured
+    if (dns_urls.empty())
+      return false;
 
     if (!tools::dns_utils::load_txt_records_from_dns(records, dns_urls))
       return false;
