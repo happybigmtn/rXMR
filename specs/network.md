@@ -17,5 +17,7 @@
 | Mainnet | ZMQ | 18882 |
 | Testnet | P2P | 28880 |
 | Testnet | RPC | 28881 |
+| Testnet | ZMQ | 28882 |
 | Stagenet | P2P | 38880 |
 | Stagenet | RPC | 38881 |
+| Stagenet | ZMQ | 38882 |
