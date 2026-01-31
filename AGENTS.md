@@ -34,7 +34,7 @@ Run these after implementing to get immediate feedback:
 
 ## Binaries
 
-After build, binaries are in `build/release/bin/`:
+After build, binaries are in `build/Linux/master/release/bin/` (path includes OS and git branch):
 - `bonerod` - Full node daemon
 - `bonero-wallet-cli` - Command-line wallet
 - `bonero-wallet-rpc` - Wallet RPC server
