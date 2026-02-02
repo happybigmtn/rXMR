@@ -2,207 +2,120 @@
 
 **Private money for private machines.**
 
-Bonero is a privacy-focused cryptocurrency fork of Monero v0.18.4.5, designed for AI agents.
+A Monero fork for AI agents. Ring signatures, stealth addresses, RandomX mining. Nobody sees who sent what to whom.
 
-## Quick Start (For AI Agents)
+## Quick Install
 
 ```bash
-# 1. Clone with submodules
-git clone --recursive https://github.com/happybigmtn/bonero.git
-cd bonero
-
-# 2. Install dependencies (Ubuntu/Debian 22.04+)
-apt-get update && apt-get install -y \
-    build-essential cmake pkg-config git \
-    libboost-all-dev libssl-dev libzmq3-dev \
-    libunbound-dev libsodium-dev libhidapi-dev \
-    liblzma-dev libreadline-dev libexpat1-dev \
-    libusb-1.0-0-dev libudev-dev
-
-# 3. Build
-mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
-
-# 4. Start mining (replace WALLET_ADDRESS with your address)
-./bin/bonerod --detach \
-    --start-mining YOUR_WALLET_ADDRESS \
-    --mining-threads 2 \
-    --add-exclusive-node 185.218.126.23:18080 \
-    --add-exclusive-node 185.239.209.227:18080
+curl -fsSL https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh | bash
 ```
 
-## Network Specifications
+Or verify first:
+```bash
+curl -fsSLO https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh
+less install.sh
+bash install.sh --add-path
+```
 
-| Aspect | Value |
-|--------|-------|
-| Address Prefix | `C` (standard), `c` (subaddress) |
+## Start Mining
+
+```bash
+# 1. Create wallet
+bonero-wallet-cli --generate-new-wallet=mywallet
+# Save your seed phrase!
+
+# 2. Start mining (replace ADDRESS with your C... address)
+bonerod --detach \
+    --start-mining ADDRESS \
+    --mining-threads 4 \
+    --add-peer 95.111.227.14:18080 \
+    --add-peer 185.218.126.23:18080
+```
+
+Done. You're mining private cryptocurrency.
+
+## What is Bonero?
+
+| Feature | Value |
+|---------|-------|
+| Algorithm | RandomX (CPU-mineable) |
+| Block time | ~120 seconds |
+| Privacy | Ring signatures + stealth addresses |
+| Address prefix | `C` |
 | P2P Port | 18080 |
-| RPC Port | 18881 |
-| Data Directory | `~/.bonero` |
-| Algorithm | RandomX (CPU-optimized) |
-| Block Time | ~120 seconds |
+| RPC Port | 18081 |
+
+Based on Monero v0.18.4.5. All the privacy features, designed for AI agents.
 
 ## Seed Nodes
 
-Connect to the live network using these seed nodes:
-
 ```
+95.111.227.14:18080
+95.111.229.108:18080
+95.111.239.142:18080
+161.97.83.147:18080
+161.97.97.83:18080
+161.97.114.192:18080
+161.97.117.0:18080
+194.163.144.177:18080
 185.218.126.23:18080
 185.239.209.227:18080
 ```
 
-## Building from Source
+## Build from Source
 
-### Prerequisites
-
-**Ubuntu 22.04+ / Debian 12+:**
-```bash
-apt-get update && apt-get install -y \
-    build-essential cmake pkg-config git \
-    libboost-all-dev libssl-dev libzmq3-dev \
-    libunbound-dev libsodium-dev libhidapi-dev \
-    liblzma-dev libreadline-dev libexpat1-dev \
-    libusb-1.0-0-dev libudev-dev
-```
-
-**Runtime dependencies (if using pre-built binaries):**
-```bash
-apt-get install -y libzmq5 libhidapi-libusb0 libunbound8
-```
-
-### Clone and Build
+If the install script doesn't work:
 
 ```bash
-# Clone repository
-git clone https://github.com/happybigmtn/bonero.git
+# Ubuntu/Debian
+sudo apt-get install -y build-essential cmake pkg-config \
+    libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
+    libsodium-dev libhidapi-dev liblzma-dev libreadline-dev
+
+# Clone
+git clone --recursive https://github.com/happybigmtn/bonero.git
 cd bonero
-
-# Initialize submodules (REQUIRED - build will fail without this!)
 git submodule update --init --recursive
 
-# Create build directory
+# Build (10-20 min)
 mkdir -p build && cd build
-
-# Configure and build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
-
-# Binaries are in build/bin/
-ls -la bin/bonerod bin/bonero-wallet-cli
 ```
 
-### Common Build Errors
+macOS:
+```bash
+brew install cmake boost openssl zmq unbound libsodium hidapi
+```
 
-| Error | Fix |
-|-------|-----|
-| `check_submodule` CMake error | Run `git submodule update --init --recursive` |
-| `Could not find libunbound` | Install `libunbound-dev` |
-| `Could not find Boost` | Install `libboost-all-dev` |
-| `Could not find OpenSSL` | Install `libssl-dev` |
-
-## Running a Node
-
-### Start the Daemon
+## Commands
 
 ```bash
-# Start daemon and connect to network
-bonerod --detach \
-    --add-exclusive-node 185.218.126.23:18080 \
-    --add-exclusive-node 185.239.209.227:18080
+# Check height
+curl -s http://127.0.0.1:18081/json_rpc \
+    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' | jq '.result.height'
 
-# Check sync status
-curl -s http://127.0.0.1:18881/json_rpc \
-    -d '{jsonrpc:2.0,id:0,method:get_info}' | grep height
+# Stop daemon
+pkill bonerod
+
+# Check wallet
+bonero-wallet-cli --wallet-file=mywallet
 ```
 
-### Create a Wallet
+## Privacy
 
-```bash
-bonero-wallet-cli --generate-new-wallet=mywallet
-```
+Unlike transparent blockchains, Bonero transactions are private by default:
 
-Save the seed phrase! Your wallet address will start with `C`.
+- **Ring signatures** - hides which input is spent
+- **Stealth addresses** - hides the recipient  
+- **RingCT** - hides amounts
 
-## Mining
-
-Bonero uses RandomX proof-of-work, optimized for CPUs.
-
-### Simple Mining (Recommended)
-
-```bash
-# Start daemon with mining enabled
-bonerod --detach \
-    --start-mining YOUR_WALLET_ADDRESS \
-    --mining-threads 2 \
-    --add-exclusive-node 185.218.126.23:18080 \
-    --add-exclusive-node 185.239.209.227:18080
-```
-
-### Mining Script for AI Agents
-
-```bash
-#!/bin/bash
-# bonero-miner.sh
-
-WALLET="YOUR_WALLET_ADDRESS"
-THREADS=2
-SEEDS="--add-exclusive-node 185.218.126.23:18080 --add-exclusive-node 185.239.209.227:18080"
-
-# Kill existing daemon
-pkill -9 bonerod 2>/dev/null
-sleep 2
-
-# Start mining
-cd /path/to/bonero/build/bin
-./bonerod --detach \
-    --data-dir ~/.bonero \
-    --log-file ~/.bonero/bonerod.log \
-    --start-mining $WALLET \
-    --mining-threads $THREADS \
-    $SEEDS \
-    --p2p-bind-ip 0.0.0.0 \
-    --p2p-bind-port 18080 \
-    --rpc-bind-ip 127.0.0.1 \
-    --rpc-bind-port 18881
-
-echo "Mining started. Check status:"
-echo "curl -s http://127.0.0.1:18881/json_rpc -d '{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"get_info\"}' | grep height"
-```
-
-### Check Mining Status
-
-```bash
-# Get current height and difficulty
-curl -s http://127.0.0.1:18881/json_rpc \
-    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' | \
-    grep -E "height|difficulty"
-```
-
-## Differences from Monero
-
-| Aspect | Monero | Bonero |
-|--------|--------|--------|
-| Addresses | Start with `4` | Start with `C` |
-| P2P Port | 18080 | 18080 |
-| RPC Port | 18081 | 18881 |
-| Data Dir | .bitmonero | .bonero |
-| Binaries | monero* | bonero* |
-
-## Binaries
-
-After building, these executables are in `build/bin/`:
-
-| Binary | Purpose |
-|--------|---------|
-| `bonerod` | Main daemon - runs a full node and mines |
-| `bonero-wallet-cli` | Interactive wallet for sending/receiving |
-| `bonero-wallet-rpc` | Wallet RPC server for automation |
+You can verify blocks exist. You can't see who's transacting.
 
 ## License
 
-Same as Monero - see [LICENSE](LICENSE)
+Same as Monero - see [LICENSE](LICENSE).
 
 ---
 
-*Forked from [Monero](https://github.com/monero-project/monero) for the AI agent economy.*
+*01100110 01110010 01100101 01100101*

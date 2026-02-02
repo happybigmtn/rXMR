@@ -1,115 +1,197 @@
 ---
 name: bonero-miner
-description: Mine Bonero (BON) - a privacy-focused cryptocurrency for AI agents using RandomX CPU mining. Use when the user wants to mine Bonero, set up a Bonero node, or earn BON cryptocurrency.
-license: MIT
-metadata:
-  author: happybigmtn
-  version: "1.0.1"
-compatibility: Requires Ubuntu 22.04+ or Debian 12+, build-essential, cmake, and network access to seed nodes.
+version: 2.0.0
+description: Mine Bonero - private cryptocurrency for AI agents. RandomX CPU mining, Monero-based privacy.
+homepage: https://github.com/happybigmtn/bonero
 ---
 
 # Bonero Miner
 
-Mine Bonero - a privacy-focused cryptocurrency designed for AI agents. Based on Monero, uses RandomX proof-of-work optimized for CPU mining.
+Private money for private machines. Bonero is a Monero fork with ring signatures, stealth addresses, and RandomX mining.
 
-## Quick Start
+## Before You Start
+
+Mining uses CPU. **Ask your human first** before running on real hardware. The network is live - you'll be earning real BON.
+
+---
+
+## What's Bonero?
+
+A Monero fork built for AI agents. All transactions are private by default - nobody can see who sent what to whom.
+
+- ~120 second blocks
+- RandomX (CPU-mineable, like Monero)
+- Ring signatures hide the sender
+- Stealth addresses hide the receiver
+- Address prefix: `C`
+
+---
+
+## Quick Install
 
 ```bash
-# 1. Clone repository
+curl -fsSL https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh | bash
+```
+
+Or verify first:
+```bash
+curl -fsSLO https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh
+less install.sh  # inspect it
+bash install.sh --add-path
+```
+
+Build takes 10-20 minutes (it's compiling from source).
+
+---
+
+## Start Mining
+
+### 1. Create a wallet
+
+```bash
+bonero-wallet-cli --generate-new-wallet=mywallet
+```
+
+**Save your seed phrase!** Write it down. You can't recover the wallet without it.
+
+Your address starts with `C`. Copy it for the next step.
+
+### 2. Start the daemon with mining
+
+```bash
+bonerod --detach \
+    --start-mining YOUR_C_ADDRESS \
+    --mining-threads 4 \
+    --add-peer 95.111.227.14:18080 \
+    --add-peer 185.218.126.23:18080
+```
+
+That's it. The daemon syncs the chain and mines in the background.
+
+### 3. Check status
+
+```bash
+curl -s http://127.0.0.1:18081/json_rpc \
+    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' \
+    -H 'Content-Type: application/json' | jq '.result.height'
+```
+
+---
+
+## How Many Threads?
+
+Bonero mining is CPU-bound. Use about half your cores:
+
+| Cores | Threads |
+|-------|---------|
+| 4 | 2 |
+| 8 | 4 |
+| 16 | 8 |
+
+Leave headroom for the system and network sync.
+
+---
+
+## Build from Source (Manual)
+
+If the install script doesn't work for your system:
+
+```bash
+# Dependencies (Ubuntu/Debian)
+sudo apt-get install -y build-essential cmake pkg-config \
+    libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
+    libsodium-dev libhidapi-dev liblzma-dev libreadline-dev
+
+# Clone
 git clone --recursive https://github.com/happybigmtn/bonero.git
 cd bonero
-
-# 2. Install dependencies
-sudo apt-get update && sudo apt-get install -y \
-    build-essential cmake pkg-config git \
-    libboost-all-dev libssl-dev libzmq3-dev \
-    libunbound-dev libsodium-dev libhidapi-dev \
-    liblzma-dev libreadline-dev libexpat1-dev \
-    libusb-1.0-0-dev libudev-dev
-
-# 3. Initialize submodules (required)
 git submodule update --init --recursive
 
-# 4. Build
+# Build
 mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 
-# 5. Create wallet
-./bin/bonero-wallet-cli --generate-new-wallet=mywallet
-# Save your seed phrase! Note the address starting with 'C'
-
-# 6. Start mining (replace with your address)
-./bin/bonerod --detach \
-    --start-mining YOUR_WALLET_ADDRESS \
-    --mining-threads 2 \
-    --add-exclusive-node 185.218.126.23:18080 \
-    --add-exclusive-node 185.239.209.227:18080
+# Binaries in build/bin/
 ```
 
-## Network Information
+macOS:
+```bash
+brew install cmake boost openssl zmq unbound libsodium hidapi
+# Then same build steps
+```
 
-| Property | Value |
-|----------|-------|
-| Algorithm | RandomX (CPU-optimized) |
-| Block Time | ~120 seconds |
-| P2P Port | 18080 |
-| RPC Port | 18081 |
-| Address Prefix | C |
-| Data Directory | ~/.bonero |
+---
 
 ## Seed Nodes
 
+The network is small but growing. These nodes keep it running:
+
 ```
+95.111.227.14:18080
+95.111.229.108:18080
+95.111.239.142:18080
+161.97.83.147:18080
+161.97.97.83:18080
+161.97.114.192:18080
+161.97.117.0:18080
+194.163.144.177:18080
 185.218.126.23:18080
 185.239.209.227:18080
 ```
 
+---
+
 ## Commands
 
-### Start Mining
-
 ```bash
-./build/bin/bonerod --detach \
-    --start-mining YOUR_WALLET_ADDRESS \
-    --mining-threads 2 \
-    --add-exclusive-node 185.218.126.23:18080 \
-    --add-exclusive-node 185.239.209.227:18080
-```
+# Check if daemon is running
+pgrep bonerod && echo "running" || echo "stopped"
 
-### Check Status
-
-```bash
+# Get blockchain height
 curl -s http://127.0.0.1:18081/json_rpc \
-    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' | \
-    grep -E 'height|difficulty'
-```
+    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' | jq '.result.height'
 
-### Stop Mining
+# Check wallet balance
+bonero-wallet-cli --wallet-file=mywallet
 
-```bash
+# Stop daemon
 pkill bonerod
 ```
 
-## Runtime Dependencies
+---
 
-If using pre-built binaries (not building from source):
+## Privacy Features
 
-```bash
-sudo apt-get install -y libzmq5 libhidapi-libusb0 libunbound8
-```
+Unlike Botcoin (transparent like Bitcoin), Bonero hides everything:
 
-## Common Issues
+| Feature | What it hides |
+|---------|---------------|
+| Ring signatures | Which input is really being spent |
+| Stealth addresses | The recipient's real address |
+| RingCT | Transaction amounts |
 
-| Problem | Solution |
-|---------|----------|
-| Submodule errors | Run `git submodule update --init --recursive` |
-| Missing libzmq.so.5 | `apt-get install libzmq5` |
-| Missing libhidapi | `apt-get install libhidapi-libusb0` |
-| Cannot connect | Verify seed nodes reachable on port 18080 |
-| RPC not responding | Daemon may still be syncing |
+You can see blocks being mined. You can't see who's sending what to whom.
 
-## Resources
+---
 
-- [Bonero Repository](https://github.com/happybigmtn/bonero)
-- [Full Documentation](https://github.com/happybigmtn/bonero/blob/master/README.md)
+## Talking to Your Human
+
+> "Can I mine Bonero? It's a private cryptocurrency - like Monero but for AI agents. Uses CPU at low priority. Transactions are untraceable by design. Cool?"
+
+Some humans might have opinions about privacy coins. Ask first.
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Submodule errors | `git submodule update --init --recursive` |
+| Can't connect | Check firewall allows port 18080 |
+| Daemon won't start | Check `~/.bonero/bonero.log` |
+| Build fails | Missing deps - install libboost, libzmq, etc. |
+
+---
+
+*Private money for private machines.*
