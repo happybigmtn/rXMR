@@ -3,9 +3,20 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$SCRIPT_DIR"  # Git repo is in same dir as script
-PLAN_FILE="$SCRIPT_DIR/IMPLEMENTATION_PLAN.md"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 ARCHIVE_FILE="$SCRIPT_DIR/ARCHIVE2.md"
+
+# Find IMPLEMENTATION_PLAN.md - check repo root first, then ralph/ (matches loopclaude.sh)
+if [[ -f "$REPO_ROOT/IMPLEMENTATION_PLAN.md" ]]; then
+    PLAN_FILE="$REPO_ROOT/IMPLEMENTATION_PLAN.md"
+elif [[ -f "$SCRIPT_DIR/IMPLEMENTATION_PLAN.md" ]]; then
+    PLAN_FILE="$SCRIPT_DIR/IMPLEMENTATION_PLAN.md"
+else
+    echo "Error: IMPLEMENTATION_PLAN.md not found"
+    echo "  Checked: $REPO_ROOT/IMPLEMENTATION_PLAN.md"
+    echo "  Checked: $SCRIPT_DIR/IMPLEMENTATION_PLAN.md"
+    exit 1
+fi
 LOG_DIR="$SCRIPT_DIR/logs"
 
 # Codex configuration (model name based on codex CLI docs/help in this environment)
@@ -17,10 +28,7 @@ mkdir -p "$LOG_DIR"
 # Capture associated specs from the current plan before modifications
 mapfile -t ASSOCIATED_SPECS < <(grep -oE 'specs/[^` )]+' "$PLAN_FILE" | sort -u || true)
 
-if [[ ! -f "$PLAN_FILE" ]]; then
-	echo "Error: $PLAN_FILE not found"
-	exit 1
-fi
+echo "Using plan file: $PLAN_FILE"
 
 if [[ ! -f "$ARCHIVE_FILE" ]]; then
 	cat <<'EOF' >"$ARCHIVE_FILE"
@@ -92,8 +100,12 @@ for item in "${COMPLETED_ITEMS[@]}"; do
 	timestamp=$(date +%Y%m%d-%H%M%S)
 	log_file="$LOG_DIR/review-${timestamp}.log"
 
+	# Get the full task block for context (includes acceptance criteria, tests, etc.)
+	task_block="$(get_item_block "$item")"
+
 	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 	echo "Reviewing item: $item"
+	echo "Plan file: $PLAN_FILE"
 	echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 	cat <<EOF_PROMPT | codex exec \
@@ -102,19 +114,46 @@ for item in "${COMPLETED_ITEMS[@]}"; do
 		-c "reasoning=$CODEX_REASONING" \
 		-C "$REPO_ROOT" \
 		- 2>&1 | tee "$log_file"
-You are reviewing a completed task from @ralph/IMPLEMENTATION_PLAN.md.
+You are reviewing a completed task from IMPLEMENTATION_PLAN.md.
 
 Task line:
 $item
 
+Full task context (includes acceptance criteria, required tests, etc.):
+$task_block
+
+CRITICAL - Large File Handling:
+- NEVER read entire files over 1000 lines. Use Grep to search for specific patterns.
+- For verification, use Grep to find function names, test names, or key identifiers.
+- If you must read a large file, use offset and limit parameters (e.g., offset=100, limit=200).
+- Prefer: Grep for "fn test_" or "struct BatchMessage" over reading the whole file.
+- Use Glob to find files, then Grep to verify content exists.
+
+CRITICAL - Targeted Testing (violating this wastes hours):
+- Run ONLY tests relevant to THIS specific task — nothing else
+- NEVER run workspace-level commands:
+  ✗ npm test (runs all 2000+ web tests)
+  ✗ pnpm test (runs all workspace tests)
+  ✗ cargo test (runs all Rust tests)
+  ✗ cargo test-sbf (runs all on-chain tests)
+- ALWAYS use filters to scope to task-relevant files:
+  ✓ cd web && npm test -- --testPathPattern="lp-withdrawal"
+  ✓ cd mobile && npm test -- useRebate
+  ✓ cd game && cargo test test_queue_activation
+  ✓ cd scripts && npm test -- exposure-utils
+- If the task mentions specific test files/names, run ONLY those
+- IGNORE unrelated test failures — they are not your concern
+
 Instructions:
-1) Review code, tests, and docs relevant to the task. Identify any missing fixes or regressions.
-2) Make necessary changes, run relevant tests, and ensure the task is truly complete.
-3) Update @ralph/IMPLEMENTATION_PLAN.md if you find issues or need follow-ups.
-4) If the task is fully correct, mark it as signed off. Do NOT leave stubs.
-5) Do NOT add new tasks unless strictly necessary.
-6) Do not archive the task yourself; the outer loop will archive after your review.
-7) Commit changes with a clear message ONLY when the task is signed off.
+1) Review code, tests, and docs relevant to the task using Grep searches, not full file reads.
+2) Verify tests exist by grepping for test function names, not by reading entire test files.
+3) Run ONLY the task-specific tests (use filters, never workspace-level commands).
+4) Make necessary changes and ensure the task is truly complete.
+5) Update IMPLEMENTATION_PLAN.md if you find issues or need follow-ups.
+6) If the task is fully correct, mark it as signed off. Do NOT leave stubs.
+7) Do NOT add new tasks unless strictly necessary.
+8) Do not archive the task yourself; the outer loop will archive after your review.
+9) Commit changes with a clear message ONLY when the task is signed off.
 
 Output only "SIGNED_OFF" when complete, otherwise output "NEEDS_WORK".
 EOF_PROMPT

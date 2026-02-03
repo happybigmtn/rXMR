@@ -1,25 +1,25 @@
-0a. Study `specs/*` with up to 250 parallel Sonnet subagents to learn the Botcoin specifications.
-0b. Study @IMPLEMENTATION_PLAN.md (if present) to understand the plan so far.
-0c. Study `src/*` with up to 250 parallel Sonnet subagents to understand the Bitcoin Core codebase we're forking.
-0d. For reference, Botcoin is a Bitcoin fork with RandomX PoW, 60-second blocks, targeting AI agents.
+0a. Study @IMPLEMENTATION_PLAN.md (if present) to understand the plan so far.
+0b. Reference `specs/*` as needed (read specific files relevant to your planning).
+0c. Source code is in `src/*`. Botcoin is a Bitcoin fork with RandomX PoW, 60-second blocks.
 
-1. Study @IMPLEMENTATION_PLAN.md (if present; it may be incorrect) and use up to 500 Sonnet subagents to study existing source code in `src/*` and compare it against `specs/*`. Use an Opus subagent to analyze findings, prioritize tasks, and create/update @IMPLEMENTATION_PLAN.md as a bullet point list sorted in priority of items yet to be implemented. Ultrathink. Consider searching for TODO, minimal implementations, placeholders, and inconsistent patterns.
+1. Use up to 15 parallel subagents to study existing code and compare against specs. Prioritize tasks and update @IMPLEMENTATION_PLAN.md as a bullet list sorted by priority. Search for TODOs, minimal implementations, placeholders.
 
-2. For each task in the plan, derive required tests from acceptance criteria in specs. Tests verify WHAT works, not HOW it's implemented. Include specific test code/commands as part of each task definition. Tests are NOT optional - they are the backpressure that validates completion.
+2. For each task, derive LIGHTWEIGHT required tests from acceptance criteria:
+   - Prefer unit tests over integration tests
+   - Prefer fast tests over slow tests
+   - Include the SPECIFIC test command with filter (e.g., `make check TESTS=test_randomx`)
+   - Avoid requiring full test suite runs
+   - Tests verify WHAT works, not HOW it's implemented
 
-IMPORTANT: Plan only. Do NOT implement anything. Do NOT assume functionality is missing; confirm with code search first.
+IMPORTANT: Plan only. Do NOT implement anything. Confirm with code search first.
 
-ULTIMATE GOAL: Create Botcoin - a Bitcoin fork with:
-- RandomX proof-of-work (CPU-friendly, ASIC-resistant)
-- 60-second block time
-- 50 BOT block reward, halving every 2.1M blocks
-- 21M max supply
-- New network ports (8433/8432)
-- New address prefixes (B/bot1)
-- New genesis block with "Molty Manifesto" message
+CRITICAL: Edit @IMPLEMENTATION_PLAN.md directly with findings.
 
-Consider missing elements and plan accordingly. If an element is missing, search first to confirm it doesn't exist, then if needed author the specification at specs/FILENAME.md.
+ULTIMATE GOAL: Create Botcoin - a Bitcoin fork with RandomX PoW, 60-second blocks, 21M supply.
 
-99999. Each task MUST include "Required Tests:" section with concrete test code derived from acceptance criteria.
-999999. Tests verify behavioral outcomes (WHAT), not implementation details (HOW).
-9999999. A task without test requirements is incomplete planning.
+Each task MUST include "Required Tests:" with:
+- Specific test file or test name pattern
+- The exact command to run ONLY that test (with filters)
+- Example: `make check TESTS=test_randomx_verify`
+
+A task requiring "run all tests" is poorly scoped — break it down or specify targeted tests.
