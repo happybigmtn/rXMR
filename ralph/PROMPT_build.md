@@ -1,21 +1,45 @@
 0a. Study @IMPLEMENTATION_PLAN.md to understand what needs to be built.
 0b. Reference `specs/*` as needed (read specific files, don't bulk-scan).
-0c. Source code is in `src/*`. Botcoin is a Bitcoin fork with RandomX PoW.
+0c. Source code in `src/*`. Bonero is a Bitcoin fork with RandomX PoW.
 
-1. Choose the most important unchecked task from @IMPLEMENTATION_PLAN.md. Search codebase before assuming something is missing. Use up to 10 parallel subagents for searches. Use 1 subagent for builds/tests.
+## Task Selection
 
-2. Each task has "Required Tests:" — implement these. Tests are NOT optional. Task complete ONLY when required tests exist AND pass.
+1. Find unchecked tasks (`- [ ]`) in @IMPLEMENTATION_PLAN.md
+2. Choose ONE task with clear implementation scope
+3. Search codebase before assuming something is missing
+4. Use up to 10 parallel subagents for searches, 1 for builds/tests
 
-3. TARGETED TESTING (critical for performance):
-   - Run ONLY the specific tests listed in "Required Tests:" for your task
-   - Do NOT run full test suites without filters
-   - Use test filters: `make check TESTS=test_specific` or `./test/functional/test_name.py`
-   - If a targeted test requires dependencies, run only those dependencies
+## Required Tests
 
-4. When tests pass, update @IMPLEMENTATION_PLAN.md (mark complete), `git add -A`, `git commit`.
+Each task has "Required Tests:" — implement these. Tests are NOT optional.
+Task complete ONLY when required tests exist AND pass.
 
-CRITICAL: Required tests MUST exist and MUST pass before committing.
-CRITICAL: Run TARGETED tests only — never the full test suite per task.
-Important: No placeholders, stubs, or TODOs. Implement completely.
-Important: Keep @IMPLEMENTATION_PLAN.md current with completion status.
-Note: If you discover unrelated test failures, document them in IMPLEMENTATION_PLAN.md as new tasks — do NOT fix them in this increment.
+## Targeted Testing (CRITICAL)
+
+Run ONLY tests for YOUR specific task — nothing else.
+
+**NEVER run workspace-level commands:**
+✗ `cargo test` (runs all Rust tests)
+✗ `cargo test --all` (same problem)
+✗ `make check` (runs everything)
+
+**ALWAYS use filters:**
+✓ `cargo check` - Fast syntax/type check
+✓ `cargo test specific_test_name` - One test only
+✓ `cargo test -p bonero-core test_pattern` - Filtered by crate
+
+IGNORE unrelated test failures — document them as new tasks.
+
+## Marking Complete
+
+1. BEFORE committing, edit @IMPLEMENTATION_PLAN.md
+2. Change `- [ ] ...` to `- [x] ...`
+3. Then `git add -A`, `git commit -m "feat: description"`
+
+## Rules
+
+- CRITICAL: Required tests MUST exist and MUST pass before committing
+- CRITICAL: Run TARGETED tests only — never workspace-level commands
+- CRITICAL: Mark task complete in IMPLEMENTATION_PLAN.md before committing
+- Important: No placeholders, stubs, or TODOs - implement completely
+- Note: Document unrelated test failures as new tasks in IMPLEMENTATION_PLAN.md
