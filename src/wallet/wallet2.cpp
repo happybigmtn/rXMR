@@ -3465,15 +3465,41 @@ void check_block_hard_fork_version(cryptonote::network_type nettype, uint8_t hf_
   const hardfork_t *wallet_hard_forks = nettype == TESTNET ? testnet_hard_forks
     : nettype == STAGENET ? stagenet_hard_forks : mainnet_hard_forks;
 
-  wallet_is_outdated = static_cast<size_t>(hf_version) > wallet_num_hard_forks;
+  // NOTE: Bonero starts at hardfork version 16 from genesis.
+  // The hardfork table stores explicit {version,height} pairs, so the number of
+  // entries is not equal to the maximum hardfork version.
+  if (wallet_num_hard_forks == 0)
+  {
+    wallet_is_outdated = true;
+    daemon_is_outdated = false;
+    return;
+  }
+
+  const uint8_t wallet_max_hf_version = wallet_hard_forks[wallet_num_hard_forks - 1].version;
+  wallet_is_outdated = hf_version > wallet_max_hf_version;
   if (wallet_is_outdated)
     return;
 
-  // check block's height falls within wallet's expected range for block's given version
-  uint64_t start_height = hf_version == 1 ? 0 : wallet_hard_forks[hf_version - 1].height;
-  uint64_t end_height = static_cast<size_t>(hf_version) + 1 > wallet_num_hard_forks
+  // Find the hardfork entry that matches this version to determine the valid height range.
+  size_t idx = 0;
+  for (; idx < wallet_num_hard_forks; ++idx)
+  {
+    if (wallet_hard_forks[idx].version == hf_version)
+      break;
+  }
+
+  // If we know about the version but cannot find it in the table, the wallet is outdated.
+  if (idx == wallet_num_hard_forks)
+  {
+    wallet_is_outdated = true;
+    daemon_is_outdated = false;
+    return;
+  }
+
+  const uint64_t start_height = wallet_hard_forks[idx].height;
+  const uint64_t end_height = (idx + 1 >= wallet_num_hard_forks)
     ? std::numeric_limits<uint64_t>::max()
-    : wallet_hard_forks[hf_version].height;
+    : wallet_hard_forks[idx + 1].height;
 
   daemon_is_outdated = height < start_height || height >= end_height;
 }
