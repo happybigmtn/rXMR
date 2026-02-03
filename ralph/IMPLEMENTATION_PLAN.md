@@ -21,6 +21,8 @@
 >
 > **Review (2026-01-31):** Signed off `init_default_checkpoints()` returning true for a fresh chain; ran `unit_tests --gtest_filter=chain_state.*`.
 >
+> **Review (2026-01-31):** Signed off message signing domain separator (`HASH_KEY_MESSAGE_SIGNING="BoneroMessageSignature"`); ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=branding.*`.
+>
 > **Review (2026-01-31):** Signed off removal of Monero IP seed nodes from `src/p2p/net_node.inl`; ran `unit_tests --gtest_filter=network_identity.*`.
 >
 > **Review (2026-01-31):** Signed off removal of DNS blocklist sources from `src/p2p/net_node.inl`; ran `./build/Linux/master/release/tests/unit_tests/unit_tests --gtest_filter=network_identity.*`.
