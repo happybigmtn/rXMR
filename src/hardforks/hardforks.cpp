@@ -31,25 +31,68 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "blockchain.hardforks"
 
-// Bonero: Fresh chain starting at hardfork version 16 from genesis (block 0)
-// Unlike Monero which had a gradual upgrade path, Bonero starts directly at v16.
-// Timestamp 1735689600 = January 1, 2025 00:00:00 UTC
+// Bonero: Fresh chain starting at v16 from genesis.
+// wallet2.cpp indexes by version number, so all versions 1-16 must be present.
+// All point to height 0 since Bonero starts directly at v16.
 const hardfork_t mainnet_hard_forks[] = {
-  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
+  {  1, 0, 0, 1735689600 },
+  {  2, 0, 0, 1735689600 },
+  {  3, 0, 0, 1735689600 },
+  {  4, 0, 0, 1735689600 },
+  {  5, 0, 0, 1735689600 },
+  {  6, 0, 0, 1735689600 },
+  {  7, 0, 0, 1735689600 },
+  {  8, 0, 0, 1735689600 },
+  {  9, 0, 0, 1735689600 },
+  { 10, 0, 0, 1735689600 },
+  { 11, 0, 0, 1735689600 },
+  { 12, 0, 0, 1735689600 },
+  { 13, 0, 0, 1735689600 },
+  { 14, 0, 0, 1735689600 },
+  { 15, 0, 0, 1735689600 },
+  { 16, 0, 0, 1735689600 },
 };
 const size_t num_mainnet_hard_forks = sizeof(mainnet_hard_forks) / sizeof(mainnet_hard_forks[0]);
-const uint64_t mainnet_hard_fork_version_1_till = 0;  // No v1 period - start at v16
+const uint64_t mainnet_hard_fork_version_1_till = 0;
 
-// Bonero testnet: Fresh chain starting at hardfork version 16 from genesis
 const hardfork_t testnet_hard_forks[] = {
-  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
+  {  1, 0, 0, 1735689600 },
+  {  2, 0, 0, 1735689600 },
+  {  3, 0, 0, 1735689600 },
+  {  4, 0, 0, 1735689600 },
+  {  5, 0, 0, 1735689600 },
+  {  6, 0, 0, 1735689600 },
+  {  7, 0, 0, 1735689600 },
+  {  8, 0, 0, 1735689600 },
+  {  9, 0, 0, 1735689600 },
+  { 10, 0, 0, 1735689600 },
+  { 11, 0, 0, 1735689600 },
+  { 12, 0, 0, 1735689600 },
+  { 13, 0, 0, 1735689600 },
+  { 14, 0, 0, 1735689600 },
+  { 15, 0, 0, 1735689600 },
+  { 16, 0, 0, 1735689600 },
 };
 const size_t num_testnet_hard_forks = sizeof(testnet_hard_forks) / sizeof(testnet_hard_forks[0]);
 const uint64_t testnet_hard_fork_version_1_till = 0;
 
-// Bonero stagenet: Fresh chain starting at hardfork version 16 from genesis
 const hardfork_t stagenet_hard_forks[] = {
-  { 16, 0, 0, 1735689600 },  // v16 from block 0 (genesis block)
+  {  1, 0, 0, 1735689600 },
+  {  2, 0, 0, 1735689600 },
+  {  3, 0, 0, 1735689600 },
+  {  4, 0, 0, 1735689600 },
+  {  5, 0, 0, 1735689600 },
+  {  6, 0, 0, 1735689600 },
+  {  7, 0, 0, 1735689600 },
+  {  8, 0, 0, 1735689600 },
+  {  9, 0, 0, 1735689600 },
+  { 10, 0, 0, 1735689600 },
+  { 11, 0, 0, 1735689600 },
+  { 12, 0, 0, 1735689600 },
+  { 13, 0, 0, 1735689600 },
+  { 14, 0, 0, 1735689600 },
+  { 15, 0, 0, 1735689600 },
+  { 16, 0, 0, 1735689600 },
 };
 const size_t num_stagenet_hard_forks = sizeof(stagenet_hard_forks) / sizeof(stagenet_hard_forks[0]);
 const uint64_t stagenet_hard_fork_version_1_till = 0;
