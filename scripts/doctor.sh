@@ -108,7 +108,7 @@ show_config_peers() {
 main() {
     local rpc_host rpc_port rpc_login info_json mining_json
     local height target_height incoming outgoing busy_syncing synchronized nettype
-    local active address threads speed
+    local active address threads speed p2p_port
 
     parse_args "$@"
     resolve_config_path
@@ -119,9 +119,11 @@ main() {
     rpc_host="$(config_value rpc-bind-ip || true)"
     rpc_port="$(config_value rpc-bind-port || true)"
     rpc_login="$(config_value rpc-login || true)"
+    p2p_port="$(config_value p2p-bind-port || true)"
 
     [ -n "$rpc_host" ] || rpc_host="127.0.0.1"
     [ -n "$rpc_port" ] || rpc_port="18881"
+    [ -n "$p2p_port" ] || p2p_port="18880"
 
     RPC_BASE="http://$rpc_host:$rpc_port"
     CURL_AUTH=()
@@ -182,6 +184,14 @@ main() {
         fi
     else
         warn "Could not read /mining_status"
+    fi
+
+    if command -v ss >/dev/null 2>&1; then
+        if ss -ltn 2>/dev/null | grep -q "[.:]$p2p_port[[:space:]]"; then
+            info "P2P port listening: $p2p_port"
+        else
+            warn "P2P port $p2p_port is not listening"
+        fi
     fi
 
     show_config_peers

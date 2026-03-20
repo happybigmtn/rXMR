@@ -50,12 +50,13 @@ jobs:
 
             ### Quick install
             ```bash
-            curl -fsSLO https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/install.sh
+            curl -fsSLO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/install.sh
             less install.sh
             RXMR_VERSION=${{ github.ref_name }} bash install.sh --add-path
             ```
 
             ### Verify release checksums
             ```bash
-            ./scripts/verify-release.sh --version ${{ github.ref_name }} --platform linux-x86_64
+            curl -fsSLO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/verify-release.sh
+            bash verify-release.sh --version ${{ github.ref_name }} --platform linux-x86_64
             ```

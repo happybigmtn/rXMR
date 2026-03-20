@@ -298,7 +298,12 @@ prepare_source_tree() {
 
     temp_root="$(mktemp -d)"
     TEMP_SOURCE_ROOT="$temp_root"
-    git clone --recursive --branch "$ref" "$GITHUB_URL.git" "$temp_root/rXMR"
+    git clone "$GITHUB_URL.git" "$temp_root/rXMR"
+    (
+        cd "$temp_root/rXMR"
+        git checkout "$ref"
+        git submodule update --init --recursive
+    )
     SOURCE_DIR="$temp_root/rXMR"
 }
 
@@ -354,6 +359,7 @@ setup_config() {
         printf 'no-igd=1\n'
         printf 'p2p-bind-ip=0.0.0.0\n'
         printf 'p2p-bind-port=18880\n'
+        printf 'confirm-external-bind=1\n'
         printf 'rpc-bind-ip=127.0.0.1\n'
         printf 'rpc-bind-port=18881\n'
         printf 'zmq-rpc-bind-ip=127.0.0.1\n'
@@ -397,7 +403,7 @@ main() {
     detect_platform
 
     if [ "$FORCE" -eq 0 ] && command -v rxmrd >/dev/null 2>&1; then
-        warn "rxmrd is already present. Rerun with --force to reinstall."
+        error "rxmrd is already present. Rerun with --force to reinstall."
     fi
 
     if [ -z "$RELEASE_VERSION" ]; then

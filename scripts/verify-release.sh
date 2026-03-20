@@ -67,6 +67,34 @@ main() {
         cd "$tmp"
         grep " $tarball\$" "$checksums" | sh -c "$checksum_cmd"
     )
+
+    python3 - "$tmp/$tarball" "$VERSION" "$PLATFORM" <<'PY'
+import json
+import sys
+import tarfile
+
+tarball_path, expected_version, expected_platform = sys.argv[1:4]
+prefix = f"rxmr-{expected_version}-{expected_platform}/"
+
+with tarfile.open(tarball_path, "r:gz") as archive:
+    manifest_name = prefix + "release-manifest.json"
+    try:
+        manifest_member = archive.getmember(manifest_name)
+    except KeyError as exc:
+        raise SystemExit(f"missing {manifest_name} in release tarball") from exc
+
+    manifest = json.load(archive.extractfile(manifest_member))
+    if manifest.get("version") != expected_version:
+        raise SystemExit("release manifest version mismatch")
+    if manifest.get("platform") != expected_platform:
+        raise SystemExit("release manifest platform mismatch")
+
+    names = set(archive.getnames())
+    for artifact in manifest.get("artifacts", []):
+        candidate = prefix + artifact
+        if candidate not in names:
+            raise SystemExit(f"missing {artifact} in release tarball")
+PY
 }
 
 main "$@"

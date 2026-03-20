@@ -8,6 +8,7 @@ BUILD_DIR="${RXMR_BUILD_DIR:-build}"
 OUTPUT_DIR="${RXMR_RELEASE_OUTPUT_DIR:-dist}"
 SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-}"
 SKIP_BUILD=0
+RELEASE_ASSETS=()
 
 usage() {
     cat <<'EOF'
@@ -152,6 +153,35 @@ Path(sys.argv[1]).write_text(
 PY
 }
 
+copy_standalone_asset() {
+    local source_path target_name mode
+
+    source_path="$1"
+    target_name="$2"
+    mode="$3"
+
+    install -m "$mode" "$source_path" "$OUTPUT_DIR/$target_name"
+    RELEASE_ASSETS+=("$target_name")
+}
+
+write_checksums() {
+    local asset
+
+    : > "$OUTPUT_DIR/SHA256SUMS"
+    (
+        cd "$OUTPUT_DIR"
+        for asset in "${RELEASE_ASSETS[@]}"; do
+            if command -v sha256sum >/dev/null 2>&1; then
+                sha256sum "$asset"
+            elif command -v shasum >/dev/null 2>&1; then
+                shasum -a 256 "$asset"
+            else
+                error "Need sha256sum or shasum to create SHA256SUMS"
+            fi
+        done
+    ) > "$OUTPUT_DIR/SHA256SUMS"
+}
+
 package_release() {
     local package_root stage_root tarball
 
@@ -222,17 +252,15 @@ with tarball.open("wb") as raw:
                     archive.addfile(info)
 PY
 
-    (
-        cd "$OUTPUT_DIR"
-        if command -v sha256sum >/dev/null 2>&1; then
-            sha256sum "$(basename "$tarball")" > SHA256SUMS
-        elif command -v shasum >/dev/null 2>&1; then
-            shasum -a 256 "$(basename "$tarball")" > SHA256SUMS
-        else
-            error "Need sha256sum or shasum to create SHA256SUMS"
-        fi
-    )
+    RELEASE_ASSETS+=("$(basename "$tarball")")
     info "Built $tarball"
+}
+
+publish_release_assets() {
+    copy_standalone_asset install.sh install.sh 0755
+    copy_standalone_asset scripts/verify-release.sh verify-release.sh 0755
+    copy_standalone_asset docs/public-node.md PUBLIC-NODE.md 0644
+    copy_standalone_asset SECURITY.md SECURITY.md 0644
 }
 
 main() {
@@ -254,6 +282,8 @@ main() {
     [ -x "$BUILD_DIR/bin/rxmr-wallet-rpc" ] || error "Missing $BUILD_DIR/bin/rxmr-wallet-rpc"
 
     package_release
+    publish_release_assets
+    write_checksums
 }
 
 main "$@"

@@ -27,6 +27,15 @@ ProtectSystem=full
 ProtectHome=true
 NoNewPrivileges=true
 PrivateDevices=true
+ProtectControlGroups=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RemoveIPC=true
+SystemCallArchitectures=native
 
 [Install]
 WantedBy=multi-user.target

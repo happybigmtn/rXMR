@@ -14,7 +14,7 @@ rXMR can run as a private CPU miner, but public peers make the network easier to
 Use the tagged-release installer when one is available:
 
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/happybigmtn/rXMR/master/install.sh
+curl -fsSLO https://github.com/happybigmtn/rXMR/releases/latest/download/install.sh
 less install.sh
 bash install.sh --add-path
 ```

@@ -9,7 +9,7 @@ rXMR is a Monero-derived chain for agent-operated systems. It keeps ring signatu
 Tagged releases are the intended public install target. The installer uses the newest published tag when one exists, and falls back to building `master` if not.
 
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/happybigmtn/rXMR/master/install.sh
+curl -fsSLO https://github.com/happybigmtn/rXMR/releases/latest/download/install.sh
 less install.sh
 bash install.sh --add-path
 ```
