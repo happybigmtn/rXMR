@@ -1,18 +1,18 @@
 - [ ] Security audit
 - [ ] Code audit
 - [ ] Ledger integration
-  - [ ] Implemented in Monero codebase (if needed)
+  - [ ] Implemented in upstream codebase (if needed)
   - [ ] Ledger app integration coded by Ledger
-  - [ ] Ledger Monero app update available
+  - [ ] Ledger app update available
 - [ ] Trezor integration
-  - [ ] Implemented in Monero codebase (if needed)
+  - [ ] Implemented in upstream codebase (if needed)
   - [ ] Trezor app integration coded by Trezor
   - [ ] Trezor firmware update available (if needed)
 - [ ] Fork height set
-  - [ ] Monero-announce mailer notice
-  - [ ] Twitter announcement
-  - [ ] Reddit announcement
-  - [ ] Getmonero.org announcement
+  - [ ] rXMR release-channel notice
+  - [ ] X / Twitter announcement
+  - [ ] Reddit / community announcement
+  - [ ] Project website announcement
 - [ ] Notify wallets
   - [ ] MyMonero
   - [ ] Coinomi
@@ -27,15 +27,15 @@
   - [ ] Exodus
   - [ ] XMRWallet
 - [ ] Notify exchanges
-  - [ ] https://web.getmonero.org/community/merchants/#exchanges
+  - [ ] Target exchange contact list updated
 - [ ] Notify 3rd party payment processors
-  - [ ] https://web.getmonero.org/community/merchants/#payment-gateways
+  - [ ] Target processor contact list updated
 - [ ] Notify mining pools
-  - [ ] https://miningpoolstats.stream/monero
+  - [ ] Pool / network index listings updated
 - [ ] Release tagged
   - [ ] Update src/version.cpp.in with new version AND new name (if necessary)
   - [ ] Update Gitian YML files in contrib/gitian/ to the new version number
-  - [ ] Update README.md with new fork table entry (or at least update the Recommended Monero version)
+  - [ ] Update README.md with the new recommended rXMR version
   - [ ] Update contrib/gitian/README.md so that the instructions reflect the current version
   - [ ] Update src/checkpoints/checkpoints.cpp with a recent hardcoded checkpoint
   - [ ] Update src/blocks/checkpoints.dat with ./rxmr-blockchain-export --output-file checkpoints.dat --block-stop <recent block height> --blocksdat
@@ -48,21 +48,21 @@
   - [ ] RPC testing/update RPC documentation
 - [ ] CLI reproducible builds validated
 - [ ] CLI released
-  - [ ] https://web.getmonero.org/downloads/ updated
-  - [ ] Update hashes.txt on website
-  - [ ] Update downloads.yml on website
+  - [ ] Project downloads page updated
+  - [ ] Update hashes.txt on project site
+  - [ ] Update release metadata on project site
   - [ ] Update auto-update DNS records
-  - [ ] Update redirects on downloads box
+  - [ ] Update download redirects
   - [ ] Update seed nodes
 - [ ] GUI released
-  - [ ] https://web.getmonero.org/downloads/ updated
-  - [ ] Update hashes.txt on website
-  - [ ] Update hashes.txt.sig on website
-  - [ ] Update downloads.yml on website
+  - [ ] Project downloads page updated
+  - [ ] Update hashes.txt on project site
+  - [ ] Update hashes.txt.sig on project site
+  - [ ] Update GUI release metadata on project site
   - [ ] Update auto-update DNS records
-  - [ ] Update redirects on downloads box
+  - [ ] Update download redirects
 - [ ] Release Announcements
-  - [ ] Monero-announce mailer notice
-  - [ ] Twitter announcement
-  - [ ] Reddit announcement
-  - [ ] Getmonero.org announcement
+  - [ ] rXMR release-channel notice
+  - [ ] X / Twitter announcement
+  - [ ] Reddit / community announcement
+  - [ ] Project website announcement

@@ -1,6 +1,6 @@
-# Anonymity Networks with Monero
+# Anonymity Networks with rXMR
 
-Currently only Tor and I2P have been integrated into Monero. The usage of
+Currently only Tor and I2P have been integrated into rXMR. The usage of
 these networks is still considered experimental - there are a few pessimistic
 cases where privacy is leaked. The design is intended to maximize privacy of
 the source of a transaction by broadcasting it over an anonymity network, while
@@ -55,8 +55,8 @@ proxy at IP 127.0.0.1 port 9050 with a max of 10 outgoing connections and
 If desired, peers can be manually specified:
 
 ```
---add-exclusive-node rveahdfho7wo4b2m.onion:28083
---add-peer rveahdfho7wo4b2m.onion:28083
+--add-exclusive-node rveahdfho7wo4b2m.onion:18880
+--add-peer rveahdfho7wo4b2m.onion:18880
 ```
 
 Either option can be listed multiple times, and can specify any mix of Tor,
@@ -70,13 +70,13 @@ Receiving anonymity connections is done through the option
 type, and max connections:
 
 ```
---anonymous-inbound rveahdfho7wo4b2m.onion:28083,127.0.0.1:28083,25
+--anonymous-inbound rveahdfho7wo4b2m.onion:18880,127.0.0.1:18880,25
 --anonymous-inbound cmeua5767mz2q5jsaelk2rxhf67agrwuetaso5dzbenyzwlbkg2q.b32.i2p,127.0.0.1:30000
 ```
 
 which tells `rxmrd` that a max of 25 inbound Tor connections are being
-received at address "rveahdfho7wo4b2m.onion:28083" and forwarded to `rxmrd`
-localhost port 28083, and a default max I2P connections are being received at
+received at address "rveahdfho7wo4b2m.onion:18880" and forwarded to `rxmrd`
+localhost port 18880, and a default max I2P connections are being received at
 address "cmeua5767mz2q5jsaelk2rxhf67agrwuetaso5dzbenyzwlbkg2q.b32.i2p" and
 forwarded to `rxmrd` localhost port 30000.
 These addresses will be shared with outgoing peers, over the same network type,
@@ -91,7 +91,7 @@ P2P anonymity connections. The anonymity network (Tor/i2p) is
 must be the RPC port (typically 18881 for mainnet) instead of the p2p port:
 
 ```
-HiddenServiceDir /var/lib/tor/data/monero
+HiddenServiceDir /var/lib/tor/data/rxmr
 HiddenServicePort 18881 127.0.0.1:18881
 ```
 
@@ -133,13 +133,13 @@ Tor must be configured for hidden services. An example configuration ("torrc")
 might look like:
 
 ```
-HiddenServiceDir /var/lib/tor/data/monero
-HiddenServicePort 28083 127.0.0.1:28083
+HiddenServiceDir /var/lib/tor/data/rxmr
+HiddenServicePort 18880 127.0.0.1:18880
 ```
 
-This will store key information in `/var/lib/tor/data/monero` and will forward
-"Tor port" 28083 to port 28083 of ip 127.0.0.1. The file
-`/usr/lib/tor/data/monero/hostname` will contain the ".onion" address for use
+This will store key information in `/var/lib/tor/data/rxmr` and will forward
+"Tor port" 18880 to port 18880 of ip 127.0.0.1. The file
+`/usr/lib/tor/data/rxmr/hostname` will contain the ".onion" address for use
 with `--anonymous-inbound`.
 
 I2P must be configured with a standard server tunnel. Configuration differs by
@@ -158,7 +158,7 @@ sees a transaction over Tor, it could _assume_ (possibly incorrectly) that the
 transaction originated from the peer. If both the Tor connection and an
 IPv4/IPv6 connection have timestamps that are approximately close in value they
 could be used to link the two connections. This is less likely to happen if the
-system clock is fairly accurate - many peers on the Monero network should have
+system clock is fairly accurate - many peers on the rXMR network should have
 similar timestamps.
 
 #### Mitigation
@@ -169,7 +169,7 @@ the system clock is noticeably off (and therefore more fingerprintable),
 linking the public IPv4/IPv6 connections with the anonymity networks will be
 more difficult.
 
-### Intermittent Monero Syncing
+### Intermittent rXMR Syncing
 
 If a user only runs `rxmrd` to send a transaction then quit, this can also
 be used by an ISP to link a user to a transaction.

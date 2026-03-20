@@ -284,7 +284,7 @@ install_deps() {
         return
     fi
 
-    warn "No supported package manager found; make sure the Monero build dependencies are installed manually"
+    warn "No supported package manager found; make sure the rXMR build dependencies are installed manually"
 }
 
 prepare_source_tree() {

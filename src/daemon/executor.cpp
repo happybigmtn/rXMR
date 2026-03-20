@@ -40,7 +40,7 @@
 
 namespace daemonize
 {
-  std::string const t_executor::NAME = "Monero Daemon";
+  std::string const t_executor::NAME = "rXMR Daemon";
 
   void t_executor::init_options(
       boost::program_options::options_description & configurable_options
@@ -76,4 +76,3 @@ namespace daemonize
     return t_daemon{vm, public_rpc_port}.run(true);
   }
 }
-

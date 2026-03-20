@@ -48,7 +48,7 @@ complete -c rxmr-wallet-cli -l non-deterministic -d "Generate non-deterministic 
 complete -c rxmr-wallet-cli -l electrum-seed -r -d "Specify Electrum seed for wallet recovery/creation"
 complete -c rxmr-wallet-cli -l restore-height -r -d "Restore from specific blockchain height. Default: 0"
 complete -c rxmr-wallet-cli -l restore-date -r -d "Restore from estimated blockchain height on specified date"
-complete -c rxmr-wallet-cli -l do-not-relay -d "The newly created transaction will not be relayed to the monero network"
+complete -c rxmr-wallet-cli -l do-not-relay -d "The newly created transaction will not be relayed to the rXMR network"
 complete -c rxmr-wallet-cli -l create-address-file -d "Create an address file for new wallets"
 complete -c rxmr-wallet-cli -l subaddress-lookahead -r -d "Set subaddress lookahead sizes to <major>:<minor>"
 complete -c rxmr-wallet-cli -l use-english-language-names -d "Display English language names"
