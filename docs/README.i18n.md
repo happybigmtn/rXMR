@@ -1,9 +1,9 @@
 rXMR daemon internationalization
 ==================================
 
-The rXMR command line tools can be translated in various languages. If you wish to contribute and need help/support, use the project’s translation workflow and community channels.
+The rXMR command line tools can be translated in various languages. If you wish to contribute and need help/support, use the project's translation workflow and community channels.
 
-In order to use the same translation workflow as the [Monero Core GUI](https://github.com/monero-project/monero-gui), they use Qt Linguist translation files.  However, to avoid the dependencies on Qt this normally implies, they use a custom loader to read those files at runtime.
+The translation pipeline still follows the historical Monero Core GUI Qt Linguist workflow. To avoid the extra Qt runtime dependencies that normally implies, rXMR uses a custom loader to read those files at runtime.
 
 ### Tools for translators
 
@@ -20,6 +20,8 @@ To update ts files after changing source code:
 ```
 
 To add a new language, eg Spanish (ISO code es):
+
+The translation filenames are still `translations/monero*.ts` for compatibility with the inherited tooling and update scripts.
 
 ```bash
 cp translations/monero.ts translations/monero_es.ts
