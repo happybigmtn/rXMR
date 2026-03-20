@@ -1,8 +1,8 @@
-# AGENTS.md - Bonero Build Guide
+# AGENTS.md - rXMR Build Guide
 
 ## Build & Run
 
-Bonero is a Monero v0.18.4.5 fork. Build with:
+rXMR is a Monero v0.18.4.5 fork. Build with:
 
 ```bash
 # Dependencies (Ubuntu/Debian)
@@ -35,18 +35,18 @@ Run these after implementing to get immediate feedback:
 ## Binaries
 
 After build, binaries are in `build/Linux/master/release/bin/` (path includes OS and git branch):
-- `bonerod` - Full node daemon
-- `bonero-wallet-cli` - Command-line wallet
-- `bonero-wallet-rpc` - Wallet RPC server
-- `bonero-blockchain-import` - Import blockchain
-- `bonero-blockchain-export` - Export blockchain
+- `rxmrd` - Full node daemon
+- `rxmr-wallet-cli` - Command-line wallet
+- `rxmr-wallet-rpc` - Wallet RPC server
+- `rxmr-blockchain-import` - Import blockchain
+- `rxmr-blockchain-export` - Export blockchain
 
 ## Operational Notes
 
 - Source is in `src/`
 - Configuration: `src/cryptonote_config.h`
-- Data directory: `~/.bonero` (Linux), `~/Library/Application Support/bonero` (macOS)
-- Config file: `bonero.conf`
+- Data directory: `~/.rxmr` (Linux), `~/Library/Application Support/rxmr` (macOS)
+- Config file: `rxmr.conf`
 
 ## Key Files to Modify
 
@@ -72,7 +72,7 @@ To generate a new genesis block (required for fresh chain):
 
 ```bash
 # Generate genesis transaction hex
-./build/Linux/master/release/bin/bonerod --print-genesis-tx
+./build/Linux/master/release/bin/rxmrd --print-genesis-tx
 
 # Copy the output hex to GENESIS_TX in src/cryptonote_config.h
 # Then run daemon to mine valid nonce - check logs for GENESIS_NONCE
@@ -80,13 +80,13 @@ To generate a new genesis block (required for fresh chain):
 
 ## Unit Tests
 
-Run Bonero-specific unit tests:
+Run rXMR-specific unit tests:
 ```bash
-ctest --test-dir build/Linux/master/release -R bonero_ --output-on-failure
+ctest --test-dir build/Linux/master/release -R rxmr_ --output-on-failure
 ```
 
 Test suites:
-- `bonero_network` - Network identity, ports, consensus params
-- `bonero_address` - Address prefix verification
-- `bonero_branding` - Data directory, message signing domain
-- `bonero_chain` - Genesis block, hardforks, checkpoints
+- `rxmr_network` - Network identity, ports, consensus params
+- `rxmr_address` - Address prefix verification
+- `rxmr_branding` - Data directory, message signing domain
+- `rxmr_chain` - Genesis block, hardforks, checkpoints

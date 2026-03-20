@@ -1,6 +1,6 @@
 0a. Study @IMPLEMENTATION_PLAN.md to understand what needs to be built.
 0b. Reference `specs/*` as needed (read specific files, don't bulk-scan).
-0c. Source code in `src/*`. Bonero is a Bitcoin fork with RandomX PoW.
+0c. Source code in `src/*`. rXMR is a Bitcoin fork with RandomX PoW.
 
 ## Task Selection
 
@@ -26,7 +26,7 @@ Run ONLY tests for YOUR specific task — nothing else.
 **ALWAYS use filters:**
 ✓ `cargo check` - Fast syntax/type check
 ✓ `cargo test specific_test_name` - One test only
-✓ `cargo test -p bonero-core test_pattern` - Filtered by crate
+✓ `cargo test -p rxmr-core test_pattern` - Filtered by crate
 
 IGNORE unrelated test failures — document them as new tasks.
 

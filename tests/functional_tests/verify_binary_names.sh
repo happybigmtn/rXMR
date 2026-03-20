@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build verification test - verifies all Bonero binaries are present with correct names
+# Build verification test - verifies all rXMR binaries are present with correct names
 # Required by IMPLEMENTATION_PLAN.md Priority 2.1: Binary Names
 #
 # Usage: ./tests/functional_tests/verify_binary_names.sh [build_dir]
@@ -17,29 +17,29 @@ if [[ -f "$CMAKE_CACHE" ]]; then
   fi
 fi
 
-# All expected Bonero binaries (renamed from Monero)
+# All expected rXMR binaries (renamed from Monero)
 expected_binaries=(
-  "bonerod"
-  "bonero-wallet-cli"
-  "bonero-wallet-rpc"
-  "bonero-blockchain-import"
-  "bonero-blockchain-export"
-  "bonero-blockchain-mark-spent-outputs"
-  "bonero-blockchain-usage"
-  "bonero-blockchain-ancestry"
-  "bonero-blockchain-depth"
-  "bonero-blockchain-stats"
-  "bonero-blockchain-prune-known-spent-data"
-  "bonero-blockchain-prune"
-  "bonero-gen-trusted-multisig"
-  "bonero-gen-ssl-cert"
+  "rxmrd"
+  "rxmr-wallet-cli"
+  "rxmr-wallet-rpc"
+  "rxmr-blockchain-import"
+  "rxmr-blockchain-export"
+  "rxmr-blockchain-mark-spent-outputs"
+  "rxmr-blockchain-usage"
+  "rxmr-blockchain-ancestry"
+  "rxmr-blockchain-depth"
+  "rxmr-blockchain-stats"
+  "rxmr-blockchain-prune-known-spent-data"
+  "rxmr-blockchain-prune"
+  "rxmr-gen-trusted-multisig"
+  "rxmr-gen-ssl-cert"
 )
 
 if [[ "$BUILD_DEBUG_UTILITIES" == "ON" ]]; then
   expected_binaries+=(
-    "bonero-utils-deserialize"
-    "bonero-utils-object-sizes"
-    "bonero-utils-dns-checks"
+    "rxmr-utils-deserialize"
+    "rxmr-utils-object-sizes"
+    "rxmr-utils-dns-checks"
   )
 fi
 
@@ -50,15 +50,18 @@ forbidden_binaries=(
   "monero-wallet-rpc"
   "monero-blockchain-import"
   "monero-blockchain-export"
+  "bonerod"
+  "bonero-wallet-cli"
+  "bonero-wallet-rpc"
 )
 
-echo "Verifying Bonero binary names in: $BUILD_DIR"
+echo "Verifying rXMR binary names in: $BUILD_DIR"
 echo "=============================================="
 
 errors=0
 found=0
 
-# Check expected Bonero binaries exist
+# Check expected rXMR binaries exist
 for binary in "${expected_binaries[@]}"; do
   if [[ -f "$BUILD_DIR/$binary" ]]; then
     echo "PASS: Found $binary"

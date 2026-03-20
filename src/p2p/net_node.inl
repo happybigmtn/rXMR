@@ -731,25 +731,27 @@ namespace nodetool
   std::set<std::string> node_server<t_payload_net_handler>::get_ip_seed_nodes() const
   {
     std::set<std::string> full_addrs;
-    // Bonero: No seed node infrastructure yet
-    // When Bonero seed nodes are established, add them here with the correct ports:
-    // - Mainnet: 18880
-    // - Testnet: 28880
-    // - Stagenet: 38880
     if (m_nettype == cryptonote::TESTNET)
     {
-      // TODO: Add Bonero testnet seed nodes
     }
     else if (m_nettype == cryptonote::STAGENET)
     {
-      // TODO: Add Bonero stagenet seed nodes
     }
     else if (m_nettype == cryptonote::FAKECHAIN)
     {
     }
     else
     {
-      // TODO: Add Bonero mainnet seed nodes
+      full_addrs.insert("95.111.227.14:18880");
+      full_addrs.insert("95.111.229.108:18880");
+      full_addrs.insert("95.111.239.142:18880");
+      full_addrs.insert("161.97.83.147:18880");
+      full_addrs.insert("161.97.97.83:18880");
+      full_addrs.insert("161.97.114.192:18880");
+      full_addrs.insert("161.97.117.0:18880");
+      full_addrs.insert("194.163.144.177:18880");
+      full_addrs.insert("185.218.126.23:18880");
+      full_addrs.insert("185.239.209.227:18880");
     }
     return full_addrs;
   }
@@ -2134,11 +2136,11 @@ namespace nodetool
     if (m_nettype != cryptonote::MAINNET)
       return true;
 
-    // Bonero: No DNS blocklist infrastructure yet
-    // When Bonero blocklist DNS is established, add domains here
+    // rXMR: No DNS blocklist infrastructure yet
+    // When rXMR blocklist DNS is established, add domains here
     static const std::vector<std::string> dns_urls = {
-      // TODO: Add Bonero blocklist DNS domains
-      // "blocklist.bonero.org"
+      // TODO: Add rXMR blocklist DNS domains
+      // "blocklist.rxmr.org"
     };
 
     std::vector<std::string> records;

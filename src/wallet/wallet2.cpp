@@ -3465,7 +3465,7 @@ void check_block_hard_fork_version(cryptonote::network_type nettype, uint8_t hf_
   const hardfork_t *wallet_hard_forks = nettype == TESTNET ? testnet_hard_forks
     : nettype == STAGENET ? stagenet_hard_forks : mainnet_hard_forks;
 
-  // NOTE: Bonero starts at hardfork version 16 from genesis.
+  // NOTE: rXMR starts at hardfork version 16 from genesis.
   // The hardfork table stores explicit {version,height} pairs, so the number of
   // entries is not equal to the maximum hardfork version.
   if (wallet_num_hard_forks == 0)
@@ -15651,7 +15651,7 @@ std::string wallet2::make_uri(const std::string &address, const std::string &pay
     return std::string();
   }
 
-  std::string uri = "bonero:" + address;
+  std::string uri = "rxmr:" + address;
   unsigned int n_fields = 0;
 
   if (!payment_id.empty())
@@ -15680,9 +15680,9 @@ std::string wallet2::make_uri(const std::string &address, const std::string &pay
 //----------------------------------------------------------------------------------------------------
 bool wallet2::parse_uri(const std::string &uri, std::string &address, std::string &payment_id, uint64_t &amount, std::string &tx_description, std::string &recipient_name, std::vector<std::string> &unknown_parameters, std::string &error)
 {
-  if (uri.substr(0, 7) != "bonero:")
+  if (uri.substr(0, 7) != "rxmr:")
   {
-    error = std::string("URI has wrong scheme (expected \"bonero:\"): ") + uri;
+    error = std::string("URI has wrong scheme (expected \"rxmr:\"): ") + uri;
     return false;
   }
 
@@ -15916,8 +15916,8 @@ std::vector<std::pair<uint64_t, uint64_t>> wallet2::estimate_backlog(const std::
     uint64_t nblocks_max = minfee_weight / full_reward_zone;
     uint64_t nblocks_min = maxfee_weight / full_reward_zone;
     MDEBUG("estimate_backlog: given a block weight of " << full_reward_zone << " you will need to wait "
-      << nblocks_min << " when paying " << our_fee_byte_max << " picobon per byte and " << nblocks_max
-      << " when paying " << our_fee_byte_min << " picobons per byte.");
+      << nblocks_min << " when paying " << our_fee_byte_max << " picorxmr per byte and " << nblocks_max
+      << " when paying " << our_fee_byte_min << " picorxmr per byte.");
     blocks.push_back(std::make_pair(nblocks_min, nblocks_max));
   }
   return blocks;

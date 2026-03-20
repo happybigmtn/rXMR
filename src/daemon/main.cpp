@@ -32,6 +32,7 @@
 #include "common/scoped_message_writer.h"
 #include "common/password.h"
 #include "common/util.h"
+#include "cryptonote_config.h"
 #include "cryptonote_core/cryptonote_core.h"
 #include "cryptonote_core/cryptonote_tx_utils.h"
 #include "cryptonote_basic/miner.h"
@@ -193,16 +194,16 @@ int main(int argc, char const * argv[])
 
     if (command_line::get_arg(vm, command_line::arg_help))
     {
-      std::cout << "Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ")" << ENDL << ENDL;
+      std::cout << "rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ")" << ENDL << ENDL;
       std::cout << "Usage: " + std::string{argv[0]} + " [options|settings] [daemon_command...]" << std::endl << std::endl;
       std::cout << visible_options << std::endl;
       return 0;
     }
 
-    // Bonero Version
+    // rXMR Version
     if (command_line::get_arg(vm, command_line::arg_version))
     {
-      std::cout << "Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ")" << ENDL;
+      std::cout << "rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ")" << ENDL;
       return 0;
     }
 
@@ -213,49 +214,20 @@ int main(int argc, char const * argv[])
       return 0;
     }
 
-    // Print Genesis TX - utility for generating genesis block coinbase transaction
+    const bool testnet = command_line::get_arg(vm, cryptonote::arg_testnet_on);
+    const bool stagenet = command_line::get_arg(vm, cryptonote::arg_stagenet_on);
+    const bool regtest = command_line::get_arg(vm, cryptonote::arg_regtest_on);
+
+    // Print the canonical chain genesis transaction hex.
+    // The live chain preserves its historical genesis memo even after the rename.
     if (command_line::get_arg(vm, daemon_args::arg_print_genesis_tx))
     {
-      // Genesis message: proves the chain's creation date and purpose
-      const std::string genesis_message = "Bonero Genesis - 2026: Private money for private machines";
-
-      // Create a null address for the genesis block (coins are effectively burned)
-      // This follows the CryptoNote convention where genesis block reward is sent to a null address
-      cryptonote::account_public_address genesis_addr = {};
-
-      // Construct the genesis coinbase transaction
-      cryptonote::transaction tx;
-      const uint8_t hf_version = 16; // Bonero starts at hardfork version 16
-      cryptonote::blobdata extra_nonce(genesis_message.begin(), genesis_message.end());
-
-      bool success = cryptonote::construct_miner_tx(
-        0,                    // height: genesis block is height 0
-        0,                    // median_weight: no previous blocks
-        0,                    // already_generated_coins: none for genesis
-        0,                    // current_block_weight: minimal
-        0,                    // fee: no fees in genesis
-        genesis_addr,         // miner address: null for genesis
-        tx,                   // output transaction
-        extra_nonce,          // the genesis message
-        1,                    // max_outs: single output for genesis
-        hf_version            // hardfork version
-      );
-
-      if (!success)
-      {
-        std::cerr << "Failed to construct genesis transaction" << std::endl;
-        return 1;
-      }
-
-      // Serialize and print the transaction as hex
-      cryptonote::blobdata tx_blob;
-      if (!t_serializable_object_to_blob(tx, tx_blob))
-      {
-        std::cerr << "Failed to serialize genesis transaction" << std::endl;
-        return 1;
-      }
-
-      std::cout << epee::string_tools::buff_to_hex_nodelimer(tx_blob) << std::endl;
+      if (stagenet)
+        std::cout << config::stagenet::GENESIS_TX << std::endl;
+      else if (testnet)
+        std::cout << config::testnet::GENESIS_TX << std::endl;
+      else
+        std::cout << config::GENESIS_TX << std::endl;
       return 0;
     }
 
@@ -294,9 +266,6 @@ int main(int argc, char const * argv[])
       return 1;
     }
 
-    const bool testnet = command_line::get_arg(vm, cryptonote::arg_testnet_on);
-    const bool stagenet = command_line::get_arg(vm, cryptonote::arg_stagenet_on);
-    const bool regtest = command_line::get_arg(vm, cryptonote::arg_regtest_on);
     if (testnet + stagenet + regtest > 1)
     {
       std::cerr << "Can't specify more than one of --tesnet and --stagenet and --regtest" << ENDL;
@@ -355,7 +324,7 @@ int main(int argc, char const * argv[])
       tools::set_max_concurrency(command_line::get_arg(vm, daemon_args::arg_max_concurrency));
 
     // logging is now set up
-    MGINFO("Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ")");
+    MGINFO("rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ")");
 
     // If there are positional options, we're running a daemon command
     {

@@ -39,6 +39,7 @@ Test the following RPCs:
 """
 
 from framework.wallet import Wallet
+from rxmr_fixtures import MAIN_ADDRESS, SECOND_MAIN_ADDRESS, SECOND_SEED, SEED
 
 class MessageSigningTest():
     def run_test(self):
@@ -50,13 +51,10 @@ class MessageSigningTest():
 
     def create(self):
         print('Creating wallets')
-        seeds = [
-            'velvet lymph giddy number token physics poetry unquoted nibs useful sabotage limits benches lifestyle eden nitrogen anvil fewest avoid batch vials washing fences goat unquoted',
-            'peeled mixture ionic radar utopia puddle buying illness nuns gadget river spout cavernous bounced paradise drunk looking cottage jump tequila melting went winter adjust spout',
-        ]
+        seeds = [SEED, SECOND_SEED]
         self.address = [
-            '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm',
-            '44Kbx4sJ7JDRDV5aAhLJzQCjDz2ViLRduE3ijDZu3osWKBjMGkV1XPk4pfDUMqt1Aiezvephdqm6YD19GKFD9ZcXVUTp6BW',
+            MAIN_ADDRESS,
+            SECOND_MAIN_ADDRESS,
         ]
         self.wallet = [None, None]
         for i in range(2):
@@ -69,7 +67,7 @@ class MessageSigningTest():
             assert res.seed == seeds[i]
 
     def check_signing(self, subaddress, spend_key):
-        print('Signing/verifing messages with ' + ('subaddress' if subaddress else 'standard address') + ' ' + ('spend key' if spend_key else 'view key'))
+        print('Signing/verifying messages with ' + ('subaddress' if subaddress else 'standard address') + ' ' + ('spend key' if spend_key else 'view key'))
         messages = ['foo', '']
         if subaddress:
             address = []

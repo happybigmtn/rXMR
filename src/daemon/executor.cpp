@@ -58,7 +58,7 @@ namespace daemonize
       boost::program_options::variables_map const & vm
     )
   {
-    LOG_PRINT_L0("Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ") Daemonised");
+    LOG_PRINT_L0("rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ") Daemonised");
     return t_daemon{vm, public_rpc_port};
   }
 

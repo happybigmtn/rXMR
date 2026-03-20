@@ -90,12 +90,12 @@ int main(int argc, char* argv[])
 
   if (command_line::get_arg(vm, command_line::arg_help))
   {
-    std::cout << "Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ")" << ENDL << ENDL;
+    std::cout << "rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ")" << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return 1;
   }
 
-  mlog_configure(mlog_get_default_log_path("bonero-blockchain-export.log"), true);
+  mlog_configure(mlog_get_default_log_path("rxmr-blockchain-export.log"), true);
   if (!command_line::is_arg_defaulted(vm, arg_log_level))
     mlog_set_log(command_line::get_arg(vm, arg_log_level).c_str());
   else

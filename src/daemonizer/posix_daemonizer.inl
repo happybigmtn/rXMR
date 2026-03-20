@@ -100,7 +100,7 @@ namespace daemonizer
     }
     else
     {
-      //LOG_PRINT_L0("Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL);
+      //LOG_PRINT_L0("rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL);
       return executor.run_interactive(vm);
     }
   }

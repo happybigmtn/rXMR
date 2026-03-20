@@ -1,19 +1,19 @@
-# Bonero Blockchain Stats
+# rXMR Blockchain Stats
 
-Bonero Blockchain Stats utility exports daily statistics for the Bonero blockchain from creation through current state.
+rXMR Blockchain Stats utility exports daily statistics for the rXMR blockchain from creation through current state.
 
 ## Usage:
 
-See also the utility's help option. `bonero-blockchain-stats --help`
+See also the utility's help option. `rxmr-blockchain-stats --help`
 
 From the command line run:
 
-`$ bonero-blockchain-stats`
+`$ rxmr-blockchain-stats`
 
 This loads the existing blockchain and prints the results to the terminal. Default printed data includes Blocks per Day, Total Blocks, Transactions per Day, Total Transactions, Bytes per Day and Total Bytes. The format of the output is in tab delimited csv which is printed to the console. Redirecting or piping the output of the command allows for saving the output to a csv file or feeding your own script accordingly, i.e.:
 
-- `bonero-blockchain-stats > stats-$(date +'%Y-%m-%d').csv`
-- `bonero-blockchain-stats | save-to-database.sh`
+- `rxmr-blockchain-stats > stats-$(date +'%Y-%m-%d').csv`
+- `rxmr-blockchain-stats | save-to-database.sh`
 
 ### Options
 `--data-dir arg` 

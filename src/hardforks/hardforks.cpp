@@ -31,9 +31,9 @@
 #undef MONERO_DEFAULT_LOG_CATEGORY
 #define MONERO_DEFAULT_LOG_CATEGORY "blockchain.hardforks"
 
-// Bonero: Fresh chain starting at v16 from genesis.
+// rXMR: Fresh chain starting at v16 from genesis.
 // wallet2.cpp indexes by version number, so all versions 1-16 must be present.
-// All point to height 0 since Bonero starts directly at v16.
+// All point to height 0 since rXMR starts directly at v16.
 const hardfork_t mainnet_hard_forks[] = {
   {  1, 0, 0, 1735689600 },
   {  2, 0, 0, 1735689600 },

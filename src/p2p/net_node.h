@@ -302,8 +302,8 @@ namespace nodetool
     virtual void clear_used_stripe_peers();
 
   private:
-    // Bonero: No DNS seed infrastructure yet
-    // When Bonero DNS seeds are established, add them here
+    // rXMR: No DNS seed infrastructure yet
+    // When rXMR DNS seeds are established, add them here
     const std::vector<std::string> m_seed_nodes_list = {};
 
     bool islimitup=false;

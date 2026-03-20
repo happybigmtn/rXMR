@@ -41,25 +41,25 @@ RUN set -ex && \
     rm -rf /var/lib/apt
 COPY --from=builder /src/build/x86_64-linux-gnu/release/bin /usr/local/bin/
 
-# Create monero user
-RUN adduser --system --group --disabled-password monero && \
-	mkdir -p /wallet /home/monero/.bitmonero && \
-	chown -R monero:monero /home/monero/.bitmonero && \
-	chown -R monero:monero /wallet
+# Create rxmr user
+RUN adduser --system --group --disabled-password rxmr && \
+	mkdir -p /wallet /home/rxmr/.rxmr && \
+	chown -R rxmr:rxmr /home/rxmr/.rxmr && \
+	chown -R rxmr:rxmr /wallet
 
 # Contains the blockchain
-VOLUME /home/monero/.bitmonero
+VOLUME /home/rxmr/.rxmr
 
 # Generate your wallet via accessing the container and run:
 # cd /wallet
-# bonero-wallet-cli
+# rxmr-wallet-cli
 VOLUME /wallet
 
 EXPOSE 18880
 EXPOSE 18881
 
-# switch to user monero
-USER monero
+# switch to user rxmr
+USER rxmr
 
-ENTRYPOINT ["monerod"]
+ENTRYPOINT ["rxmrd"]
 CMD ["--p2p-bind-ip=0.0.0.0", "--p2p-bind-port=18880", "--rpc-bind-ip=0.0.0.0", "--rpc-bind-port=18881", "--non-interactive", "--confirm-external-bind"]

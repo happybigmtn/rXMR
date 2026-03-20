@@ -53,7 +53,7 @@ namespace
 
   TEST_F(block_reward_and_already_generated_coins, handles_first_values)
   {
-    // Bonero: EMISSION_SPEED_FACTOR_PER_MINUTE = 21 (60s blocks -> effective_factor = 21)
+    // rXMR: EMISSION_SPEED_FACTOR_PER_MINUTE = 21 (60s blocks -> effective_factor = 21)
     // Block reward formula: (MONEY_SUPPLY - already_generated) >> emission_speed_factor
     //
     // First block reward = (2^64 - 1) >> 21 = 8796093022207

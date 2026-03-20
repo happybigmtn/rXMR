@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2022, The Monero Project
-// Copyright (c) 2026, The Bonero Project
+// Copyright (c) 2026, The rXMR Project
 //
 // All rights reserved.
 //
@@ -27,14 +27,14 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Bonero network identity tests
-// Acceptance criteria: Verify that Bonero network parameters differ from Monero
+// rXMR network identity tests
+// Acceptance criteria: Verify that rXMR network parameters differ from Monero
 // to ensure network isolation and proper branding.
 
 #include "gtest/gtest.h"
 #include "cryptonote_config.h"
 
-// Test suite: Verify Bonero mainnet ports are correctly configured
+// Test suite: Verify rXMR mainnet ports are correctly configured
 // Acceptance: Mainnet ports must be 18880/18881/18882 (not Monero's 18080/18081/18082)
 TEST(network_identity, mainnet_ports)
 {
@@ -43,7 +43,7 @@ TEST(network_identity, mainnet_ports)
   ASSERT_EQ(config::ZMQ_RPC_DEFAULT_PORT, 18882);
 }
 
-// Test suite: Verify Bonero testnet ports are correctly configured
+// Test suite: Verify rXMR testnet ports are correctly configured
 // Acceptance: Testnet ports must be 28880/28881 (not Monero's 28080/28081)
 TEST(network_identity, testnet_ports)
 {
@@ -52,7 +52,7 @@ TEST(network_identity, testnet_ports)
   ASSERT_EQ(config::testnet::ZMQ_RPC_DEFAULT_PORT, 28882);
 }
 
-// Test suite: Verify Bonero stagenet ports are correctly configured
+// Test suite: Verify rXMR stagenet ports are correctly configured
 // Acceptance: Stagenet ports must be 38880/38881 (not Monero's 38080/38081)
 TEST(network_identity, stagenet_ports)
 {
@@ -61,12 +61,12 @@ TEST(network_identity, stagenet_ports)
   ASSERT_EQ(config::stagenet::ZMQ_RPC_DEFAULT_PORT, 38882);
 }
 
-// Test suite: Verify Bonero network ID differs from Monero
+// Test suite: Verify rXMR network ID differs from Monero
 // Acceptance: First 3 bytes must be 0xB0, 0x9E, 0x80 (not Monero's 0x12, 0x30, 0xF1)
-// This ensures Bonero nodes cannot accidentally connect to Monero network
+// This ensures rXMR nodes cannot accidentally connect to Monero network
 TEST(network_identity, network_id_differs_from_monero)
 {
-  // Bonero mainnet NETWORK_ID starts with 0xB0, 0x9E, 0x80
+  // rXMR mainnet NETWORK_ID starts with 0xB0, 0x9E, 0x80
   // Monero mainnet NETWORK_ID starts with 0x12, 0x30, 0xF1
   ASSERT_EQ(config::NETWORK_ID.data[0], 0xB0);
   ASSERT_EQ(config::NETWORK_ID.data[1], 0x9E);
@@ -98,7 +98,7 @@ TEST(network_identity, stagenet_network_id)
   ASSERT_EQ(config::stagenet::NETWORK_ID.data[15], 0x12);
 }
 
-// Test suite: Verify Bonero consensus parameters for 60-second blocks
+// Test suite: Verify rXMR consensus parameters for 60-second blocks
 // Acceptance: Block time must be 60s (not Monero's 120s) for faster AI agent transactions
 TEST(consensus, block_time_60_seconds)
 {

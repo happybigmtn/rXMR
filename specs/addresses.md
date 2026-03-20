@@ -1,23 +1,24 @@
-# Bonero Address Specification
+# rXMR Address Specification
 
-## Address Types
+## Base58 Prefix Values
 
-| Address Type | Bonero Prefix | Starts With |
-|--------------|---------------|-------------|
-| Standard | 66 | 'B' |
-| Integrated | 67 | 'Bi' |
-| Subaddress | 98 | 'Bo' |
+| Network | Standard | Integrated | Subaddress |
+|---|---:|---:|---:|
+| Mainnet | 66 | 67 | 98 |
+| Testnet | 136 | 137 | 146 |
+| Stagenet | 86 | 87 | 108 |
 
-### Testnet
-| Address Type | Prefix | Starts With |
-|--------------|--------|-------------|
-| Standard | 136 | 'T' |
-| Integrated | 137 | 'Ti' |
-| Subaddress | 146 | 'To' |
+## Typical Human-Visible Starts
 
-### Stagenet
-| Address Type | Prefix | Starts With |
-|--------------|--------|-------------|
-| Standard | 86 | 'S' |
-| Integrated | 87 | 'Si' |
-| Subaddress | 108 | 'So' |
+These come from the current test vectors in the repo, not from a simple one-byte mapping:
+
+| Network | Standard example | Integrated example | Subaddress example |
+|---|---|---|---|
+| Mainnet | `C...` | `CD...` | `H...` |
+| Testnet | `P...` | `Pv...` | `R...` |
+| Stagenet | `F...` | `Fg...` | `K...` |
+
+## Notes
+
+- rXMR addresses are not valid Monero mainnet addresses.
+- `rxmr:` is the canonical payment URI scheme.

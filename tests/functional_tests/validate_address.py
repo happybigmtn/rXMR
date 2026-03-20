@@ -33,6 +33,15 @@
 
 from __future__ import print_function
 from framework.wallet import Wallet
+from rxmr_fixtures import (
+    MAIN_ADDRESS,
+    MAIN_ADDRESS_BAD_CHECKSUM,
+    MAIN_INTEGRATED_ADDRESS,
+    SECOND_MAIN_ADDRESS,
+    STAGENET_ADDRESS,
+    TESTNET_ADDRESS,
+    SEED,
+)
 
 class AddressValidationTest():
     def run_test(self):
@@ -43,8 +52,8 @@ class AddressValidationTest():
 
     def create(self):
         print('Creating wallet')
-        seed = 'velvet lymph giddy number token physics poetry unquoted nibs useful sabotage limits benches lifestyle eden nitrogen anvil fewest avoid batch vials washing fences goat unquoted'
-        address = 'C4KFgKxtSdc4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJHn8Rtc'
+        seed = SEED
+        address = MAIN_ADDRESS
         self.wallet = Wallet()
         # close the wallet if any, will throw if none is loaded
         try: self.wallet.close_wallet()
@@ -55,7 +64,7 @@ class AddressValidationTest():
 
     def check_bad_addresses(self):
         print('Validating bad addresses')
-        bad_addresses = ['', 'a', '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWD9', ' ', '@', '42ey']
+        bad_addresses = ['', 'a', MAIN_ADDRESS_BAD_CHECKSUM, ' ', '@', 'C4KF']
         for address in bad_addresses:
             res = self.wallet.validate_address(address, any_net_type = False)
             assert not res.valid
@@ -65,11 +74,11 @@ class AddressValidationTest():
     def check_good_addresses(self):
         print('Validating good addresses')
         addresses = [
-            [ 'mainnet',  '', 'C4KFgKxtSdc4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJHn8Rtc' ],
-            [ 'mainnet',  '', 'C5ytcpAyJ93RDV5aAhLJzQCjDz2ViLRduE3ijDZu3osWKBjMGkV1XPk4pfDUMqt1Aiezvephdqm6YD19GKFD9ZcXVXJiCsG' ],
-            [ 'testnet',  '', 'PkRG8ZRWvXzjdsemFMGb5MQ3dYEjQ1oM8harGpqiYbKBg2eTRse2TWUau1SQYsuHzBNwkakRQnja4PmUECatMRHp1Yt3H5Dqx' ],
-            [ 'stagenet', '', 'FRNMhEvp8w2eJ1REzGMAat1ZeHvuajvDiXqboEocPaDRRmqWoVPzy46GLo866qRFjbNhfkNckyhST3WEvBviDwpUDaG5Wtr' ],
-            [ 'mainnet', 'i', 'CDcixfvMenj25WooY4BVmgdcKwZu5EksVZSZkDd6ooxSVVqQ4ubxXkhLF6hEqtw96i9cf3cVfLw8UWe95bdDKfRQeYtPwLm1Jiw7BGQ2SC' ],
+            [ 'mainnet',  '', MAIN_ADDRESS ],
+            [ 'mainnet',  '', SECOND_MAIN_ADDRESS ],
+            [ 'testnet',  '', TESTNET_ADDRESS ],
+            [ 'stagenet', '', STAGENET_ADDRESS ],
+            [ 'mainnet', 'i', MAIN_INTEGRATED_ADDRESS ],
             [ 'mainnet', 's', 'HY92vDicqeiBGTY8psSNkJBg9SZgxxGGRUhGwRptBhgr5XSQ1XzmA9m8QAnoxydecSh5aLJXdrgXwTDMMZ1AuXsN1JXPVXJ' ],
             [ 'mainnet', 's', 'HU1zZPAstyALxtK1Jmx2BkNBDBSMDEVaRYMMyVbeURYDWs8uNGDZURKCA5yRcyMxHzPcmCf1q2fSdhQVcaKsFrtGRw1ttfz' ],
             [ 'testnet', 'i', 'Pv99qc974iP4eGcoeeC6mdUPh7BfEv9i99gRJUZq72YS86gPpsZDStvK14Pb19zGD7fyPD8QkG9HBj3PHd5Ppw2XVYxogqQEJc117K9kmRZ1' ],
@@ -93,7 +102,7 @@ class AddressValidationTest():
 
     def check_openalias_addresses(self):
         print('Validating openalias addresses')
-        # Bonero uses different address prefixes; Monero OpenAlias records must be rejected.
+        # rXMR uses different address prefixes; Monero OpenAlias records must be rejected.
         addresses = [
             'donate@getmonero.org'
         ]

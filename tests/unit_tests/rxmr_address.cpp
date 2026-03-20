@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2022, The Monero Project
-// Copyright (c) 2026, The Bonero Project
+// Copyright (c) 2026, The rXMR Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Bonero address prefix tests
-// Acceptance criteria: Verify that Bonero addresses use distinct prefixes
+// rXMR address prefix tests
+// Acceptance criteria: Verify that rXMR addresses use distinct prefixes
 // from Monero to enable visual identification and prevent cross-network confusion.
 
 #include "gtest/gtest.h"
@@ -38,63 +38,63 @@
 #include "cryptonote_basic/cryptonote_basic_impl.h"
 
 // Test suite: Verify mainnet standard address prefix
-// Acceptance: Prefix 66 produces addresses starting with 'B' for easy agent recognition
+// Acceptance: Prefix 66 is the configured mainnet standard address prefix value
 TEST(address_prefix, mainnet_standard_prefix_66)
 {
   ASSERT_EQ(config::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX, 66);
 }
 
 // Test suite: Verify mainnet integrated address prefix
-// Acceptance: Prefix 67 produces addresses starting with 'Bi'
+// Acceptance: Prefix 67 is the configured mainnet integrated address prefix value
 TEST(address_prefix, mainnet_integrated_prefix_67)
 {
   ASSERT_EQ(config::CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX, 67);
 }
 
 // Test suite: Verify mainnet subaddress prefix
-// Acceptance: Prefix 98 produces addresses starting with 'Bo'
+// Acceptance: Prefix 98 is the configured mainnet subaddress prefix value
 TEST(address_prefix, mainnet_subaddress_prefix_98)
 {
   ASSERT_EQ(config::CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX, 98);
 }
 
 // Test suite: Verify testnet standard address prefix
-// Acceptance: Prefix 136 produces addresses starting with 'T'
+// Acceptance: Prefix 136 is the configured testnet standard address prefix value
 TEST(address_prefix, testnet_standard_prefix)
 {
   ASSERT_EQ(config::testnet::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX, 136);
 }
 
 // Test suite: Verify testnet integrated address prefix
-// Acceptance: Prefix 137 produces addresses starting with 'Ti'
+// Acceptance: Prefix 137 is the configured testnet integrated address prefix value
 TEST(address_prefix, testnet_integrated_prefix)
 {
   ASSERT_EQ(config::testnet::CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX, 137);
 }
 
 // Test suite: Verify testnet subaddress prefix
-// Acceptance: Prefix 146 produces addresses starting with 'To'
+// Acceptance: Prefix 146 is the configured testnet subaddress prefix value
 TEST(address_prefix, testnet_subaddress_prefix)
 {
   ASSERT_EQ(config::testnet::CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX, 146);
 }
 
 // Test suite: Verify stagenet standard address prefix
-// Acceptance: Prefix 86 produces addresses starting with 'S'
+// Acceptance: Prefix 86 is the configured stagenet standard address prefix value
 TEST(address_prefix, stagenet_standard_prefix)
 {
   ASSERT_EQ(config::stagenet::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX, 86);
 }
 
 // Test suite: Verify stagenet integrated address prefix
-// Acceptance: Prefix 87 produces addresses starting with 'Si'
+// Acceptance: Prefix 87 is the configured stagenet integrated address prefix value
 TEST(address_prefix, stagenet_integrated_prefix)
 {
   ASSERT_EQ(config::stagenet::CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX, 87);
 }
 
 // Test suite: Verify stagenet subaddress prefix
-// Acceptance: Prefix 108 produces addresses starting with 'So'
+// Acceptance: Prefix 108 is the configured stagenet subaddress prefix value
 TEST(address_prefix, stagenet_subaddress_prefix)
 {
   ASSERT_EQ(config::stagenet::CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX, 108);
@@ -143,7 +143,7 @@ TEST(address_prefix, stagenet_standard_encodes_prefix)
 }
 
 // Test suite: Verify Monero addresses are rejected
-// Acceptance: Bonero must refuse to parse Monero mainnet addresses (prefix 18 vs 66)
+// Acceptance: rXMR must refuse to parse Monero mainnet addresses (prefix 18 vs 66)
 // This prevents accidental cross-network transactions
 TEST(address_prefix, monero_addresses_rejected)
 {
@@ -155,10 +155,10 @@ TEST(address_prefix, monero_addresses_rejected)
   ASSERT_FALSE(result);  // Should fail - wrong prefix (18 vs 66)
 }
 
-// Test suite: Verify Bonero prefix differs from Monero
+// Test suite: Verify rXMR prefix differs from Monero
 // Acceptance: Mainnet prefix 66 must not equal Monero's 18
 TEST(address_prefix, mainnet_prefix_differs_from_monero)
 {
-  // Monero mainnet prefix is 18, Bonero is 66
+  // Monero mainnet prefix is 18, rXMR is 66
   ASSERT_NE(config::CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX, 18);
 }

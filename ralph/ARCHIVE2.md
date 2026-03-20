@@ -29,7 +29,7 @@
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_network.cpp (NEW FILE)
+// tests/unit_tests/rxmr_network.cpp (NEW FILE)
 #include "gtest/gtest.h"
 #include "cryptonote_config.h"
 
@@ -90,7 +90,7 @@ TEST(network_identity, network_id_differs_from_monero)
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_address.cpp (NEW FILE)
+// tests/unit_tests/rxmr_address.cpp (NEW FILE)
 #include "gtest/gtest.h"
 #include "common/base58.h"
 #include "cryptonote_config.h"
@@ -144,36 +144,36 @@ TEST(address_prefix, monero_addresses_rejected)
 
 ### 1.3 Data Directory ✅ COMPLETED
 
-- [x] Change CRYPTONOTE_NAME from "bitmonero" to "bonero"
+- [x] Change CRYPTONOTE_NAME from "bitmonero" to "rxmr"
 
 **File:** `src/cryptonote_config.h` (line 165)
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_branding.cpp (NEW FILE)
+// tests/unit_tests/rxmr_branding.cpp (NEW FILE)
 #include "gtest/gtest.h"
 #include "cryptonote_config.h"
 
 TEST(branding, data_directory_name)
 {
-  ASSERT_STREQ(CRYPTONOTE_NAME, "bonero");
+  ASSERT_STREQ(CRYPTONOTE_NAME, "rxmr");
 }
 ```
 
 **Functional Test:**
 ```bash
 
-- [x] Change daemon OUTPUT_NAME from "monerod" to "bonerod"
+- [x] Change daemon OUTPUT_NAME from "rxmrd" to "rxmrd"
 
-- [x] Change wallet CLI OUTPUT_NAME from "monero-wallet-cli" to "bonero-wallet-cli"
+- [x] Change wallet CLI OUTPUT_NAME from "rxmr-wallet-cli" to "rxmr-wallet-cli"
 
-- [x] Change wallet RPC OUTPUT_NAME from "monero-wallet-rpc" to "bonero-wallet-rpc"
+- [x] Change wallet RPC OUTPUT_NAME from "rxmr-wallet-rpc" to "rxmr-wallet-rpc"
 
-- [x] Rename all blockchain utilities from "monero-blockchain-*" to "bonero-blockchain-*"
+- [x] Rename all blockchain utilities from "monero-blockchain-*" to "rxmr-blockchain-*"
 
-- [x] Rename debug utilities from "monero-utils-*" to "bonero-utils-*"
+- [x] Rename debug utilities from "monero-utils-*" to "rxmr-utils-*"
 
-- [x] Rename gen utilities from "monero-gen-*" to "bonero-gen-*"
+- [x] Rename gen utilities from "monero-gen-*" to "rxmr-gen-*"
 
 **Files:**
 - `src/daemon/CMakeLists.txt` (line 74)
@@ -187,7 +187,7 @@ TEST(branding, data_directory_name)
 **Required Tests:**
 ```bash
 
-- [x] Change project(monero) to project(bonero) in CMakeLists.txt
+- [x] Change project(monero) to project(rxmr) in CMakeLists.txt
 
 **File:** `CMakeLists.txt` (line 49)
 
@@ -196,7 +196,7 @@ TEST(branding, data_directory_name)
 
 - [x] Change "piconero" to "picobon" in cryptonote_format_utils.cpp
 
-- [x] Update unit names in simplewallet.cpp (monero→bonero, millinero→millibon, etc.)
+- [x] Update unit names in simplewallet.cpp (monero→rxmr, millinero→millibon, etc.)
 
 - [x] Update unit names in wallet2.cpp
 
@@ -207,7 +207,7 @@ TEST(branding, data_directory_name)
 
 **Required Tests:**
 ```cpp
-// Add to tests/unit_tests/bonero_branding.cpp
+// Add to tests/unit_tests/rxmr_branding.cpp
 TEST(branding, currency_unit_name)
 {
   // Verify smallest unit is "picobon" not "piconero"
@@ -227,7 +227,7 @@ TEST(branding, currency_unit_name)
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_consensus.cpp (NEW FILE)
+// tests/unit_tests/rxmr_consensus.cpp (NEW FILE)
 #include "gtest/gtest.h"
 #include "cryptonote_config.h"
 
@@ -283,7 +283,7 @@ const uint64_t mainnet_hard_fork_version_1_till = 0;
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_chain.cpp
+// tests/unit_tests/rxmr_chain.cpp
 TEST(chain_state, starts_at_version_16)
 {
   ASSERT_EQ(num_mainnet_hard_forks, 1);
@@ -317,7 +317,7 @@ TEST(chain_state, starts_at_version_16)
 
 **Required Tests:**
 ```cpp
-// tests/unit_tests/bonero_network.cpp
+// tests/unit_tests/rxmr_network.cpp
 TEST(network_identity, no_monero_seed_nodes)
 {
   // Verify seed node list doesn't contain Monero domains
@@ -333,5 +333,5 @@ TEST(network_identity, no_monero_seed_nodes)
 
 - [x] Implement `--print-genesis-tx` option in daemon (src/daemon/main.cpp, command_line_args.h)
 
-- [x] Create unit tests for genesis validation (tests/unit_tests/bonero_chain.cpp)
+- [x] Create unit tests for genesis validation (tests/unit_tests/rxmr_chain.cpp)
 

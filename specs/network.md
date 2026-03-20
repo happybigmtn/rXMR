@@ -1,23 +1,21 @@
-# Bonero Network Parameters
+# rXMR Network Parameters
 
-## Network Magic / Levin Signature
+## Network IDs
 
-| Network | Bonero |
-|---------|--------|
+| Network | UUID bytes |
+|---|---|
 | Mainnet | `{0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x10}` |
 | Testnet | `{0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x11}` |
 | Stagenet | `{0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x12}` |
 
-## Port Numbers
+## Ports
 
-| Network | Type | Bonero |
-|---------|------|--------|
-| Mainnet | P2P | 18880 |
-| Mainnet | RPC | 18881 |
-| Mainnet | ZMQ | 18882 |
-| Testnet | P2P | 28880 |
-| Testnet | RPC | 28881 |
-| Testnet | ZMQ | 28882 |
-| Stagenet | P2P | 38880 |
-| Stagenet | RPC | 38881 |
-| Stagenet | ZMQ | 38882 |
+| Network | P2P | RPC | ZMQ RPC |
+|---|---:|---:|---:|
+| Mainnet | 18880 | 18881 | 18882 |
+| Testnet | 28880 | 28881 | 28882 |
+| Stagenet | 38880 | 38881 | 38882 |
+
+## Seed Peers
+
+Mainnet hardcodes ten IPv4 fallback peers on `18880` in `src/p2p/net_node.inl` and mirrors the same list in the installer and public-node example config.

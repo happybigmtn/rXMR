@@ -1,4 +1,4 @@
-# Bonero Blockchain Utilities
+# rXMR Blockchain Utilities
 
 Copyright (c) 2014-2022, The Monero Project
 
@@ -12,16 +12,16 @@ See also each utility's "--help" option.
 
 ### Export an existing blockchain database
 
-`$ bonero-blockchain-export`
+`$ rxmr-blockchain-export`
 
 This loads the existing blockchain and exports it to `<data-dir>/export/blockchain.raw`
 
 ### Import the exported file
 
-`$ bonero-blockchain-import`
+`$ rxmr-blockchain-import`
 
 This imports blocks from `<data-dir>/export/blockchain.raw` (exported using the
-`bonero-blockchain-export` tool as described above) into the current database.
+`rxmr-blockchain-export` tool as described above) into the current database.
 
 Defaults: `--batch on`, `--batch size 20000`, `--verify on`
 
@@ -30,14 +30,14 @@ Batch size refers to number of blocks and can be adjusted for performance based 
 Verification should only be turned off if importing from a trusted blockchain.
 
 If you encounter an error like "resizing not supported in batch mode", you can just re-run
-the `bonero-blockchain-import` command again, and it will restart from where it left off.
+the `rxmr-blockchain-import` command again, and it will restart from where it left off.
 
 ```bash
 ## use default settings to import blockchain.raw into database
-$ bonero-blockchain-import
+$ rxmr-blockchain-import
 
 ## fast import with large batch size, database mode "fastest", verification off
-$ bonero-blockchain-import --batch-size 20000 --database lmdb#fastest --verify off
+$ rxmr-blockchain-import --batch-size 20000 --database lmdb#fastest --verify off
 
 ```
 
@@ -80,9 +80,9 @@ LMDB flags (more than one may be specified):
 ## Examples:
 
 ```bash
-$ bonero-blockchain-import --database lmdb#fastest
+$ rxmr-blockchain-import --database lmdb#fastest
 
-$ bonero-blockchain-import --database lmdb#nosync
+$ rxmr-blockchain-import --database lmdb#nosync
 
-$ bonero-blockchain-import --database lmdb#nosync,nometasync
+$ rxmr-blockchain-import --database lmdb#nosync,nometasync
 ```

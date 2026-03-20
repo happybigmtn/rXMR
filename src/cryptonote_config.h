@@ -43,7 +43,7 @@
 #define CRYPTONOTE_PUBLIC_ADDRESS_TEXTBLOB_VER          0
 #define CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW            60
 #define CURRENT_TRANSACTION_VERSION                     2
-#define CURRENT_BLOCK_MAJOR_VERSION                     16  // Bonero starts at v16
+#define CURRENT_BLOCK_MAJOR_VERSION                     16  // rXMR starts at v16
 #define CURRENT_BLOCK_MINOR_VERSION                     16  // Voting version must match for hardfork check
 #define CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT              60*60*2
 #define CRYPTONOTE_DEFAULT_TX_SPENDABLE_AGE             10
@@ -77,9 +77,9 @@
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 
 
-#define DIFFICULTY_TARGET_V2                            60  // seconds (Bonero: 60s blocks for faster AI agent transactions)
+#define DIFFICULTY_TARGET_V2                            60  // seconds (rXMR: 60s blocks for faster AI agent transactions)
 #define DIFFICULTY_TARGET_V1                            60  // seconds - before first fork
-#define DIFFICULTY_WINDOW                               1440 // blocks (Bonero: 1440 * 60s = 24h window)
+#define DIFFICULTY_WINDOW                               1440 // blocks (rXMR: 1440 * 60s = 24h window)
 #define DIFFICULTY_LAG                                  15  // !!!
 #define DIFFICULTY_CUT                                  60  // timestamps to cut after sorting
 #define DIFFICULTY_BLOCKS_COUNT                         DIFFICULTY_WINDOW + DIFFICULTY_LAG
@@ -162,7 +162,7 @@
 
 #define RPC_IP_FAILS_BEFORE_BLOCK                       3
 
-#define CRYPTONOTE_NAME                         "bonero"
+#define CRYPTONOTE_NAME                         "rxmr"
 #define CRYPTONOTE_BLOCKCHAINDATA_FILENAME      "data.mdb"
 #define CRYPTONOTE_BLOCKCHAINDATA_LOCK_FILENAME "lock.mdb"
 #define P2P_NET_DATA_FILENAME                   "p2pstate.bin"
@@ -224,15 +224,15 @@ namespace config
   uint64_t const DEFAULT_DUST_THRESHOLD = ((uint64_t)2000000000); // 2 * pow(10, 9)
   uint64_t const BASE_REWARD_CLAMP_THRESHOLD = ((uint64_t)100000000); // pow(10, 8)
 
-  uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 66;    // 'B' prefix for Bonero mainnet
-  uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 67;  // 'Bi' prefix
-  uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 98;  // 'Bo' prefix
+  uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 66;    // mainnet standard address prefix value
+  uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 67;  // mainnet integrated address prefix value
+  uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 98;  // mainnet subaddress prefix value
   uint16_t const P2P_DEFAULT_PORT = 18880;
   uint16_t const RPC_DEFAULT_PORT = 18881;
   uint16_t const ZMQ_RPC_DEFAULT_PORT = 18882;
   boost::uuids::uuid const NETWORK_ID = { {
       0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x10
-    } }; // Bonero mainnet
+    } }; // rXMR mainnet
   std::string const GENESIS_TX = "023c01ff0001ffffffffffff01039b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd088071335c01a2bd2735bb2ae9e2f364374bf3b2b3296b5161c7ee58bb96526ed87bb63ac3a50239426f6e65726f2047656e65736973202d20323032363a2050726976617465206d6f6e657920666f722070726976617465206d616368696e657300";
   uint32_t const GENESIS_NONCE = 10000;
 
@@ -256,7 +256,7 @@ namespace config
   const unsigned char HASH_KEY_CLSAG_ROUND[] = "CLSAG_round";
   const unsigned char HASH_KEY_CLSAG_AGG_0[] = "CLSAG_agg_0";
   const unsigned char HASH_KEY_CLSAG_AGG_1[] = "CLSAG_agg_1";
-  const char HASH_KEY_MESSAGE_SIGNING[] = "BoneroMessageSignature";
+  const char HASH_KEY_MESSAGE_SIGNING[] = "rXMRMessageSignature";
   const unsigned char HASH_KEY_MM_SLOT = 'm';
   const constexpr char HASH_KEY_MULTISIG_TX_PRIVKEYS_SEED[] = "multisig_tx_privkeys_seed";
   const constexpr char HASH_KEY_MULTISIG_TX_PRIVKEYS[] = "multisig_tx_privkeys";
@@ -267,30 +267,30 @@ namespace config
 
   namespace testnet
   {
-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 136;  // 'T' prefix for Bonero testnet
-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 137;  // 'Ti' prefix
-    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 146;  // 'To' prefix
+    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 136;  // testnet standard address prefix value
+    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 137;  // testnet integrated address prefix value
+    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 146;  // testnet subaddress prefix value
     uint16_t const P2P_DEFAULT_PORT = 28880;
     uint16_t const RPC_DEFAULT_PORT = 28881;
     uint16_t const ZMQ_RPC_DEFAULT_PORT = 28882;
     boost::uuids::uuid const NETWORK_ID = { {
         0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x11
-      } }; // Bonero testnet
+      } }; // rXMR testnet
     std::string const GENESIS_TX = "023c01ff0001ffffffffffff01039b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd088071335c0174a1e7919bcf29176d13ce9df890f548bf873b56e35cc3b5a2841161bdc02d060239426f6e65726f2047656e65736973202d20323032363a2050726976617465206d6f6e657920666f722070726976617465206d616368696e657300";
     uint32_t const GENESIS_NONCE = 10001;
   }
 
   namespace stagenet
   {
-    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 86;   // 'S' prefix for Bonero stagenet
-    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 87;   // 'Si' prefix
-    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 108;  // 'So' prefix
+    uint64_t const CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = 86;   // stagenet standard address prefix value
+    uint64_t const CRYPTONOTE_PUBLIC_INTEGRATED_ADDRESS_BASE58_PREFIX = 87;   // stagenet integrated address prefix value
+    uint64_t const CRYPTONOTE_PUBLIC_SUBADDRESS_BASE58_PREFIX = 108;  // stagenet subaddress prefix value
     uint16_t const P2P_DEFAULT_PORT = 38880;
     uint16_t const RPC_DEFAULT_PORT = 38881;
     uint16_t const ZMQ_RPC_DEFAULT_PORT = 38882;
     boost::uuids::uuid const NETWORK_ID = { {
         0xB0, 0x9E, 0x80, 0x71, 0x61, 0x04, 0x41, 0x61, 0x17, 0x31, 0x00, 0x82, 0x16, 0xA1, 0xA1, 0x12
-      } }; // Bonero stagenet
+      } }; // rXMR stagenet
     std::string const GENESIS_TX = "023c01ff0001ffffffffffff01039b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd088071335c01a125cabaa560574ef759ac25ed3d9058e92e134cadc459429db28f926e3941cf0239426f6e65726f2047656e65736973202d20323032363a2050726976617465206d6f6e657920666f722070726976617465206d616368696e657300";
     uint32_t const GENESIS_NONCE = 10002;
   }

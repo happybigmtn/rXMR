@@ -150,7 +150,9 @@ void mlog_configure(const std::string &filename_base, bool console, const std::s
   el::Configurations c;
   c.setGlobally(el::ConfigurationType::Filename, filename_base);
   c.setGlobally(el::ConfigurationType::ToFile, "true");
-  const char *log_format = getenv("MONERO_LOG_FORMAT");
+  const char *log_format = getenv("RXMR_LOG_FORMAT");
+  if (!log_format)
+    log_format = getenv("MONERO_LOG_FORMAT");
   if (!log_format)
     log_format = MLOG_BASE_FORMAT;
   c.setGlobally(el::ConfigurationType::Format, log_format);
@@ -225,7 +227,9 @@ void mlog_configure(const std::string &filename_base, bool console, const std::s
     }
   });
   mlog_set_common_prefix();
-  const char *monero_log = getenv("MONERO_LOGS");
+  const char *monero_log = getenv("RXMR_LOGS");
+  if (!monero_log)
+    monero_log = getenv("MONERO_LOGS");
   if (!monero_log)
   {
     monero_log = get_default_categories(0);

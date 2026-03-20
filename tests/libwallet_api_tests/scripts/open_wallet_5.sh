@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rlwrap bonero-wallet-cli --wallet-file wallet_05.bin --password "" --testnet --trusted-daemon --daemon-address localhost:28881  --log-file wallet_05.log
+rlwrap rxmr-wallet-cli --wallet-file wallet_05.bin --password "" --testnet --trusted-daemon --daemon-address localhost:28881  --log-file wallet_05.log
 

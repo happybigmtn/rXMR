@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
 
   if (command_line::get_arg(vm, command_line::arg_help))
   {
-    std::cout << "Bonero '" << BONERO_RELEASE_NAME << "' (v" << BONERO_VERSION_FULL << ")" << ENDL << ENDL;
+    std::cout << "rXMR '" << RXMR_RELEASE_NAME << "' (v" << RXMR_VERSION_FULL << ")" << ENDL << ENDL;
     std::cout << desc_options << std::endl;
     return 1;
   }
@@ -129,20 +129,20 @@ int main(int argc, char* argv[])
   mlog_configure("", true);
   mlog_set_categories("+" MONERO_DEFAULT_LOG_CATEGORY ":INFO");
 
-  // Bonero: No DNS infrastructure yet
-  // When Bonero DNS seeds and update servers are established, add lookups here
-  // Example format for future Bonero DNS:
-  // lookup(LOOKUP_A, {"seeds.bonero.org", "seeds.bonero.net"});
-  // lookup(LOOKUP_TXT, {"updates.bonero.org", "updates.bonero.net"});
-  // lookup(LOOKUP_TXT, {"checkpoints.bonero.org", "checkpoints.bonero.net"});
-  const std::vector<std::string> bonero_seed_hosts;
-  const std::vector<std::string> bonero_update_hosts;
-  const std::vector<std::string> bonero_checkpoint_hosts;
-  lookup(LOOKUP_A, bonero_seed_hosts);
-  lookup(LOOKUP_TXT, bonero_update_hosts);
-  lookup(LOOKUP_TXT, bonero_checkpoint_hosts);
+  // rXMR: No DNS infrastructure yet
+  // When rXMR DNS seeds and update servers are established, add lookups here
+  // Example format for future rXMR DNS:
+  // lookup(LOOKUP_A, {"seeds.rxmr.org", "seeds.rxmr.net"});
+  // lookup(LOOKUP_TXT, {"updates.rxmr.org", "updates.rxmr.net"});
+  // lookup(LOOKUP_TXT, {"checkpoints.rxmr.org", "checkpoints.rxmr.net"});
+  const std::vector<std::string> rxmr_seed_hosts;
+  const std::vector<std::string> rxmr_update_hosts;
+  const std::vector<std::string> rxmr_checkpoint_hosts;
+  lookup(LOOKUP_A, rxmr_seed_hosts);
+  lookup(LOOKUP_TXT, rxmr_update_hosts);
+  lookup(LOOKUP_TXT, rxmr_checkpoint_hosts);
 
-  std::cout << "Bonero DNS infrastructure not yet configured." << std::endl;
+  std::cout << "rXMR DNS infrastructure not yet configured." << std::endl;
   std::cout << "When DNS seeds are established, update this utility." << std::endl;
 
   return 0;

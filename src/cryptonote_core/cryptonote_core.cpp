@@ -488,8 +488,8 @@ namespace cryptonote
       if (boost::filesystem::exists(old_files / "blockchain.bin"))
       {
         MWARNING("Found old-style blockchain.bin in " << old_files.string());
-        MWARNING("Bonero now uses a new format. You can either remove blockchain.bin to start syncing");
-        MWARNING("the blockchain anew, or use bonero-blockchain-export and bonero-blockchain-import to");
+        MWARNING("rXMR now uses a new format. You can either remove blockchain.bin to start syncing");
+        MWARNING("the blockchain anew, or use rxmr-blockchain-export and rxmr-blockchain-import to");
         MWARNING("convert your existing blockchain.bin to the new format. See README.md for instructions.");
         return false;
       }
@@ -1621,7 +1621,7 @@ namespace cryptonote
   //-----------------------------------------------------------------------------------------------
   bool core::check_updates()
   {
-    static const char software[] = "bonero";
+    static const char software[] = "rxmr";
 #ifdef BUILD_TAG
     static const char buildtag[] = BOOST_PP_STRINGIZE(BUILD_TAG);
     static const char subdir[] = "cli"; // because it can never be simple
@@ -1641,7 +1641,7 @@ namespace cryptonote
     if (!tools::check_updates(software, buildtag, version, hash))
       return false;
 
-    if (tools::vercmp(version.c_str(), BONERO_VERSION) <= 0)
+    if (tools::vercmp(version.c_str(), RXMR_VERSION) <= 0)
     {
       m_update_available = false;
       return true;

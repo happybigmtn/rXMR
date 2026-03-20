@@ -1,10 +1,17 @@
-# Bonero Genesis Block
+# rXMR Genesis
 
-## Genesis Message
-"Bonero Genesis - 2026: Private money for private machines"
+## Canonical Genesis Transaction
 
-## Emission Curve
-Adjusted from Monero (reduced main emission):
-- Initial reward: ~8.75 BNR/block (halved from Monero's ~17.5)
-- Tail emission: 0.3 BNR/block (perpetual, halved from Monero's 0.6)
-- Total main emission: ~18.4 million BNR
+The canonical genesis transaction hex is stored in `src/cryptonote_config.h` for mainnet, testnet, and stagenet.
+
+`rxmrd --print-genesis-tx` prints those baked-in canonical values directly.
+
+## Historical Memo
+
+The live chain preserves the original Bonero-era genesis memo. The rename to rXMR does not create a new genesis block.
+
+That is intentional:
+
+- existing chain history stays valid
+- miners stay on one chain
+- the public runtime branding changes without forcing a second network reset
