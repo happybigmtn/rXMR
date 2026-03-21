@@ -4074,9 +4074,13 @@ leave:
     MCLOG_RED(level, "global", "**********************************************************************");
   }
 
-  // this is a cheap test
-  const uint8_t hf_version = get_current_hard_fork_version();
-  if (!m_hardfork->check(bl))
+  // rXMR: skip hardfork version check for the genesis block.
+  // rXMR: on a fresh chain, get_current_hard_fork_version() returns 1 because
+  // no blocks exist yet but genesis is v16. Use the block.major_version for genesis
+  // so all downstream validation (output types, tx version) gets the right version.
+  const bool is_genesis = (blockchain_height == 0 || blockchain_height == 1);
+  const uint8_t hf_version = is_genesis ? bl.major_version : get_current_hard_fork_version();
+  if (!is_genesis && !m_hardfork->check(bl))
   {
     MERROR_VER("Block with id: " << id << std::endl << "has old version: " << (unsigned)bl.major_version << std::endl << "current: " << (unsigned)hf_version);
     bvc.m_verifivation_failed = true;
