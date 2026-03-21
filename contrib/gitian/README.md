@@ -1,9 +1,9 @@
 Gitian building
 ================
 
-*Setup instructions for a Gitian build of Monero.*
+*Setup instructions for a Gitian build of rXMR.*
 
-Gitian is the deterministic build process that is used to build the Monero CLI
+Gitian is the deterministic build process that is used to build the rXMR CLI
 executables. It provides a way to be reasonably sure that the
 executables are really built from the git source. It also makes sure that
 the same, tested dependencies are used and statically built into the executable.
@@ -122,7 +122,7 @@ Initial Gitian Setup
 The `gitian-build.py` script will checkout different release tags, so it's best to copy it to the top level directory:
 
 ```bash
-cp monero/contrib/gitian/gitian-build.py .
+cp rXMR/contrib/gitian/gitian-build.py .
 ```
 
 ### Setup the required environment
@@ -134,32 +134,33 @@ su - gitianuser
 
 GH_USER=YOUR_GITHUB_USER_NAME
 VERSION=v0.18.4.6
+SIGS_REPO=https://github.com/YOUR_GITHUB_USER/rXMR-gitian.sigs.git
+
 ```
 
-Where `GH_USER` is your GitHub user name and `VERSION` is the version tag you want to build. 
+Where `GH_USER` is your GitHub user name, `VERSION` is the version tag you want to build, and `SIGS_REPO` is the writable Gitian signatures repository you want to publish to.
 The `gitian-build.py`'s `--setup` switch will also refresh the environment of any stale files and submodules.
 
 Setup for LXC:
 
 ```bash
-./gitian-build.py --setup $GH_USER $VERSION
+./gitian-build.py --setup --sigs-url $SIGS_REPO $GH_USER $VERSION
 ```
 
 Setup for docker:
 
 ```bash
-./gitian-build.py --setup --docker $GH_USER $VERSION
+./gitian-build.py --setup --docker --sigs-url $SIGS_REPO $GH_USER $VERSION
 ```
 
 While gitian and this build script does provide a way for you to sign the build directly, it is recommended to sign in a separate step. This script is only there for convenience. Separate steps for building can still be taken.
 In order to sign gitian builds on your host machine, which has your PGP key, 
-fork the [gitian.sigs repository](https://github.com/monero-project/gitian.sigs) and clone it on your host machine, 
+fork the project Gitian signatures repository (or create your own if you are coordinating the first reproducible release) and clone it on your host machine,
 or pass the signed assert file back to your build machine.
 
 ```bash
-git clone https://github.com/monero-project/gitian.sigs/
-pushd gitian.sigs
-git remote add $GH_USER https://github.com/$GH_USER/gitian.sigs
+git clone $SIGS_REPO sigs
+pushd sigs
 popd
 ```
 
@@ -169,18 +170,18 @@ Build the binaries
 To build the most recent tag (pass in `--docker` if using docker):
 
 ```bash
-./gitian-build.py --detach-sign --no-commit --build $GH_USER $VERSION
+./gitian-build.py --detach-sign --no-commit --build --sigs-url $SIGS_REPO $GH_USER $VERSION
 ```
 
-To speed up the build, use `-j 5 --memory 10000` as the first arguments, where `5` is the number of CPU's you allocated to the VM plus one, and 10000 is a little bit less than then the MB's of RAM you allocated. If there is memory corruption on your machine, try to tweak these values. A good rule of thumb is, that Monero currently needs about 2 GB of RAM per core. 
+To speed up the build, use `-j 5 --memory 10000` as the first arguments, where `5` is the number of CPU's you allocated to the VM plus one, and 10000 is a little bit less than then the MB's of RAM you allocated. If there is memory corruption on your machine, try to tweak these values. A good rule of thumb is that the current `rXMR` build still needs about 2 GB of RAM per core.
 
 A full example for `docker` would look like the following:
 
 ```bash
-./gitian-build.py -j 5 --memory 10000 --docker --detach-sign --no-commit --build $GH_USER $VERSION
+./gitian-build.py -j 5 --memory 10000 --docker --detach-sign --no-commit --build --sigs-url $SIGS_REPO $GH_USER $VERSION
 ```
 
-If all went well, this produces a number of (uncommitted) `.assert` files in the gitian.sigs directory.
+If all went well, this produces a number of (uncommitted) `.assert` files in the `sigs` directory.
 
 Checking your work
 ------------------
@@ -206,7 +207,7 @@ popd
 Don't ignore the incorrect formatting of the found assert files. These files you'll have to compare manually (currently OSX and FreeBSD).
 
 
-You can also look in the [gitian.sigs](https://github.com/monero-project/gitian.sigs/) repo and / or [getmonero.org release checksums](https://web.getmonero.org/downloads/hashes.txt) to see if others got the same checksum for the same version tag.  If there is ever a mismatch -- **STOP! Something is wrong**.  Contact others on IRC / github to figure out what is going on.
+You should also compare your hashes against the published `rXMR` release artifacts and the signatures repository for the same tag. If there is ever a mismatch, **STOP**. Something is wrong and the release should not be trusted until the discrepancy is explained.
 
 
 Signing assert files
@@ -224,18 +225,17 @@ This will create a `.sig` file for each `.assert` file above (2 files for each p
 Submitting your signed assert files
 -----------------------------------
 
-Make a pull request (both the `.assert` and `.assert.sig` files) to the
-[monero-project/gitian.sigs](https://github.com/monero-project/gitian.sigs/) repository:
+Publish both the `.assert` and `.assert.sig` files to the Gitian signatures repository you are using for the release:
 
 ```bash
-cd gitian.sigs
+cd sigs
 git checkout -b $VERSION
 # add your assert and sig files...
 git commit -S -a -m "Add $GH_USER $VERSION"
-git push --set-upstream $GH_USER $VERSION
+git push --set-upstream origin $VERSION
 ```
 
-**Note:** Please ensure your gpg public key is available to check signatures by adding it to the [gitian.sigs/gitian-pubkeys/](https://github.com/monero-project/gitian.sigs/tree/master/gitian-pubkeys) directory in a pull request.
+**Note:** Make sure the release signatures repository also publishes the builder public keys needed to verify `.assert.sig` files.
 
 
 More Build Options
@@ -243,7 +243,7 @@ More Build Options
 
 You can choose your own remote and commit hash by running for example:
 ```bash
-./gitian-build.py --detach-sign --no-commit --url https://github.com/moneromooo-monero/bitmonero -b moneromooo 1f5680c8db8f4cc7acc04a04c724b832003440fd
+./gitian-build.py --detach-sign --no-commit --url https://github.com/happybigmtn/rXMR.git -b YOUR_SIGNER v0.1.0.0
 ```
 
 Note that you won't be able to build commits authored before the gitian scripts
@@ -269,4 +269,3 @@ Local-Only Builds
 If you need to run builds while disconnected from the internet, make sure you have
 local up-to-date repos in advance. Then specify your local repo using the `--url`
 option when building. This will avoid attempts to git pull across a network.
-

@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2022, The Monero Project
-// Copyright (c) 2026, The Bonero Project
+// Copyright (c) 2026, The rXMR Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Bonero branding tests
-// Acceptance criteria: Verify Bonero branding elements are correctly configured
+// rXMR branding tests
+// Acceptance criteria: Verify rXMR branding elements are correctly configured
 // to distinguish from Monero and provide consistent user experience.
 
 #include "gtest/gtest.h"
@@ -37,11 +37,11 @@
 #include <cstring>
 
 // Test suite: Verify data directory name
-// Acceptance: Data directory must be "bonero" (not Monero's "bitmonero")
+// Acceptance: Data directory must be "rxmr" (not Monero's "bitmonero")
 // This prevents conflicts with existing Monero installations
 TEST(branding, data_directory_name)
 {
-  ASSERT_STREQ(CRYPTONOTE_NAME, "bonero");
+  ASSERT_STREQ(CRYPTONOTE_NAME, "rxmr");
 }
 
 // Test suite: Verify data directory is not Monero's
@@ -52,11 +52,11 @@ TEST(branding, data_directory_not_monero)
 }
 
 // Test suite: Verify message signing domain separator
-// Acceptance: Must be "BoneroMessageSignature" (not "MoneroMessageSignature")
+// Acceptance: Must be "rXMRMessageSignature" (not "MoneroMessageSignature")
 // This is critical for security - prevents cross-chain signature replay attacks
 TEST(branding, message_signing_domain)
 {
-  ASSERT_STREQ(config::HASH_KEY_MESSAGE_SIGNING, "BoneroMessageSignature");
+  ASSERT_STREQ(config::HASH_KEY_MESSAGE_SIGNING, "rXMRMessageSignature");
 }
 
 // Test suite: Verify message signing domain differs from Monero
@@ -67,8 +67,8 @@ TEST(branding, message_signing_domain_not_monero)
 }
 
 // Test suite: Verify smallest currency unit name
-// Acceptance: get_unit(0) returns "picobon" (not "piconero")
+// Acceptance: get_unit(0) returns "picorxmr" (not "piconero")
 TEST(branding, currency_unit_name)
 {
-  ASSERT_EQ(cryptonote::get_unit(0), "picobon");
+  ASSERT_EQ(cryptonote::get_unit(0), "picorxmr");
 }

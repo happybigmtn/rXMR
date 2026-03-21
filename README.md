@@ -1,121 +1,123 @@
-# Bonero
+# rXMR
 
-**Private money for private machines.**
+Private money for private machines.
 
-A Monero fork for AI agents. Ring signatures, stealth addresses, RandomX mining. Nobody sees who sent what to whom.
+rXMR is a Monero-derived chain for agent-operated systems. It keeps ring signatures, stealth addresses, RingCT, and RandomX CPU mining, but runs on its own network identity, ports, seeds, binaries, and data directory.
 
 ## Quick Install
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh | bash
-```
+Tagged releases are the intended public install target. The installer uses the newest published tag when one exists, and falls back to building `master` if not.
 
-Or verify first:
 ```bash
-curl -fsSLO https://raw.githubusercontent.com/happybigmtn/bonero/master/install.sh
+curl -fsSLO https://github.com/happybigmtn/rXMR/releases/latest/download/install.sh
 less install.sh
 bash install.sh --add-path
 ```
 
-## Start Mining
+## Quick Mining
 
 ```bash
-# 1. Create wallet
-bonero-wallet-cli --generate-new-wallet=mywallet
-# Save your seed phrase!
+# 1. Create a wallet and save the seed phrase.
+rxmr-wallet-cli --generate-new-wallet=mywallet
 
-# 2. Start mining (replace ADDRESS with your C... address)
-bonerod --detach \
-    --start-mining ADDRESS \
-    --mining-threads 4 \
-    --add-peer 95.111.227.14:18080 \
-    --add-peer 185.218.126.23:18080
+# 2. Start mining against your local config.
+rxmr-start-miner --address YOUR_RXMR_ADDRESS
+
+# 3. Verify sync and mining health.
+rxmr-doctor
 ```
 
-Done. You're mining private cryptocurrency.
+Mainnet defaults:
 
-## What is Bonero?
+| Parameter | Value |
+|---|---|
+| Algorithm | RandomX |
+| Target block time | 60 seconds |
+| P2P port | 18880 |
+| RPC port | 18881 |
+| ZMQ RPC port | 18882 |
+| Default datadir | `~/.rxmr` |
+| Mainnet URI scheme | `rxmr:` |
 
-| Feature | Value |
-|---------|-------|
-| Algorithm | RandomX (CPU-mineable) |
-| Block time | ~120 seconds |
-| Privacy | Ring signatures + stealth addresses |
-| Address prefix | `C` |
-| P2P Port | 18080 |
-| RPC Port | 18081 |
-
-Based on Monero v0.18.4.5. All the privacy features, designed for AI agents.
+The live chain preserves its historical genesis memo from the Bonero launch era. The rename does not roll a new genesis or discard existing chain history.
 
 ## Seed Nodes
 
-```
-95.111.227.14:18080
-95.111.229.108:18080
-95.111.239.142:18080
-161.97.83.147:18080
-161.97.97.83:18080
-161.97.114.192:18080
-161.97.117.0:18080
-194.163.144.177:18080
-185.218.126.23:18080
-185.239.209.227:18080
+These public seeds are baked into the installer, the daemon fallback list, and the example public-node config:
+
+```text
+95.111.227.14:18880
+95.111.229.108:18880
+95.111.239.142:18880
+161.97.83.147:18880
+161.97.97.83:18880
+161.97.114.192:18880
+161.97.117.0:18880
+194.163.144.177:18880
+185.218.126.23:18880
+185.239.209.227:18880
 ```
 
-## Build from Source
+## Public VPS Node
 
-If the install script doesn't work:
+To run a public peer that accepts inbound connections:
 
 ```bash
-# Ubuntu/Debian
-sudo apt-get install -y build-essential cmake pkg-config \
-    libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
-    libsodium-dev libhidapi-dev liblzma-dev libreadline-dev
-
-# Clone
-git clone --recursive https://github.com/happybigmtn/bonero.git
-cd bonero
-git submodule update --init --recursive
-
-# Build (10-20 min)
-mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j$(nproc)
+sudo rxmr-install-public-node --enable-now
+sudo ufw allow 18880/tcp
+rxmr-doctor
 ```
 
-macOS:
-```bash
-brew install cmake boost openssl zmq unbound libsodium hidapi
-```
-
-## Commands
+To run persistent mining under systemd on the same host:
 
 ```bash
-# Check height
-curl -s http://127.0.0.1:18081/json_rpc \
-    -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' | jq '.result.height'
-
-# Stop daemon
-pkill bonerod
-
-# Check wallet
-bonero-wallet-cli --wallet-file=mywallet
+sudo rxmr-install-public-miner --address YOUR_RXMR_ADDRESS --enable-now
 ```
 
-## Privacy
+Operator notes are in [docs/public-node.md](docs/public-node.md).
 
-Unlike transparent blockchains, Bonero transactions are private by default:
+## Build From Source
 
-- **Ring signatures** - hides which input is spent
-- **Stealth addresses** - hides the recipient  
-- **RingCT** - hides amounts
+If you need an unreleased build:
 
-You can verify blocks exist. You can't see who's transacting.
+```bash
+sudo apt-get install -y \
+  build-essential cmake pkg-config git python3 \
+  libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
+  libsodium-dev libhidapi-dev liblzma-dev libreadline-dev \
+  libexpat1-dev libpgm-dev libusb-1.0-0-dev
+
+git clone --recursive https://github.com/happybigmtn/rXMR.git
+cd rXMR
+cmake -S . -B build -D BUILD_TESTS=OFF -D CMAKE_BUILD_TYPE=Release
+cmake --build build -j"$(nproc)" --target daemon simplewallet wallet_rpc_server
+```
+
+Expected binaries land in `build/bin/`:
+
+- `rxmrd`
+- `rxmr-wallet-cli`
+- `rxmr-wallet-rpc`
+
+## Useful Commands
+
+```bash
+curl -fsS http://127.0.0.1:18881/get_info
+curl -fsS http://127.0.0.1:18881/mining_status
+pkill rxmrd
+```
+
+## What Changed From Monero
+
+The high-signal runtime differences from upstream are:
+
+- chain identity: distinct network IDs, ports, prefixes, seeds, and datadir
+- product identity: `rxmrd`, `rxmr-wallet-cli`, `rxmr-wallet-rpc`, `rxmr:` URIs
+- mining defaults: first-class CPU-mining helpers and public-node installers
+- policy/docs: tagged releases and operator helpers are part of the public surface
+
+The underlying privacy model and core transaction format remain Monero-derived.
 
 ## License
 
-Same as Monero - see [LICENSE](LICENSE).
-
----
-
-*01100110 01110010 01100101 01100101*
+See [LICENSE](LICENSE).

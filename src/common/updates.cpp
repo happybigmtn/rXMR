@@ -44,12 +44,12 @@ namespace tools
 
     MDEBUG("Checking updates for " << buildtag << " " << software);
 
-    // Bonero: No update DNS infrastructure yet
-    // When Bonero update servers are established, add them here
+    // rXMR: No update DNS infrastructure yet
+    // When rXMR update servers are established, add them here
     static const std::vector<std::string> dns_urls = {
-        // TODO: Add Bonero update DNS domains
-        // "updates.bonero.org",
-        // "updates.bonero.net",
+        // TODO: Add rXMR update DNS domains
+        // "updates.rxmr.org",
+        // "updates.rxmr.net",
     };
 
     // Return false if no DNS infrastructure configured

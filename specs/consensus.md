@@ -1,48 +1,33 @@
-# Bonero Consensus
+# rXMR Consensus
 
 ## Proof of Work
-- Algorithm: RandomX (inherited from Monero)
-- No changes needed
+
+- Algorithm: RandomX
+- Mining hardware target: CPUs
+- Seeded/validated through the inherited Monero RandomX path
 
 ## Block Timing
 
-| Parameter | Monero | Bonero | Rationale |
-|-----------|--------|--------|-----------|
-| Target block time | 120 seconds | **60 seconds** | Match Botcoin, faster confirmations |
-| Difficulty window | 720 blocks (~24h) | 1440 blocks (~24h) | Maintain 24h window |
-| Difficulty lag | 15 blocks | 15 blocks | Keep same |
+| Parameter | Value |
+|---|---|
+| Target block time | 60 seconds |
+| Difficulty window | 1440 blocks |
+| Difficulty lag | 15 blocks |
 
-## Emission (Reduced for 60s blocks)
+The 1440-block difficulty window preserves an approximately 24-hour adjustment period despite the 60-second block target.
 
-Bonero deliberately slows main emission relative to Monero. With 60s blocks, the effective emission shift is 21 (vs Monero's 19 at 120s), so per-block rewards are 4x smaller; with 2x more blocks, the initial emission rate is ~50% of Monero.
+## Emission
 
-| Parameter | Monero | Bonero |
-|-----------|--------|--------|
-| Initial block reward | ~17.5 XMR | **~8.75 BNR** |
-| Tail emission | 0.6 XMR/block | **0.3 BNR/block** |
-| Main emission period | ~8 years | ~13.5 years |
-| Total main emission | ~18.4M | ~18.4M BNR |
-| Annual tail inflation | ~157,680 XMR | ~157,680 BNR |
+| Parameter | Value |
+|---|---|
+| Emission speed factor per minute | 21 |
+| Tail subsidy per minute | 300000000000 atomic units |
+| Display decimal point | 12 |
 
-### Emission Formula
+The chain intentionally slows main emission relative to Monero to fit the faster block cadence while preserving a smaller per-block subsidy.
 
-```
-reward = max(0.3, (2^64 - 1 - already_emitted) * 2^-21 * 10^-12)
-```
+## Fork Policy
 
-Note: Changed from 2^-19 to 2^-21. This reduces per-block rewards 4x; with 2x more blocks, the initial emission rate is ~50% of Monero.
-
-## Privacy Features (all inherited)
-- Ring size: 16 minimum
-- RingCT: Enabled
-- Stealth addresses: Enabled
-
-## Implementation
-
-```cpp
-// src/cryptonote_config.h
-#define DIFFICULTY_TARGET_V2                               60  // 60 seconds (was 120)
-#define DIFFICULTY_BLOCKS_COUNT_V2                         1440 // 24h window at 60s blocks
-
-#define EMISSION_SPEED_FACTOR_PER_MINUTE                   21  // 60s blocks -> effective factor 21 (Monero 19)
-```
+- rXMR starts directly at hardfork version 16
+- there is no legacy pre-v16 mainnet period
+- the rename does not re-roll genesis or restart the live chain

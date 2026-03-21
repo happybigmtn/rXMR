@@ -2,8 +2,8 @@
 
 DIR=$(realpath $(dirname $0))
 
-echo "Checking monerod..."
-monerod=""
+echo "Checking rxmrd..."
+rxmrd=""
 for dir in \
   . \
   "$DIR" \
@@ -15,20 +15,20 @@ for dir in \
   "$DIR/build/Windows/master/release/bin" \
   "$DIR/../../build/Windows/master/release/bin"
 do
-  if test -x "$dir/monerod"
+  if test -x "$dir/rxmrd"
   then
-    monerod="$dir/monerod"
+    rxmrd="$dir/rxmrd"
     break
   fi
 done
-if test -z "$monerod"
+if test -z "$rxmrd"
 then
-  echo "monerod not found"
+  echo "rxmrd not found"
   exit 1
 fi
-echo "Found: $monerod"
+echo "Found: $rxmrd"
 
-TORDIR="$DIR/monero-over-tor"
+TORDIR="$DIR/rxmr-over-tor"
 TORRC="$TORDIR/torrc"
 HOSTNAMEFILE="$TORDIR/hostname"
 echo "Creating configuration..."
@@ -42,7 +42,7 @@ CookieAuthentication 1
 CookieAuthFile $TORDIR/control.authcookie
 CookieAuthFileGroupReadable 1
 HiddenServiceDir $TORDIR
-HiddenServicePort 18083 127.0.0.1:18083
+HiddenServicePort 18880 127.0.0.1:18880
 EOF
 
 echo "Starting Tor..."
@@ -64,18 +64,16 @@ then
   exit 1
 fi
 
-echo "Starting monerod..."
+echo "Starting rxmrd..."
 HOSTNAME=$(cat "$HOSTNAMEFILE")
-"$monerod" \
-  --anonymous-inbound "$HOSTNAME":18083,127.0.0.1:18083,25 --tx-proxy tor,127.0.0.1:9050,10 \
-  --add-priority-node zbjkbsxc5munw3qusl7j2hpcmikhqocdf4pqhnhtpzw5nt5jrmofptid.onion:18083 \
-  --add-priority-node 2xmrnode5itf65lz.onion:18083 \
+"$rxmrd" \
+  --anonymous-inbound "$HOSTNAME":18880,127.0.0.1:18880,25 --tx-proxy tor,127.0.0.1:9050,10 \
   --detach
 ready=0
 for i in `seq 10`
 do
   sleep 1
-  status=$("$monerod" status)
+  status=$("$rxmrd" status)
   echo "$status" | grep -q "Height:"
   if test $? = 0
   then
@@ -85,8 +83,8 @@ do
 done
 if test "$ready" = 0
 then
-  echo "Error starting monerod"
-  tail -n 400 "$HOME/.bitmonero/bitmonero.log" | grep -Ev stacktrace\|"Error: Couldn't connect to daemon:"\|"src/daemon/main.cpp:.*Monero\ \'" | tail -n 20
+  echo "Error starting rxmrd"
+  tail -n 400 "$HOME/.rxmr/rxmrd.log" | grep -Ev stacktrace\|"Error: Couldn't connect to daemon:" | tail -n 20
   exit 1
 fi
 

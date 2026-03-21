@@ -731,25 +731,27 @@ namespace nodetool
   std::set<std::string> node_server<t_payload_net_handler>::get_ip_seed_nodes() const
   {
     std::set<std::string> full_addrs;
-    // Bonero: No seed node infrastructure yet
-    // When Bonero seed nodes are established, add them here with the correct ports:
-    // - Mainnet: 18880
-    // - Testnet: 28880
-    // - Stagenet: 38880
     if (m_nettype == cryptonote::TESTNET)
     {
-      // TODO: Add Bonero testnet seed nodes
     }
     else if (m_nettype == cryptonote::STAGENET)
     {
-      // TODO: Add Bonero stagenet seed nodes
     }
     else if (m_nettype == cryptonote::FAKECHAIN)
     {
     }
     else
     {
-      // TODO: Add Bonero mainnet seed nodes
+      full_addrs.insert("95.111.227.14:18880");
+      full_addrs.insert("95.111.229.108:18880");
+      full_addrs.insert("95.111.239.142:18880");
+      full_addrs.insert("161.97.83.147:18880");
+      full_addrs.insert("161.97.97.83:18880");
+      full_addrs.insert("161.97.114.192:18880");
+      full_addrs.insert("161.97.117.0:18880");
+      full_addrs.insert("194.163.144.177:18880");
+      full_addrs.insert("185.218.126.23:18880");
+      full_addrs.insert("185.239.209.227:18880");
     }
     return full_addrs;
   }
@@ -877,27 +879,11 @@ namespace nodetool
     case epee::net_utils::zone::public_:
       return get_dns_seed_nodes();
     case epee::net_utils::zone::tor:
-      if (m_nettype == cryptonote::MAINNET)
-      {
-        return {
-          "zbjkbsxc5munw3qusl7j2hpcmikhqocdf4pqhnhtpzw5nt5jrmofptid.onion:18083",
-          "plowsof3t5hogddwabaeiyrno25efmzfxyro2vligremt7sxpsclfaid.onion:18083",
-          "plowsoffjexmxalw73tkjmf422gq6575fc7vicuu4javzn2ynnte6tyd.onion:18083",
-          "plowsofe6cleftfmk2raiw5h2x66atrik3nja4bfd3zrfa2hdlgworad.onion:18083",
-          "aclc4e2jhhtr44guufbnwk5bzwhaecinax4yip4wr4tjn27sjsfg6zqd.onion:18083",
-          "lykcas4tus7mkm4bhsgqe4drtd4awi7gja24goscc47xfgzj54yofyqd.onion:18083",
-        };
-      }
+      // rXMR does not ship upstream Monero onion fallbacks. Operators using Tor
+      // should configure explicit peers until dedicated rXMR hidden services exist.
       return {};
     case epee::net_utils::zone::i2p:
-      if (m_nettype == cryptonote::MAINNET)
-      {
-        return {
-          "uqj3aphckqtjsitz7kxx5flqpwjlq5ppr3chazfued7xucv3nheq.b32.i2p",
-          "vdmnehdjkpkg57nthgnjfuaqgku673r5bpbqg56ix6fyqoywgqrq.b32.i2p",
-          "ugnlcdciyhghh2zert7c3kl4biwkirc43ke33jiy5slnd3mv2trq.b32.i2p",
-        };
-      }
+      // rXMR does not currently ship built-in I2P fallback peers.
       return {};
     default:
       break;
@@ -2134,11 +2120,11 @@ namespace nodetool
     if (m_nettype != cryptonote::MAINNET)
       return true;
 
-    // Bonero: No DNS blocklist infrastructure yet
-    // When Bonero blocklist DNS is established, add domains here
+    // rXMR: No DNS blocklist infrastructure yet
+    // When rXMR blocklist DNS is established, add domains here
     static const std::vector<std::string> dns_urls = {
-      // TODO: Add Bonero blocklist DNS domains
-      // "blocklist.bonero.org"
+      // TODO: Add rXMR blocklist DNS domains
+      // "blocklist.rxmr.org"
     };
 
     std::vector<std::string> records;

@@ -182,7 +182,7 @@ namespace cryptonote
 
   bool checkpoints::init_default_checkpoints(network_type nettype)
   {
-    // Bonero: Fresh chain with no pre-existing checkpoints
+    // rXMR: Fresh chain with no pre-existing checkpoints
     // Checkpoints will be added as the chain grows
     (void)nettype;  // Suppress unused parameter warning
     return true;
@@ -226,8 +226,8 @@ namespace cryptonote
 
   bool checkpoints::load_checkpoints_from_dns(network_type nettype)
   {
-    // Bonero: No DNS checkpoint infrastructure yet
-    // When Bonero DNS seeds are established, add them here
+    // rXMR: No DNS checkpoint infrastructure yet
+    // When rXMR DNS seeds are established, add them here
     (void)nettype;  // Suppress unused parameter warning
     return true;
   }

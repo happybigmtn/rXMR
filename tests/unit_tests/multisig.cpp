@@ -37,7 +37,7 @@
 #include <cstdint>
 
 // Test spend keys for generating multisig wallets
-// Note: Address strings depend on network prefix (Bonero testnet uses 136, Monero used 53)
+// Note: Address strings depend on network prefix (rXMR testnet uses 136, Monero used 53)
 // We only verify the spend key is correctly restored.
 static const char *test_spendkeys[] =
 {

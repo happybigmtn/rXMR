@@ -54,6 +54,7 @@ Control the behavior with these environment variables:
 
 from framework.daemon import Daemon
 from framework.wallet import Wallet
+from rxmr_fixtures import MAIN_ADDRESS, SEED
 
 def assert_non_null_hash(s):
     assert len(s) == 64 # correct length
@@ -83,7 +84,7 @@ class MiningTest():
         # close the wallet if any, will throw if none is loaded
         try: wallet.close_wallet()
         except: pass
-        res = wallet.restore_deterministic_wallet(seed = 'velvet lymph giddy number token physics poetry unquoted nibs useful sabotage limits benches lifestyle eden nitrogen anvil fewest avoid batch vials washing fences goat unquoted')
+        res = wallet.restore_deterministic_wallet(seed = SEED)
 
     def mine(self, via_daemon):
         print("Test mining via " + ("daemon" if via_daemon else "wallet"))
@@ -111,14 +112,14 @@ class MiningTest():
         res_status = daemon.mining_status()
 
         if via_daemon:
-            res = daemon.start_mining('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', threads_count = 1)
+            res = daemon.start_mining(MAIN_ADDRESS, threads_count = 1)
         else:
             res = wallet.start_mining(threads_count = cores_mine)
 
         res_status = daemon.mining_status()
         assert res_status.active == True
         assert res_status.threads_count == cores_mine
-        assert res_status.address == '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
+        assert res_status.address == MAIN_ADDRESS
         assert res_status.is_background_mining_enabled == False
         assert res_status.block_reward >= TAIL_EMISSION_REWARD
 
@@ -200,13 +201,13 @@ class MiningTest():
         assert balance >= prev_balance + (new_height - initial_height) * TAIL_EMISSION_REWARD
 
         if via_daemon:
-            res = daemon.start_mining('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', threads_count = 1, do_background_mining = True)
+            res = daemon.start_mining(MAIN_ADDRESS, threads_count = 1, do_background_mining = True)
         else:
             res = wallet.start_mining(threads_count = 1, do_background_mining = True)
         res_status = daemon.mining_status()
         assert res_status.active == True
         assert res_status.threads_count == 1
-        assert res_status.address == '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
+        assert res_status.address == MAIN_ADDRESS
         assert res_status.is_background_mining_enabled == True
         assert res_status.block_reward >= TAIL_EMISSION_REWARD
 
@@ -241,7 +242,7 @@ class MiningTest():
         daemon = Daemon()
         res = daemon.get_height()
         height = res.height
-        res = daemon.generateblocks('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', 5)
+        res = daemon.generateblocks(MAIN_ADDRESS, 5)
         assert len(res.blocks) == 5
         hashes = res.blocks
         blocks = []
@@ -290,7 +291,7 @@ class MiningTest():
 
         epoch = int(os.environ['SEEDHASH_EPOCH_BLOCKS'])
         lag = int(os.environ['SEEDHASH_EPOCH_LAG'])
-        address = '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
+        address = MAIN_ADDRESS
 
         # check we can generate blocks, and that the seed hash changes when expected
         res = daemon.getblocktemplate(address)
@@ -336,7 +337,7 @@ class MiningTest():
         assert new_seed_hash != res.seed_hash
         #print('First mining: ' + str(t0))
 
-        # pop all these blocks, and feed them again to monerod
+        # pop all these blocks, and feed them again to rxmrd
         print('Recreating the chain')
         res = daemon.get_info()
         height = res.height

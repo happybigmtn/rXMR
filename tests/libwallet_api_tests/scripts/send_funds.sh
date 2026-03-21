@@ -4,7 +4,7 @@ function send_funds {
     local amount=$1
     local dest=$(cat "$2.address.txt")
 
-    bonero-wallet-cli --wallet-file wallet_m --password "" \
+    rxmr-wallet-cli --wallet-file wallet_m --password "" \
         --testnet --trusted-daemon --daemon-address localhost:28881  --log-file wallet_m.log \
         --command transfer $dest $amount 
 }

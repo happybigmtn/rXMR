@@ -38,10 +38,10 @@ Test the following RPCs:
 
 """
 
+from __future__ import print_function
 
 import time
 from time import sleep
-from __future__ import print_function
 
 from framework.daemon import Daemon
 from framework.wallet import Wallet
@@ -68,7 +68,7 @@ class SpeedTest():
 
         destinations = []
         for i in range(3):
-            destinations.append({"amount":1,"address":'888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H'})
+            destinations.append({"amount":1,"address":'C5ytcpAyJ93RDV5aAhLJzQCjDz2ViLRduE3ijDZu3osWKBjMGkV1XPk4pfDUMqt1Aiezvephdqm6YD19GKFD9ZcXVXJiCsG'})
 
         self._test_speed_generateblocks(daemon=daemon, blocks=70)
         for i in range(1, 10):
@@ -82,7 +82,7 @@ class SpeedTest():
         print('Test speed of block generation')
         start = time.time()
 
-        res = daemon.generateblocks('42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm', blocks)
+        res = daemon.generateblocks('C4KFgKxtSdc4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJHn8Rtc', blocks)
 
         print('generating ', blocks, 'blocks took: ', time.time() - start, 'seconds')
 
@@ -90,7 +90,7 @@ class SpeedTest():
         print('Test speed of transfer')
         start = time.time()
 
-        destinations = [{"amount":1,"address":'888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H'}]
+        destinations = [{"amount":1,"address":'C5ytcpAyJ93RDV5aAhLJzQCjDz2ViLRduE3ijDZu3osWKBjMGkV1XPk4pfDUMqt1Aiezvephdqm6YD19GKFD9ZcXVXJiCsG'}]
         res = wallet.transfer_split(destinations)
 
         print('generating tx took: ', time.time() - start, 'seconds')

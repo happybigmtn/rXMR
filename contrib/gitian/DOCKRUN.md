@@ -1,7 +1,7 @@
 Quick Gitian building with docker
 =================================
 
-*Setup instructions for a Gitian build of Monero using Docker.*
+*Setup instructions for a Gitian build of rXMR using Docker.*
 
 Gitian supports other container mechanisms too but if you have a Debian or
 Ubuntu-based host the steps can be greatly simplified.
@@ -23,11 +23,11 @@ su $USER
 The final `su` command is needed to start a new shell with your new group membership,
 since the `usermod` command doesn't affect any existing sessions.
 
-You'll also need to clone the monero repository and navigate to the `contrib/gitian` directory:
+You'll also need to clone the `rXMR` repository and navigate to the `contrib/gitian` directory:
 
 ```bash
-git clone https://github.com/monero-project/monero.git
-cd monero/contrib/gitian
+git clone https://github.com/happybigmtn/rXMR.git
+cd rXMR/contrib/gitian
 ```
 
 Other User Preparation
@@ -44,10 +44,15 @@ export GH_USER=<github account name>
 ```
 
 * PGP keys - if you don't have one already, you can use `gpg --quick-gen-key` to generate it.
-* a fork of the [gitian.sigs](https://github.com/monero-project/gitian.sigs/) repo on your GitHub account.
-Please follow the directions there for uploading your key first.
+* a writable Gitian signatures repository for the release and its public signing keys:
 
-**Note:** Please ensure your gpg public key is available to check signatures by adding it to the [gitian.sigs/gitian-pubkeys/](https://github.com/monero-project/gitian.sigs/tree/master/gitian-pubkeys) directory in a pull request.
+```bash
+export SIGS_REPO=https://github.com/<github account name>/rXMR-gitian.sigs.git
+```
+
+The script will clone `SIGS_REPO` locally if needed and use it as the push target for signed asserts.
+
+**Note:** Please ensure your gpg public key is available anywhere verifiers expect to fetch builder keys from before you publish a release.
 
 
 Building the Binaries
@@ -65,15 +70,15 @@ The build should run to completion with no errors, and will display the SHA256 c
 of the resulting binaries. You'll be prompted to check if the sums look good, and if so
 then the results will be signed, and the signatures will be pushed to GitHub.
 
-***Note: In order to publish the signed assertions via this script, you need to have your SSH key uploaded to GitHub beforehand. See https://docs.github.com/articles/generating-an-ssh-key/ for more info.***
+***Note: In order to publish the signed assertions via this script, the `SIGS_REPO` remote must be writable from the host where you run `git push`.***
 
-You can also look in the [gitian.sigs](https://github.com/monero-project/gitian.sigs/) repo and / or [getmonero.org release checksums](https://web.getmonero.org/downloads/hashes.txt) to see if others got the same checksum for the same version tag.  If there is ever a mismatch -- **STOP! Something is wrong**.  Contact others on IRC / GitHub to figure out what is going on.
+You should compare the resulting hashes against the published `rXMR` release assets and the Gitian signatures repository for the same tag. If there is ever a mismatch, **STOP**. Something is wrong and the release should not be trusted until the discrepancy is explained.
 
 
 Other Options
 -------------
 
-This script just runs the [gitian-build.py](gitian-build.py) inside a container named `gitrun`.
+This script just runs the [gitian-build.py](gitian-build.py) inside a container named `rxmr-gitrun`.
 You can set other options for that script by setting the OPT variable when running `dockrun.sh`
 e.g.
 
@@ -89,12 +94,12 @@ You can examine the build and install logs by running a shell in the container, 
 
 ```bash
 # Tail running logs
-docker exec -it gitrun /bin/bash
+docker exec -it rxmr-gitrun /bin/bash
 tail -F builder/var/install.log
 tail -F builder/var/build.log
 
 # Inspect logs, in format install-<OS>.log and build-<OS>.log
-docker exec -it gitrun /bin/bash
+docker exec -it rxmr-gitrun /bin/bash
 more builder/var/install-linux.log
 more builder/var/build-linux.log
 ```
@@ -102,7 +107,7 @@ more builder/var/build-linux.log
 You can find the compiled archives inside of the container at the following directory:
 
 ```bash
-docker exec -it gitrun /bin/bash
+docker exec -it rxmr-gitrun /bin/bash
 ls -la out/$VERSION/
 ```
 
@@ -110,5 +115,5 @@ To copy the compiled archives to the local host out of the Docker container, you
 
 ```bash
 mkdir out
-docker cp gitrun:/home/ubuntu/out/$VERSION out
+docker cp rxmr-gitrun:/home/ubuntu/out/$VERSION out
 ```

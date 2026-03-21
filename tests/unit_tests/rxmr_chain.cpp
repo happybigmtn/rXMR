@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2022, The Monero Project
-// Copyright (c) 2026, The Bonero Project
+// Copyright (c) 2026, The rXMR Project
 //
 // All rights reserved.
 //
@@ -27,8 +27,8 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Bonero chain state tests
-// Acceptance criteria: Verify that Bonero starts fresh without Monero history
+// rXMR chain state tests
+// Acceptance criteria: Verify that rXMR starts fresh without Monero history
 // and that genesis block is properly configured for the new chain.
 
 #include "gtest/gtest.h"
@@ -39,14 +39,16 @@
 #include "checkpoints/checkpoints.h"
 #include "string_tools.h"
 
-// Test suite: Verify hardfork schedule starts at version 16
-// Acceptance: Bonero starts at hardfork 16 with no legacy hardfork history
-// This ensures we start with all modern features enabled from genesis (block 0)
+// Test suite: Verify hardfork schedule activates all compatibility entries at
+// genesis and reaches version 16 immediately.
+// Acceptance: rXMR can keep versions 1-16 in the table for wallet compatibility
+// as long as every entry activates at height 0 and the terminal version is 16.
 TEST(chain_state, starts_at_version_16)
 {
-  ASSERT_EQ(num_mainnet_hard_forks, 1);
-  ASSERT_EQ(mainnet_hard_forks[0].version, 16);
-  ASSERT_EQ(mainnet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_GE(num_mainnet_hard_forks, 1);
+  for (size_t i = 0; i < num_mainnet_hard_forks; ++i)
+    ASSERT_EQ(mainnet_hard_forks[i].height, 0);
+  ASSERT_EQ(mainnet_hard_forks[num_mainnet_hard_forks - 1].version, 16);
 }
 
 // Test suite: Verify no legacy v1 period exists
@@ -58,21 +60,25 @@ TEST(chain_state, no_v1_period)
 }
 
 // Test suite: Verify testnet hardfork configuration
-// Acceptance: Testnet should also start at version 16 with no legacy history
+// Acceptance: Testnet should also activate its entire compatibility schedule
+// at genesis and terminate at version 16.
 TEST(chain_state, testnet_starts_at_version_16)
 {
-  ASSERT_EQ(num_testnet_hard_forks, 1);
-  ASSERT_EQ(testnet_hard_forks[0].version, 16);
-  ASSERT_EQ(testnet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_GE(num_testnet_hard_forks, 1);
+  for (size_t i = 0; i < num_testnet_hard_forks; ++i)
+    ASSERT_EQ(testnet_hard_forks[i].height, 0);
+  ASSERT_EQ(testnet_hard_forks[num_testnet_hard_forks - 1].version, 16);
 }
 
 // Test suite: Verify stagenet hardfork configuration
-// Acceptance: Stagenet should also start at version 16 with no legacy history
+// Acceptance: Stagenet should also activate its entire compatibility schedule
+// at genesis and terminate at version 16.
 TEST(chain_state, stagenet_starts_at_version_16)
 {
-  ASSERT_EQ(num_stagenet_hard_forks, 1);
-  ASSERT_EQ(stagenet_hard_forks[0].version, 16);
-  ASSERT_EQ(stagenet_hard_forks[0].height, 0);  // Genesis block is v16
+  ASSERT_GE(num_stagenet_hard_forks, 1);
+  for (size_t i = 0; i < num_stagenet_hard_forks; ++i)
+    ASSERT_EQ(stagenet_hard_forks[i].height, 0);
+  ASSERT_EQ(stagenet_hard_forks[num_stagenet_hard_forks - 1].version, 16);
 }
 
 // Test suite: Verify genesis transaction is valid and parseable
@@ -131,7 +137,7 @@ TEST(chain_state, unique_genesis_nonces)
 }
 
 // Test suite: Verify no initial checkpoints exist
-// Acceptance: Bonero starts fresh with no Monero checkpoint history
+// Acceptance: rXMR starts fresh with no Monero checkpoint history
 // Empty checkpoints allow the new chain to grow from its own genesis
 TEST(chain_state, no_initial_checkpoints)
 {

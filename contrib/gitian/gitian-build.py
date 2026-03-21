@@ -5,7 +5,10 @@ import os
 import subprocess
 import sys
 
-gsigs = 'https://github.com/monero-project/gitian.sigs.git'
+PROJECT_NAME = 'rXMR'
+PROJECT_SLUG = 'rxmr'
+DEFAULT_SOURCE_URL = 'https://github.com/happybigmtn/rXMR.git'
+DEFAULT_SIGS_ENV_VARS = ('RXMR_GITIAN_SIGS_URL', 'GITIAN_SIGS_URL')
 gbrepo = 'https://github.com/devrandom/gitian-builder.git'
 
 platforms = {'l': ['Linux', 'linux', 'tar.bz2'],
@@ -13,6 +16,37 @@ platforms = {'l': ['Linux', 'linux', 'tar.bz2'],
         'f': ['FreeBSD', 'freebsd', 'tar.bz2'],
         'w': ['Windows', 'win', 'zip'],
         'm': ['MacOS', 'osx', 'tar.bz2'] }
+
+def sigs_dir():
+    return args.sigs_dir if os.path.isabs(args.sigs_dir) else os.path.join(workdir, args.sigs_dir)
+
+def selected_platforms():
+    seen = set()
+    for key in args.os:
+        if key not in platforms:
+            raise Exception('Unknown platform selector: ' + key)
+        if key in seen:
+            continue
+        seen.add(key)
+        yield key, platforms[key]
+
+def clone_sigs_if_needed():
+    sigs_path = sigs_dir()
+    if os.path.isdir(sigs_path):
+        return
+    sigs_url = args.sigs_url
+    if not sigs_url:
+        for env_var in DEFAULT_SIGS_ENV_VARS:
+            sigs_url = os.environ.get(env_var)
+            if sigs_url:
+                break
+    if not sigs_url:
+        raise Exception(
+            'Missing Gitian signatures repository. Pass --sigs-url or set '
+            + ' / '.join(DEFAULT_SIGS_ENV_VARS)
+            + '.'
+        )
+    subprocess.check_call(['git', 'clone', sigs_url, sigs_path])
 
 def setup():
     global args, workdir
@@ -23,18 +57,18 @@ def setup():
         programs += ['lxc', 'debootstrap']
     if not args.no_apt:
         subprocess.check_call(['sudo', 'apt-get', 'install', '-qq'] + programs)
-    if not os.path.isdir('sigs'):
-        subprocess.check_call(['git', 'clone', gsigs, 'sigs'])
+    clone_sigs_if_needed()
     if not os.path.isdir('builder'):
         subprocess.check_call(['git', 'clone', gbrepo, 'builder'])
     os.chdir('builder')
     subprocess.check_call(['git', 'checkout', 'c0f77ca018cb5332bfd595e0aff0468f77542c23'])
     os.makedirs('inputs', exist_ok=True)
     os.chdir('inputs')
-    if os.path.isdir('monero'):
-        # Remove the potentially stale monero dir. Otherwise you might face submodule mismatches.
-        subprocess.check_call(['rm', 'monero', '-fR'])
-    subprocess.check_call(['git', 'clone', args.url, 'monero'])
+    for source_dir in ('monero', PROJECT_SLUG):
+        if os.path.isdir(source_dir):
+            # Remove the potentially stale source dir. Otherwise you might face submodule mismatches.
+            subprocess.check_call(['rm', source_dir, '-fR'])
+    subprocess.check_call(['git', 'clone', args.url, PROJECT_SLUG])
     os.chdir('..')
     make_image_prog = ['bin/make-base-vm', '--suite', 'bionic', '--arch', 'amd64']
     if args.docker:
@@ -60,16 +94,16 @@ def rebuild():
     os.makedirs('../out/' + args.version, exist_ok=True)
 
 
-    for i in args.os:
-        os_name = platforms[i][0]
-        tag_name = platforms[i][1]
-        suffix = platforms[i][2]
+    for _, platform in selected_platforms():
+        os_name = platform[0]
+        tag_name = platform[1]
+        suffix = platform[2]
 
         print('\nCompiling ' + args.version + ' ' + os_name)
-        infile = 'inputs/monero/contrib/gitian/gitian-' + tag_name + '.yml'
-        subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'monero='+args.commit, '--url', 'monero='+args.url, infile])
-        subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-'+tag_name, '--destination', '../sigs/', infile])
-        subprocess.check_call('mv build/out/monero-*.' + suffix + ' ../out/'+args.version, shell=True)
+        infile = 'inputs/' + PROJECT_SLUG + '/contrib/gitian/gitian-' + tag_name + '.yml'
+        subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', PROJECT_SLUG + '=' + args.commit, '--url', PROJECT_SLUG + '=' + args.url, infile])
+        subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-'+tag_name, '--destination', sigs_dir(), infile])
+        subprocess.check_call('mv build/out/' + PROJECT_SLUG + '-*.' + suffix + ' ../out/'+args.version, shell=True)
         print('Moving var/install.log to var/install-' + tag_name + '.log')
         subprocess.check_call('mv var/install.log var/install-' + tag_name + '.log', shell=True)
         print('Moving var/build.log to var/build-' + tag_name + '.log')
@@ -79,9 +113,9 @@ def rebuild():
 
     if args.commit_files:
         print('\nCommitting '+args.version+' Unsigned Sigs\n')
-        os.chdir('sigs')
-        for i, v in platforms:
-            subprocess.check_call(['git', 'add', args.version+'-'+v[1]+'/'+args.signer])
+        os.chdir(sigs_dir())
+        for _, platform in selected_platforms():
+            subprocess.check_call(['git', 'add', args.version+'-'+platform[1]+'/'+args.signer])
         subprocess.check_call(['git', 'commit', '-m', 'Add '+args.version+' unsigned sigs for '+args.signer])
         os.chdir(workdir)
 
@@ -93,7 +127,7 @@ def build():
     os.chdir('builder')
     os.makedirs('inputs', exist_ok=True)
 
-    subprocess.check_call(['make', '-C', 'inputs/monero/contrib/depends', 'download', 'SOURCES_PATH=' + os.getcwd() + '/cache/common'])
+    subprocess.check_call(['make', '-C', 'inputs/' + PROJECT_SLUG + '/contrib/depends', 'download', 'SOURCES_PATH=' + os.getcwd() + '/cache/common'])
 
     rebuild()
 
@@ -102,9 +136,9 @@ def verify():
     global args, workdir
     os.chdir('builder')
 
-    for i, v in platforms:
-        print('\nVerifying v'+args.version+' '+v[0]+'\n')
-        subprocess.check_call(['bin/gverify', '-v', '-d', '../sigs/', '-r', args.version+'-'+v[1], 'inputs/monero/contrib/gitian/gitian-'+v[1]+'.yml'])
+    for _, platform in selected_platforms():
+        print('\nVerifying ' + args.version + ' ' + platform[0] + '\n')
+        subprocess.check_call(['bin/gverify', '-v', '-d', sigs_dir(), '-r', args.version+'-'+platform[1], 'inputs/' + PROJECT_SLUG + '/contrib/gitian/gitian-'+platform[1]+'.yml'])
     os.chdir(workdir)
 
 def main():
@@ -113,7 +147,7 @@ def main():
     parser = argparse.ArgumentParser(description='Script for running full Gitian builds.', usage='%(prog)s [options] signer version')
     parser.add_argument('-c', '--commit', action='store_true', dest='commit', help='Indicate that the version argument is for a commit or branch')
     parser.add_argument('-p', '--pull', action='store_true', dest='pull', help='Indicate that the version argument is the number of a github repository pull request')
-    parser.add_argument('-u', '--url', dest='url', default='https://github.com/monero-project/monero', help='Specify the URL of the repository. Default is %(default)s')
+    parser.add_argument('-u', '--url', dest='url', default=DEFAULT_SOURCE_URL, help='Specify the URL of the repository. Default is %(default)s')
     parser.add_argument('-v', '--verify', action='store_true', dest='verify', help='Verify the Gitian build')
     parser.add_argument('-b', '--build', action='store_true', dest='build', help='Do a Gitian build')
     parser.add_argument('-B', '--buildsign', action='store_true', dest='buildsign', help='Build both signed and unsigned binaries')
@@ -127,6 +161,8 @@ def main():
     parser.add_argument('-S', '--setup', action='store_true', dest='setup', help='Set up the Gitian building environment. Uses LXC. If you want to use KVM, use the --kvm option. If you run this script on a non-debian based system, pass the --no-apt flag')
     parser.add_argument('-D', '--detach-sign', action='store_true', dest='detach_sign', help='Create the assert file for detached signing. Will not commit anything.')
     parser.add_argument('-n', '--no-commit', action='store_false', dest='commit_files', help='Do not commit anything to git')
+    parser.add_argument('--sigs-dir', dest='sigs_dir', default='sigs', help='Directory for the Gitian signatures checkout. Default is %(default)s')
+    parser.add_argument('--sigs-url', dest='sigs_url', default=None, help='Git URL for the Gitian signatures repository. Required when the signatures checkout is absent.')
     parser.add_argument('signer', nargs='?', help='GPG signer to sign each build assert file')
     parser.add_argument('version', nargs='?', help='Version number, commit, or branch to build.')
     parser.add_argument('-a', '--no-apt', action='store_true', dest='no_apt', help='Indicate that apt is not installed on the system')
@@ -161,11 +197,11 @@ def main():
 
     script_name = os.path.basename(sys.argv[0])
     # Signer and version shouldn't be empty
-    if args.signer == '':
+    if not args.signer:
         print(script_name+': Missing signer.')
         print('Try '+script_name+' --help for more information')
         sys.exit(1)
-    if args.version == '':
+    if not args.version:
         print(script_name+': Missing version.')
         print('Try '+script_name+' --help for more information')
         sys.exit(1)
@@ -178,8 +214,19 @@ def main():
     if args.setup:
         setup()
 
-    os.makedirs('builder/inputs/monero', exist_ok=True)
-    os.chdir('builder/inputs/monero')
+    source_checkout = os.path.join(workdir, 'builder', 'inputs', PROJECT_SLUG)
+    legacy_source_checkout = os.path.join(workdir, 'builder', 'inputs', 'monero')
+    if not os.path.isdir(os.path.join(source_checkout, '.git')):
+        if os.path.isdir(os.path.join(legacy_source_checkout, '.git')):
+            raise Exception(
+                'Found a legacy builder/inputs/monero checkout. Re-run with --setup to refresh the builder inputs for '
+                + PROJECT_NAME + '.'
+            )
+        raise Exception(
+            'Missing builder/inputs/' + PROJECT_SLUG + ' checkout. Run --setup before building or verifying.'
+        )
+
+    os.chdir(source_checkout)
     if args.pull:
         subprocess.check_call(['git', 'fetch', args.url, 'refs/pull/'+args.version+'/merge'])
         args.commit = subprocess.check_output(['git', 'show', '-s', '--format=%H', 'FETCH_HEAD'], universal_newlines=True).strip()

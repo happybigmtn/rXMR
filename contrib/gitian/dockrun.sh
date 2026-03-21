@@ -8,6 +8,8 @@ VERSION=$1
 
 DOCKER=`command -v docker`
 CACHER=`command -v apt-cacher-ng`
+PROJECT_REPO=${PROJECT_REPO-https://github.com/happybigmtn/rXMR.git}
+SIGS_REPO=${SIGS_REPO-}
 
 if [ -z "$DOCKER" -o -z "$CACHER" ]; then
 	echo "$0: you must first install docker.io and apt-cacher-ng"
@@ -15,10 +17,17 @@ if [ -z "$DOCKER" -o -z "$CACHER" ]; then
 	exit 1
 fi
 
+if [ -z "$SIGS_REPO" ]; then
+	echo "$0: set SIGS_REPO to a writable gitian signatures repository before building"
+	echo "  e.g. export SIGS_REPO=https://github.com/<you>/rXMR-gitian.sigs.git"
+	exit 1
+fi
+
 GH_USER=${GH_USER-$USER}
 
-TAG=gitrun-bionic
-TAG2=base-bionic-amd64
+TAG=rxmr-gitrun-bionic
+TAG2=rxmr-base-bionic-amd64
+CONTAINER=rxmr-gitrun
 IMAGE=`docker images | grep $TAG`
 
 WORKDIR=/home/ubuntu
@@ -41,10 +50,9 @@ RUN useradd -ms /bin/bash -U ubuntu -G docker
 USER ubuntu:docker
 WORKDIR $WORKDIR
 
-RUN	git clone https://github.com/monero-project/gitian.sigs.git sigs; \
-  git clone https://github.com/devrandom/gitian-builder.git builder; \
+RUN	git clone https://github.com/devrandom/gitian-builder.git builder; \
   cd builder; git checkout c0f77ca018cb5332bfd595e0aff0468f77542c23; mkdir -p inputs var; cd inputs; \
-  git clone https://github.com/monero-project/monero
+  git clone ${PROJECT_REPO} rxmr
 
 CMD ["sleep", "infinity"]
 EOF
@@ -52,7 +60,7 @@ EOF
 docker build --pull -f ${TAG}.Dockerfile -t $TAG .
 
 cd ..
-docker run -v /var/run/docker.sock:/var/run/docker.sock -d --name gitrun $TAG
+docker run -v /var/run/docker.sock:/var/run/docker.sock -d --name $CONTAINER $TAG
 
 fi
 
@@ -84,23 +92,23 @@ cd ..
 
 fi
 
-RUNNING=`docker ps | grep gitrun`
+RUNNING=`docker ps | grep $CONTAINER`
 if [ -z "$RUNNING" ]; then
-  BUILT=`docker ps -a | grep gitrun`
+  BUILT=`docker ps -a | grep $CONTAINER`
   if [ -z "$BUILT" ]; then
-    docker run -v /var/run/docker.sock:/var/run/docker.sock -d --name gitrun $TAG
+    docker run -v /var/run/docker.sock:/var/run/docker.sock -d --name $CONTAINER $TAG
   else
-    docker start gitrun
+    docker start $CONTAINER
   fi
 fi
-docker cp gitian-build.py gitrun:$WORKDIR/
-docker exec -t gitrun ./gitian-build.py -d -b -D -n $OPT $GH_USER $VERSION
+docker cp gitian-build.py $CONTAINER:$WORKDIR/
+docker exec -t $CONTAINER ./gitian-build.py -d -b -D -n --url "$PROJECT_REPO" --sigs-url "$SIGS_REPO" $OPT $GH_USER $VERSION
 RC=$?
 if [ $RC != 0 ]; then
 	exit $RC
 fi
 echo "\nBuild Results:\n"
-docker exec gitrun sh -c "sha256sum out/$VERSION/*"
+docker exec $CONTAINER sh -c "sha256sum out/$VERSION/*"
 echo "\nIf these results look correct, type \"sign\" to sign them, otherwise ^C to stop now."
 read check
 if [ "$check" != "sign" ]; then
@@ -109,20 +117,17 @@ if [ "$check" != "sign" ]; then
 fi
 
 if [ ! -d sigs ]; then
-	git clone https://github.com/monero-project/gitian.sigs.git sigs
-	cd sigs
-	git remote add $GH_USER git@github.com:$GH_USER/gitian.sigs.git
-	cd ..
+	git clone "$SIGS_REPO" sigs
 fi
 
-DIRS=`docker exec gitrun sh -c "echo sigs/$VERSION-*"`
+DIRS=`docker exec $CONTAINER sh -c "echo sigs/$VERSION-*"`
 for i in $DIRS; do
-	docker cp gitrun:$WORKDIR/$i sigs
+	docker cp $CONTAINER:$WORKDIR/$i sigs
 	gpg --detach-sign $i/$GH_USER/*.assert
 done
 
 cd sigs
-git checkout -b $VERSION
+git checkout -B $VERSION
 git add $VERSION-*
 git commit -S -m "Add $GH_USER $VERSION"
-git push --set-upstream $GH_USER $VERSION
+git push --set-upstream origin $VERSION

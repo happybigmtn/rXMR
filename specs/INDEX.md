@@ -1,32 +1,24 @@
-# Bonero Specification Index
+# rXMR Specification Index
 
-> A privacy-focused cryptocurrency fork of Monero, designed for AI agents.
-> "Private money for private machines."
+rXMR is a Monero-derived privacy chain with its own runtime identity, ports, seeds, binaries, and 60-second block target.
 
-## Core Specifications
+| Spec | File | Scope |
+|---|---|---|
+| Genesis | [genesis.md](genesis.md) | Canonical genesis handling and historical memo preservation |
+| Network | [network.md](network.md) | Network IDs, ports, seed peers |
+| Addresses | [addresses.md](addresses.md) | Prefix values and address examples |
+| Consensus | [consensus.md](consensus.md) | RandomX, block timing, emission |
+| Branding | [branding.md](branding.md) | Binaries, datadir, URI scheme, units |
 
-| Specification | File | Status | Description |
-|--------------|------|--------|-------------|
-| **Genesis** | [genesis.md](genesis.md) | 📝 Draft | Genesis block and initial chain state |
-| **Network** | [network.md](network.md) | 📝 Draft | Network parameters, ports, magic bytes |
-| **Addresses** | [addresses.md](addresses.md) | 📝 Draft | Address prefixes and formats |
-| **Consensus** | [consensus.md](consensus.md) | 📝 Draft | Block time, emission, difficulty |
-| **Branding** | [branding.md](branding.md) | 📝 Draft | Binary names, user agent, data directories |
+## High-Signal Deltas From Monero
 
-## Key Differentiators from Monero
+| Surface | Monero | rXMR |
+|---|---|---|
+| Daemon | `monerod` | `rxmrd` |
+| Wallet CLI | `monero-wallet-cli` | `rxmr-wallet-cli` |
+| URI scheme | `monero:` | `rxmr:` |
+| Mainnet ports | `18080/18081/18082` | `18880/18881/18882` |
+| Block target | 120 seconds | 60 seconds |
+| Datadir | `.bitmonero` | `.rxmr` |
 
-| Feature | Monero | Bonero | Rationale |
-|---------|--------|--------|-----------|
-| Target Audience | Humans | AI Agents | Privacy for autonomous systems |
-| Network Ports | 18080/18081 | 18880/18881 | Network separation |
-| Address Prefix | 4 | B | Agent-recognizable |
-| Binary Names | monerod | bonerod | Distinct identity |
-| Data Directory | .bitmonero | .bonero | Isolated storage |
-
-## Fork Strategy
-
-Bonero is a straightforward Monero fork:
-1. **Monero already uses RandomX** - No PoW changes needed
-2. **CryptoNote protocol intact** - Keep all privacy features
-3. **Minimal code changes** - Mostly branding and parameters
-4. **Clean chain** - New genesis, fresh history
+The chain rename is a runtime and operator-surface change, not a new mainnet reset.

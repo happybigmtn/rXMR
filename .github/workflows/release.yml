@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake pkg-config git python3 \
+            libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
+            libsodium-dev libhidapi-dev liblzma-dev libreadline-dev \
+            libexpat1-dev libpgm-dev libusb-1.0-0-dev
+
+      - name: Build release binaries
+        run: |
+          cmake -S . -B build -D BUILD_TESTS=OFF -D CMAKE_BUILD_TYPE=Release
+          cmake --build build -j"$(nproc)" --target daemon simplewallet wallet_rpc_server
+
+      - name: Package deterministic tarball
+        run: |
+          chmod +x scripts/build-release.sh
+          ./scripts/build-release.sh \
+            --version "${GITHUB_REF_NAME}" \
+            --platform linux-x86_64 \
+            --build-dir build \
+            --output-dir dist \
+            --skip-build
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body: |
+            ## rXMR ${{ github.ref_name }}
+
+            Tagged releases are the canonical public install target.
+
+            ### Quick install
+            ```bash
+            curl -fsSLO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/install.sh
+            less install.sh
+            RXMR_VERSION=${{ github.ref_name }} bash install.sh --add-path
+            ```
+
+            ### Verify release checksums
+            ```bash
+            curl -fsSLO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/verify-release.sh
+            bash verify-release.sh --version ${{ github.ref_name }} --platform linux-x86_64
+            ```

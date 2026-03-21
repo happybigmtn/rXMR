@@ -35,10 +35,10 @@ from __future__ import print_function
 from framework.daemon import Daemon
 from framework.wallet import Wallet
 import random
+from rxmr_fixtures import ACCOUNT_0_SUB_1, MAIN_ADDRESS, SEED
 
-SEED = 'velvet lymph giddy number token physics poetry unquoted nibs useful sabotage limits benches lifestyle eden nitrogen anvil fewest avoid batch vials washing fences goat unquoted'
-STANDARD_ADDRESS = '42ey1afDFnn4886T7196doS9GPMzexD9gXpsZJDwVjeRVdFCSoHnv7KPbBeGpzJBzHRCAs9UxqeoyFQMYbqSWYTfJJQAWDm'
-SUBADDRESS = '84QRUYawRNrU3NN1VpFRndSukeyEb3Xpv8qZjjsoJZnTYpDYceuUTpog13D7qPxpviS7J29bSgSkR11hFFoXWk2yNdsR9WF'
+STANDARD_ADDRESS = MAIN_ADDRESS
+SUBADDRESS = ACCOUNT_0_SUB_1
 
 class ColdSigningTest():
     def run_test(self):

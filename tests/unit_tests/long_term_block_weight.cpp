@@ -1,8 +1,8 @@
 // Copyright (c) 2019-2022, The Monero Project
-// Copyright (c) 2026, The Bonero Project
+// Copyright (c) 2026, The rXMR Project
 //
 // NOTE: These tests require a valid genesis block to initialize the blockchain.
-// They are DISABLED until Bonero's genesis block is generated with --print-genesis-tx.
+// They are DISABLED until rXMR's genesis block is generated with --print-genesis-tx.
 // To re-enable, remove the DISABLED_ prefix from test names once genesis is ready.
 //
 // All rights reserved.
