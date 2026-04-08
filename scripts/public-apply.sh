@@ -21,6 +21,23 @@ EOF
 
 error() { printf '[ERROR] %s\n' "$1" >&2; exit 1; }
 
+print_next_steps() {
+    cat <<EOF
+
+rXMR public apply complete
+
+Installed:
+- config: /etc/rxmr/rxmr.conf
+- data dir: /var/lib/rxmrd
+- services: rxmrd.service, rxmr-miner.service
+
+Next steps:
+- verify health: rxmr-doctor --json --strict --expect-public --expect-miner
+- open inbound P2P: sudo ufw allow 18880/tcp
+- inspect daemon RPC: curl -fsS http://127.0.0.1:18881/get_info
+EOF
+}
+
 while [ $# -gt 0 ]; do
     case "$1" in
         --address)
@@ -79,3 +96,7 @@ fi
 "$SCRIPT_DIR/install-public-node.sh" "${node_args[@]}"
 "$SCRIPT_DIR/install-public-miner.sh" "${miner_args[@]}"
 "$SCRIPT_DIR/doctor.sh" "${doctor_args[@]}"
+
+if [ "$OUTPUT_JSON" -eq 0 ]; then
+    print_next_steps
+fi
