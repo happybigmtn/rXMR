@@ -139,6 +139,7 @@ Path(sys.argv[1]).write_text(
                 "rxmr-doctor",
                 "rxmr-install-public-node",
                 "rxmr-install-public-miner",
+                "rxmr-public-apply",
                 "rxmrd.service",
                 "rxmr.conf.example",
                 "PUBLIC-NODE.md",
@@ -197,6 +198,7 @@ package_release() {
     cp scripts/doctor.sh "$stage_root/rxmr-doctor"
     cp scripts/install-public-node.sh "$stage_root/rxmr-install-public-node"
     cp scripts/install-public-miner.sh "$stage_root/rxmr-install-public-miner"
+    cp scripts/public-apply.sh "$stage_root/rxmr-public-apply"
     cp contrib/init/rxmrd.service "$stage_root/rxmrd.service"
     cp contrib/init/rxmr.conf.example "$stage_root/rxmr.conf.example"
     cp docs/public-node.md "$stage_root/PUBLIC-NODE.md"
@@ -204,7 +206,8 @@ package_release() {
 
     chmod 0755 "$stage_root/rxmrd" "$stage_root/rxmr-wallet-cli" "$stage_root/rxmr-wallet-rpc" \
         "$stage_root/rxmr-start-miner" "$stage_root/rxmr-doctor" \
-        "$stage_root/rxmr-install-public-node" "$stage_root/rxmr-install-public-miner"
+        "$stage_root/rxmr-install-public-node" "$stage_root/rxmr-install-public-miner" \
+        "$stage_root/rxmr-public-apply"
     chmod 0644 "$stage_root/rxmrd.service" "$stage_root/rxmr.conf.example" \
         "$stage_root/PUBLIC-NODE.md" "$stage_root/LICENSE"
 
@@ -259,6 +262,7 @@ PY
 publish_release_assets() {
     copy_standalone_asset install.sh install.sh 0755
     copy_standalone_asset scripts/verify-release.sh verify-release.sh 0755
+    copy_standalone_asset scripts/public-apply.sh rxmr-public-apply 0755
     copy_standalone_asset docs/public-node.md PUBLIC-NODE.md 0644
     copy_standalone_asset SECURITY.md SECURITY.md 0644
 }

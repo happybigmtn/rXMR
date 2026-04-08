@@ -6,13 +6,19 @@ RXMR_CONFIG="${RXMR_CONFIG:-}"
 RXMR_DATADIR="${RXMR_DATADIR:-}"
 HEALTHY=1
 CONFIG_PATH=""
+OUTPUT_JSON=0
+STRICT=0
+EXPECT_PUBLIC=0
+EXPECT_MINER=0
+WARNINGS=()
 
 usage() {
     cat <<'EOF'
-Check whether a local rXMR daemon is synced enough to mine and serving the expected mainnet ports.
+Verify that a local rXMR node is healthy enough to serve peers and mine.
 
 Usage:
-  rxmr-doctor [--config PATH] [--datadir DIR]
+  ./scripts/doctor.sh [--config PATH] [--datadir DIR] [--json] [--strict] [--expect-public] [--expect-miner]
+  rxmr-doctor [same flags]
 
 Environment:
   RXMR_CONFIG   Config path (default: ~/.rxmr/rxmr.conf)
@@ -20,8 +26,20 @@ Environment:
 EOF
 }
 
-info() { printf '[INFO] %s\n' "$1"; }
-warn() { printf '[WARN] %s\n' "$1"; HEALTHY=0; }
+info() {
+    if [ "$OUTPUT_JSON" -eq 0 ]; then
+        printf '[INFO] %s\n' "$1"
+    fi
+}
+
+warn() {
+    if [ "$OUTPUT_JSON" -eq 0 ]; then
+        printf '[WARN] %s\n' "$1"
+    fi
+    HEALTHY=0
+    WARNINGS+=("$1")
+}
+
 error() { printf '[ERROR] %s\n' "$1" >&2; exit 1; }
 
 parse_args() {
@@ -36,6 +54,22 @@ parse_args() {
                 [ $# -ge 2 ] || error "--datadir requires a path"
                 RXMR_DATADIR="$2"
                 shift 2
+                ;;
+            --json)
+                OUTPUT_JSON=1
+                shift
+                ;;
+            --strict)
+                STRICT=1
+                shift
+                ;;
+            --expect-public)
+                EXPECT_PUBLIC=1
+                shift
+                ;;
+            --expect-miner)
+                EXPECT_MINER=1
+                shift
                 ;;
             -h|--help)
                 usage
@@ -87,17 +121,71 @@ else:
 ' "$1" "$(cat)"
 }
 
-rpc_curl() {
-    local endpoint
-    endpoint="$1"
-    shift
+warnings_json() {
+    python3 - <<'PY' "${WARNINGS[@]}"
+import json
+import sys
+print(json.dumps(sys.argv[1:]))
+PY
+}
 
-    curl -fsS "${CURL_AUTH[@]}" "$@" "$RPC_BASE/$endpoint"
+print_json_status() {
+    local rpc_ok="$1"
+    local public_reachable="$2"
+    local miner_configured="$3"
+    local miner_running="$4"
+    local ready="$5"
+    local warning_json="$6"
+    local services_json="$7"
+
+    python3 - "$rpc_ok" "$public_reachable" "$miner_configured" "$miner_running" \
+        "$ready" "${height:-0}" "${target_height:-0}" "${incoming:-0}" \
+        "${outgoing:-0}" "${synchronized:-false}" "${busy_syncing:-false}" \
+        "${nettype:-unknown}" "${p2p_port:-18880}" "${address:-}" \
+        "${threads:-0}" "${speed:-0}" "$warning_json" "$services_json" <<'PY'
+import json
+import sys
+
+def as_bool(value: str) -> bool:
+    return value == "true"
+
+def as_int(value: str) -> int:
+    try:
+        return int(value)
+    except Exception:
+        return 0
+
+payload = {
+    "rpc_ok": as_bool(sys.argv[1]),
+    "public_reachable": as_bool(sys.argv[2]),
+    "miner_configured": as_bool(sys.argv[3]),
+    "miner_running": as_bool(sys.argv[4]),
+    "ready": as_bool(sys.argv[5]),
+    "height": as_int(sys.argv[6]),
+    "target_height": as_int(sys.argv[7]),
+    "connections_in": as_int(sys.argv[8]),
+    "connections_out": as_int(sys.argv[9]),
+    "synchronized": as_bool(sys.argv[10]),
+    "busy_syncing": as_bool(sys.argv[11]),
+    "nettype": sys.argv[12],
+    "p2p_port": as_int(sys.argv[13]),
+    "mining_address": sys.argv[14],
+    "mining_threads": as_int(sys.argv[15]),
+    "mining_hashrate_hps": as_int(sys.argv[16]),
+    "warnings": json.loads(sys.argv[17]),
+    "services": json.loads(sys.argv[18]),
+}
+print(json.dumps(payload, indent=2))
+PY
 }
 
 show_config_peers() {
     if [ ! -f "$CONFIG_PATH" ]; then
         warn "Config not found at $CONFIG_PATH"
+        return
+    fi
+
+    if [ "$OUTPUT_JSON" -eq 1 ]; then
         return
     fi
 
@@ -109,6 +197,8 @@ main() {
     local rpc_host rpc_port rpc_login info_json mining_json
     local height target_height incoming outgoing busy_syncing synchronized nettype
     local active address threads speed p2p_port
+    local rpc_ok public_reachable miner_configured miner_running ready
+    local warning_json services_json
 
     parse_args "$@"
     resolve_config_path
@@ -133,14 +223,29 @@ main() {
 
     info "RPC endpoint: $RPC_BASE"
 
-    info_json="$(rpc_curl json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' 2>/dev/null || true)"
+    info_json="$(curl -fsS "${CURL_AUTH[@]}" -H 'Content-Type: application/json' \
+        -d '{"jsonrpc":"2.0","id":"0","method":"get_info"}' \
+        "$RPC_BASE/json_rpc" 2>/dev/null || true)"
     if [ -z "$info_json" ]; then
+        rpc_ok=false
+        public_reachable=false
+        miner_configured=false
+        miner_running=false
+        ready=false
         warn "Could not reach rxmrd RPC. Start the daemon first."
         show_config_peers
+        warning_json="$(warnings_json)"
+        services_json='{"rxmrd":"unreachable"}'
+        if [ "$OUTPUT_JSON" -eq 1 ]; then
+            print_json_status "$rpc_ok" "$public_reachable" "$miner_configured" \
+                "$miner_running" "$ready" "$warning_json" "$services_json"
+        fi
         exit 1
     fi
+    rpc_ok=true
 
-    mining_json="$(rpc_curl mining_status -H 'Content-Type: application/json' -d '{}' 2>/dev/null || true)"
+    mining_json="$(curl -fsS "${CURL_AUTH[@]}" -H 'Content-Type: application/json' \
+        -d '{}' "$RPC_BASE/mining_status" 2>/dev/null || true)"
 
     height="$(printf '%s' "$info_json" | json_value result.height 2>/dev/null || true)"
     target_height="$(printf '%s' "$info_json" | json_value result.target_height 2>/dev/null || true)"
@@ -168,19 +273,35 @@ main() {
         warn "Daemon is still syncing"
     fi
 
+    public_reachable=false
+    if [ "${incoming:-0}" -gt 0 ]; then
+        public_reachable=true
+    elif [ "$EXPECT_PUBLIC" -eq 1 ]; then
+        warn "Expected a public node, but inbound reachability is not yet proven"
+    else
+        info "Inbound reachability is not proven yet. Open TCP/18880 if this host should serve peers."
+    fi
+
+    miner_configured=false
+    miner_running=false
     if [ -n "$mining_json" ]; then
         active="$(printf '%s' "$mining_json" | json_value active 2>/dev/null || true)"
         address="$(printf '%s' "$mining_json" | json_value address 2>/dev/null || true)"
         threads="$(printf '%s' "$mining_json" | json_value threads_count 2>/dev/null || true)"
         speed="$(printf '%s' "$mining_json" | json_value speed 2>/dev/null || true)"
+        miner_configured=true
 
         [ -n "$active" ] && info "Mining active: $active"
         [ -n "$address" ] && info "Mining address: $address"
         [ -n "$threads" ] && info "Mining threads: $threads"
         [ -n "$speed" ] && info "Reported hashrate: ${speed} H/s"
 
-        if [ "${active:-false}" != "true" ]; then
-            warn "Mining is not active. Start it with rxmr-start-miner --address YOUR_RXMR_ADDRESS"
+        if [ "${active:-false}" = "true" ]; then
+            miner_running=true
+        elif [ "$EXPECT_MINER" -eq 1 ]; then
+            warn "Expected mining to be active, but mining_status reports inactive"
+        else
+            info "Mining is not active. Start it with rxmr-start-miner --address YOUR_RXMR_ADDRESS"
         fi
     else
         warn "Could not read /mining_status"
@@ -196,12 +317,37 @@ main() {
 
     show_config_peers
 
-    if [ "$HEALTHY" -eq 1 ]; then
-        info "Node looks healthy for the current rXMR mainnet"
+    services_json="$(python3 - <<'PY' "$(systemctl is-active rxmrd.service 2>/dev/null || printf unknown)" "${active:-unknown}" "${threads:-0}"
+import json
+import sys
+print(json.dumps({"rxmrd": {"service": sys.argv[1], "mining_active": sys.argv[2], "mining_threads": sys.argv[3]}}))
+PY
+)"
+    warning_json="$(warnings_json)"
+
+    ready=false
+    if [ "$rpc_ok" = true ] && [ "${outgoing:-0}" -gt 0 ] && \
+        [ "${busy_syncing:-false}" != "true" ] && [ "${synchronized:-false}" = "true" ] && \
+        { [ "$EXPECT_PUBLIC" -eq 0 ] || [ "$public_reachable" = true ]; } && \
+        { [ "$EXPECT_MINER" -eq 0 ] || [ "$miner_running" = true ]; }; then
+        ready=true
+    fi
+
+    if [ "$OUTPUT_JSON" -eq 1 ]; then
+        print_json_status "$rpc_ok" "$public_reachable" "$miner_configured" \
+            "$miner_running" "$ready" "$warning_json" "$services_json"
+    fi
+
+    if [ "$ready" = true ]; then
+        info "Node looks healthy for the live rXMR network"
         exit 0
     fi
 
-    warn "Node needs attention before it is fully ready to mine"
+    if [ "$STRICT" -eq 1 ] || [ "$EXPECT_PUBLIC" -eq 1 ] || [ "$EXPECT_MINER" -eq 1 ]; then
+        exit 1
+    fi
+
+    warn "Node needs attention before it is fully ready for public mining"
     exit 1
 }
 

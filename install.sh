@@ -32,6 +32,7 @@ FORCE=0
 ADD_PATH=0
 SKIP_DEPS=0
 NO_CONFIG=0
+SOURCE_STATIC="${RXMR_SOURCE_STATIC:-}"
 
 usage() {
     cat <<'EOF'
@@ -122,6 +123,40 @@ cpu_count() {
     nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 1
 }
 
+have_cmd() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+have_pkg_config_lib() {
+    local name
+    name="$1"
+    if ! have_cmd pkg-config; then
+        return 1
+    fi
+    pkg-config --exists "$name" >/dev/null 2>&1
+}
+
+have_unbound_dev() {
+    if have_pkg_config_lib libunbound; then
+        return 0
+    fi
+    if [ -f /usr/include/unbound.h ] || [ -f /usr/include/unbound/unbound.h ]; then
+        if have_cmd ldconfig && ldconfig -p 2>/dev/null | grep -q 'libunbound\.so'; then
+            return 0
+        fi
+        for libdir in /usr/lib /usr/lib64 /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/local/lib; do
+            if [ -e "$libdir/libunbound.so" ] || [ -e "$libdir/libunbound.a" ]; then
+                return 0
+            fi
+        done
+    fi
+    return 1
+}
+
+source_build_deps_ready() {
+    have_cmd cmake && have_cmd git && have_cmd make && have_cmd g++ && have_unbound_dev
+}
+
 detect_platform() {
     local os arch
 
@@ -186,23 +221,34 @@ verify_release_asset() {
 fetch_latest_release_version() {
     local response
 
-    response="$(download_to_stdout "$GITHUB_API_URL/releases/latest" 2>/dev/null || true)"
+    response="$(download_to_stdout "$GITHUB_API_URL/releases" 2>/dev/null || true)"
     [ -n "$response" ] || return 1
     python3 -c '
 import json
 import sys
 
+platform = sys.argv[1]
+tarball_suffix = f"-{platform}.tar.gz"
+
 try:
-    payload = json.loads(sys.argv[1])
+    payload = json.loads(sys.argv[2])
 except Exception:
     raise SystemExit(1)
 
-tag = payload.get("tag_name")
-if not tag:
+if not isinstance(payload, list):
     raise SystemExit(1)
 
-print(tag)
-' "$response"
+for release in payload:
+    tag = release.get("tag_name")
+    if not tag:
+        continue
+    assets = {asset.get("name") for asset in (release.get("assets") or [])}
+    if f"rxmr-{tag}{tarball_suffix}" in assets and "SHA256SUMS" in assets:
+        print(tag)
+        raise SystemExit(0)
+
+raise SystemExit(1)
+' "$PLATFORM" "$response"
 }
 
 install_asset_if_present() {
@@ -215,6 +261,41 @@ install_asset_if_present() {
     if [ -f "$source_path" ]; then
         install -m "$mode" "$source_path" "$INSTALL_DIR/$target_name"
     fi
+}
+
+binary_runtime_ready() {
+    local binary_path
+
+    binary_path="$1"
+    [ -x "$binary_path" ] || return 1
+
+    if command -v ldd >/dev/null 2>&1; then
+        if ldd "$binary_path" 2>/dev/null | grep -q "not found"; then
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+source_static_value() {
+    if [ -n "$SOURCE_STATIC" ]; then
+        case "$SOURCE_STATIC" in
+            1|true|TRUE|on|ON|yes|YES)
+                printf 'ON\n'
+                return
+                ;;
+            0|false|FALSE|off|OFF|no|NO)
+                printf 'OFF\n'
+                return
+                ;;
+            *)
+                error "RXMR_SOURCE_STATIC must be one of: on/off, true/false, yes/no, 1/0"
+                ;;
+        esac
+    fi
+
+    printf 'OFF\n'
 }
 
 install_from_release() {
@@ -244,9 +325,17 @@ install_from_release() {
     install_asset_if_present "$RELEASE_DIR/rxmr-doctor" "rxmr-doctor" 0755
     install_asset_if_present "$RELEASE_DIR/rxmr-install-public-node" "rxmr-install-public-node" 0755
     install_asset_if_present "$RELEASE_DIR/rxmr-install-public-miner" "rxmr-install-public-miner" 0755
+    install_asset_if_present "$RELEASE_DIR/rxmr-public-apply" "rxmr-public-apply" 0755
     install_asset_if_present "$RELEASE_DIR/rxmrd.service" "rxmrd.service" 0644
     install_asset_if_present "$RELEASE_DIR/rxmr.conf.example" "rxmr.conf.example" 0644
     install_asset_if_present "$RELEASE_DIR/PUBLIC-NODE.md" "PUBLIC-NODE.md" 0644
+
+    if ! binary_runtime_ready "$INSTALL_DIR/rxmrd" || \
+        ! binary_runtime_ready "$INSTALL_DIR/rxmr-wallet-cli" || \
+        ! binary_runtime_ready "$INSTALL_DIR/rxmr-wallet-rpc"; then
+        warn "Tagged release $version is missing required runtime libraries on this host"
+        return 1
+    fi
 
     success "Installed tagged release $version"
     return 0
@@ -262,8 +351,8 @@ install_deps() {
         return
     fi
 
-    if command -v cmake >/dev/null 2>&1 && command -v git >/dev/null 2>&1 && command -v make >/dev/null 2>&1 && command -v g++ >/dev/null 2>&1; then
-        info "Toolchain already present; skipping package-manager dependency install"
+    if source_build_deps_ready; then
+        info "Source build dependencies already present; skipping package-manager dependency install"
         return
     fi
 
@@ -274,7 +363,8 @@ install_deps() {
             build-essential cmake pkg-config git python3 \
             libboost-all-dev libssl-dev libzmq3-dev libunbound-dev \
             libsodium-dev libhidapi-dev liblzma-dev libreadline-dev \
-            libexpat1-dev libpgm-dev libusb-1.0-0-dev
+            libexpat1-dev libpgm-dev libusb-1.0-0-dev libudev-dev \
+            libevent-dev
         return
     fi
 
@@ -308,15 +398,16 @@ prepare_source_tree() {
 }
 
 install_from_source() {
-    local ref build_dir
+    local ref build_dir static_value
 
     ref="$1"
     install_deps
     prepare_source_tree "$ref"
+    static_value="$(source_static_value)"
 
     build_dir="$SOURCE_DIR/build"
-    info "Building rXMR from source at $ref"
-    cmake -S "$SOURCE_DIR" -B "$build_dir" -D BUILD_TESTS=OFF -D CMAKE_BUILD_TYPE=Release
+    info "Building rXMR from source at $ref (STATIC=$static_value)"
+    cmake -S "$SOURCE_DIR" -B "$build_dir" -D BUILD_TESTS=OFF -D CMAKE_BUILD_TYPE=Release -D STATIC="$static_value"
     cmake --build "$build_dir" -j"$(cpu_count)" --target daemon simplewallet wallet_rpc_server
 
     install -d -m 0755 "$INSTALL_DIR"
@@ -327,9 +418,16 @@ install_from_source() {
     install -m 0755 "$SOURCE_DIR/scripts/doctor.sh" "$INSTALL_DIR/rxmr-doctor"
     install -m 0755 "$SOURCE_DIR/scripts/install-public-node.sh" "$INSTALL_DIR/rxmr-install-public-node"
     install -m 0755 "$SOURCE_DIR/scripts/install-public-miner.sh" "$INSTALL_DIR/rxmr-install-public-miner"
+    install -m 0755 "$SOURCE_DIR/scripts/public-apply.sh" "$INSTALL_DIR/rxmr-public-apply"
     install_asset_if_present "$SOURCE_DIR/contrib/init/rxmrd.service" "rxmrd.service" 0644
     install_asset_if_present "$SOURCE_DIR/contrib/init/rxmr.conf.example" "rxmr.conf.example" 0644
     install_asset_if_present "$SOURCE_DIR/docs/public-node.md" "PUBLIC-NODE.md" 0644
+
+    if ! binary_runtime_ready "$INSTALL_DIR/rxmrd" || \
+        ! binary_runtime_ready "$INSTALL_DIR/rxmr-wallet-cli" || \
+        ! binary_runtime_ready "$INSTALL_DIR/rxmr-wallet-rpc"; then
+        error "Source build completed but installed binaries are missing required runtime libraries"
+    fi
 
     success "Built and installed rXMR from source"
 }
@@ -451,8 +549,7 @@ Next steps:
      rxmr-doctor --config $DATA_DIR/rxmr.conf --datadir $DATA_DIR
 
 Public node:
-  sudo rxmr-install-public-node
-  sudo rxmr-install-public-miner --address YOUR_RXMR_ADDRESS --enable-now
+  sudo rxmr-public-apply --address YOUR_RXMR_ADDRESS --enable-now
 EOF
 }
 

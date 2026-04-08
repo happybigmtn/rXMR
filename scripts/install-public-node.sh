@@ -133,12 +133,13 @@ install_assets() {
     install -m 0755 "$WALLET_CLI_PATH" "$INSTALL_BIN_DIR/rxmr-wallet-cli"
     install -m 0755 "$WALLET_RPC_PATH" "$INSTALL_BIN_DIR/rxmr-wallet-rpc"
 
-    for helper in doctor.sh start-miner.sh install-public-miner.sh; do
+    for helper in doctor.sh start-miner.sh install-public-miner.sh public-apply.sh; do
         if [ -f "$SCRIPT_DIR/$helper" ]; then
             case "$helper" in
                 doctor.sh) install -m 0755 "$SCRIPT_DIR/$helper" "$INSTALL_BIN_DIR/rxmr-doctor" ;;
                 start-miner.sh) install -m 0755 "$SCRIPT_DIR/$helper" "$INSTALL_BIN_DIR/rxmr-start-miner" ;;
                 install-public-miner.sh) install -m 0755 "$SCRIPT_DIR/$helper" "$INSTALL_BIN_DIR/rxmr-install-public-miner" ;;
+                public-apply.sh) install -m 0755 "$SCRIPT_DIR/$helper" "$INSTALL_BIN_DIR/rxmr-public-apply" ;;
             esac
         fi
     done
